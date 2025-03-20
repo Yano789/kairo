@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tag_filters">
+        <item>All Tags</item>
+        <item>tech</item>
+        <item>ai</item>
+        <item>design</item>
+        <item>music</item>
+        <item>dance</item>
+        <item>fifthrow</item>
+        <item>art</item>
+        <item>cca</item>
+        <item>exhibition</item>
+    </string-array>
+</resources>
