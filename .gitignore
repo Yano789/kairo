@@ -7,3 +7,6 @@ build/
 captures/
 .externalNativeBuild/
 .cxx/
+.gradle/buildOutputCleanup/outputFiles.bin
+local.properties
+.idea/
