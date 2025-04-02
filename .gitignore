@@ -1,11 +1,9 @@
-# Gradle build files
+# Ignore Gradle files
 .gradle/
+*.iml
+/local.properties
+/.idea/
 build/
-
-# Android Studio/IDEA files
-.idea/*
-!.idea/.gitignore  # Optional: keep this if you want specific IDEA files
-
-# Local build outputs
-*.apk
-*.aar
+captures/
+.externalNativeBuild/
+.cxx/
