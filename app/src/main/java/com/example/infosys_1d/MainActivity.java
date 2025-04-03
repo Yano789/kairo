@@ -1,14 +1,10 @@
 package com.example.infosys_1d;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.infosys_1d.Chatbot.ChatFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
         Fragment homeFragment = new HomeFragment();
         Fragment calendarFragment = new CalendarFragment();
-        Fragment notificationsFragment = new NotificationsFragment();
+        Fragment chatFragment = new ChatFragment(); // Replaced notificationsFragment
         Fragment scheduleFragment = new ScheduleFragment();
         Fragment profileFragment = new ProfileFragment();
 
@@ -36,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.events_calendar) {
                 setCurrentFragment(calendarFragment);
             } else if (id == R.id.notifications) {
-                setCurrentFragment(notificationsFragment);
+                setCurrentFragment(chatFragment); // Now loads ChatFragment
             } else if (id == R.id.schedule) {
                 setCurrentFragment(scheduleFragment);
             } else if (id == R.id.profile) {

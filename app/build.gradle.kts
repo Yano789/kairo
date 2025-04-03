@@ -44,4 +44,6 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)
     implementation(libs.material.v190)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     }
