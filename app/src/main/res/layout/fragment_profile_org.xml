@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileFragmentOrg"
+    android:background="#F4F4F4">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+            <ImageView
+                android:id="@+id/backgroundImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/default_profile"
+                android:scaleType="centerCrop"
+                android:clickable="true"
+                android:focusable="true"
+                android:alpha="0.6"/>
+
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:background="@drawable/circle_mask"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profile_pic"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hello, Name!"
+                android:textSize="35dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="110dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:background="#FFD2AC"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="150dp"
+                android:background="#FF7300"/>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            android:divider="@drawable/spacer_12dp"
+            android:dividerPadding="12dp">
+
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/profile_overlay_box"
+                android:hint="Enter your name"
+                android:textSize="30sp"
+                android:padding="12dp"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/profile_overlay_box"
+                android:text="Email ID"
+                android:textSize="30sp"
+                android:padding="12dp"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/studentId"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/profile_overlay_box"
+                android:text="Organization ID"
+                android:textSize="30sp"
+                android:padding="12dp"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
