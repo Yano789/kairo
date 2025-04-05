@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="7.5dp"
+    android:orientation="horizontal"
+    android:weightSum="8">
+
+    <!-- Time label -->
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textColor="@android:color/black" />
+
+    <!-- 7 day slots: empty containers for dynamic event views -->
+    <FrameLayout
+        android:id="@+id/mon"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:id="@+id/tue"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:id="@+id/wed"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:id="@+id/thu"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:id="@+id/fri"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:id="@+id/sat"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:id="@+id/sun"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+</LinearLayout>

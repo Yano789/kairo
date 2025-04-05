@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.infosys_1d"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-
+    implementation("com.jakewharton.threetenabp:threetenabp:1.3.1")
     implementation("com.google.android.material:material:1.12.0")
     implementation(libs.appcompat)
     implementation(libs.material)

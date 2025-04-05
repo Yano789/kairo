@@ -38,6 +38,7 @@
        app:menu="@menu/bottom_nav_menu"
        app:itemIconSize="20dp"
 
+
        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
