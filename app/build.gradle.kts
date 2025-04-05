@@ -32,6 +32,7 @@ android {
 }
 
 dependencies {
+
     implementation(libs.material)
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -41,7 +42,12 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.androidx.recyclerview)
-    implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)
     implementation(libs.material.v190)
-    }
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.materialCalendarView)
+    implementation(libs.threetenabp)
+    implementation(libs.androidx.cardview)
+    implementation(libs.guava)
+    implementation(libs.androidx.core)
+}

@@ -9,13 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Locale;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
-
     private List<Event> eventList;
     private Context context;
 
@@ -49,6 +51,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             holder.eventImage.setImageResource(event.getImageResId());
         }
 
+        // Set the background color dynamically
+        holder.cardView.setCardBackgroundColor(
+                ContextCompat.getColor(holder.itemView.getContext(), event.getColor())
+        );
+
         // Set click listener to open the detail activity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, EventDetailActivity.class);
@@ -64,7 +71,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         ImageView eventImage;
-        TextView eventTitle, eventDate, eventSubtitle, eventTags;  // Updated to eventTags
+        TextView eventTitle, eventDate, eventSubtitle, eventTags;
+        CardView cardView;
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,7 +80,21 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             eventTitle = itemView.findViewById(R.id.eventTitle);
             eventDate = itemView.findViewById(R.id.eventDate);
             eventSubtitle = itemView.findViewById(R.id.eventSubtitle);
-            eventTags = itemView.findViewById(R.id.eventTags);  // Updated to eventTags
+            eventTags = itemView.findViewById(R.id.eventTags);
+            cardView = itemView.findViewById(R.id.cardViewEvent);
+        }
+    }
+
+    // Helper method to get day of the week from a date string
+    private String getDayName(String date) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            java.util.Date dateObj = sdf.parse(date);
+            SimpleDateFormat dayFormat = new SimpleDateFormat("EEE", Locale.ENGLISH); // EEE -> Mon, Tue
+            return dayFormat.format(dateObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
         }
     }
 }
