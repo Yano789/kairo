@@ -32,4 +32,3 @@ threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", ver
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-

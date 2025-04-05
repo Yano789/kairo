@@ -1,52 +1,139 @@
 package com.example.infosys_1d;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
+public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int TYPE_CALENDAR = 1;
+    private static final int TYPE_DISCOVERY = 2;
+
     private List<Event> eventList;
+    private Context context;
+    private int layoutResId;
 
-    public EventAdapter(List<Event> eventList) {
+    public EventAdapter(Context context, List<Event> eventList, int layoutResId) {
+        this.context = context;
         this.eventList = eventList;
+        this.layoutResId = layoutResId;
+    }
+
+    public void setEvents(List<Event> eventList) {
+        this.eventList = eventList;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return layoutResId == R.layout.calendar_item_event ? TYPE_CALENDAR : TYPE_DISCOVERY;
     }
 
     @NonNull
     @Override
-    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
-        return new EventViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == TYPE_CALENDAR) {
+            View view = inflater.inflate(R.layout.calendar_item_event, parent, false);
+            return new CalendarViewHolder(view);
+        } else {
+            View view = inflater.inflate(R.layout.discovery_item_event, parent, false);
+            return new DiscoveryViewHolder(view);
+        }
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Event event = eventList.get(position);
-        holder.eventDay.setText(event.getDate().split("-")[2]); // Extracts day (DD) from date string
-        holder.eventDayText.setText(getDayName(event.getDate())); // Converts to Mon, Tue, etc.
-        holder.title.setText(event.getName()); // Set event title
-        holder.description.setText(event.getDescription()); // Set event description
-        holder.time.setText(event.getStartTime() + " - " + event.getEndTime());
-        holder.time.setText(event.getLocation());
 
-        // Convert list of tags to a comma-separated string
-        holder.tags.setText(String.join(", ", event.getTags()));
+        if (holder.getItemViewType() == TYPE_CALENDAR) {
+            bindCalendarViewHolder((CalendarViewHolder) holder, event);
+        } else {
+            bindDiscoveryViewHolder((DiscoveryViewHolder) holder, event);
+        }
 
-        // Set the background color dynamically
-        holder.cardView.setCardBackgroundColor(
-                ContextCompat.getColor(holder.itemView.getContext(), event.getColor())
-        );
+        // Common click listener
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, EventDetailActivity.class);
+            intent.putExtra("event", event);
+            context.startActivity(intent);
+        });
+    }
+
+    private void bindCalendarViewHolder(CalendarViewHolder holder, Event event) {
+        // Set date components
+        String[] dateParts = event.getDate().split("-");
+        holder.tvEventDay.setText(dateParts[2]); // Day number
+        holder.eventDayOfWeek.setText(getDayName(event.getDate())); // Day name
+
+        // Set event details
+        holder.tvTitle.setText(event.getTitle());
+        holder.tvDescription.setText(event.getDescription());
+        holder.tvTime.setText(event.getStartTime() + " - " + event.getEndTime());
+
+        // Set tags if available
+        if (event.getTags() != null && !event.getTags().isEmpty()) {
+            holder.tvTags.setText(String.join(", ", event.getTags()));
+        } else {
+            holder.tvTags.setVisibility(View.GONE);
+        }
+
+        // Set card color
+        holder.cardView.setCardBackgroundColor(event.getColor());
+    }
+
+    private void bindDiscoveryViewHolder(DiscoveryViewHolder holder, Event event) {
+        // Set date in discovery format (e.g., "22\nFEB")
+        String[] dateParts = event.getDate().split("-");
+        try {
+            int year = Integer.parseInt(dateParts[0]);
+            int month = Integer.parseInt(dateParts[1]) - 1; // Months are 0-based
+            int day = Integer.parseInt(dateParts[2]);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, day);
+
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.ENGLISH);
+            String monthName = monthFormat.format(calendar.getTime()).toUpperCase();
+
+            holder.eventDate.setText(day + "\n" + monthName);
+        } catch (Exception e) {
+            holder.eventDate.setText(dateParts[2] + "\n" + dateParts[1]);
+        }
+
+        // Set event details
+        holder.eventTitle.setText(event.getTitle());
+        holder.eventSubtitle.setText(event.getSubtitle());
+
+        // Set tags if available
+        if (event.getTags() != null && !event.getTags().isEmpty()) {
+            holder.eventTags.setText(String.join(", ", event.getTags()));
+        } else {
+            holder.eventTags.setVisibility(View.GONE);
+        }
+
+        // Set image
+        if (event.getImageResId() != -1) {
+            holder.eventImage.setImageResource(event.getImageResId());
+        } else {
+            holder.eventImage.setImageResource(R.drawable.default_event_image);
+        }
     }
 
     @Override
@@ -54,41 +141,55 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         return eventList.size();
     }
 
-    // Update event list dynamically
     public void updateEvents(List<Event> newEvents) {
-        this.eventList = newEvents;
+        Set<Event> uniqueEvents = new HashSet<>(newEvents);
+        this.eventList.clear();
+        this.eventList.addAll(uniqueEvents);
         notifyDataSetChanged();
     }
 
-    static class EventViewHolder extends RecyclerView.ViewHolder {
-        public TextView tags;
-
-        public CardView cardView;
-        TextView title, description, time, eventDay, eventDayText;
-
-        EventViewHolder(View itemView) {
-            super(itemView);
-            cardView = itemView.findViewById(R.id.cardViewEvent); //Find cardview that will display event
-            tags = itemView.findViewById(R.id.tvTags);
-
-            title = itemView.findViewById(R.id.tvTitle);
-            description = itemView.findViewById(R.id.tvDescription);
-            time = itemView.findViewById(R.id.tvTime);
-            eventDay = itemView.findViewById(R.id.tvEventDay);
-            eventDayText = itemView.findViewById(R.id.tvEventDayText);
-        }
-    }
-
-    // Helper method to get day of the week from a date string
     private String getDayName(String date) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            java.util.Date dateObj = sdf.parse(date);
-            SimpleDateFormat dayFormat = new SimpleDateFormat("EEE", Locale.ENGLISH); // EEE -> Mon, Tue
+            Date dateObj = sdf.parse(date);
+            SimpleDateFormat dayFormat = new SimpleDateFormat("EEE", Locale.ENGLISH);
             return dayFormat.format(dateObj);
         } catch (Exception e) {
-            e.printStackTrace();
             return "";
+        }
+    }
+
+    // ViewHolder for calendar layout
+    static class CalendarViewHolder extends RecyclerView.ViewHolder {
+        TextView tvEventDay, eventDayOfWeek, tvTitle, tvDescription, tvTime, tvTags;
+        CardView cardView;
+
+        CalendarViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvEventDay = itemView.findViewById(R.id.tvEventDay);
+            eventDayOfWeek = itemView.findViewById(R.id.eventDayOfWeek);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
+            tvDescription = itemView.findViewById(R.id.tvDescription);
+            tvTime = itemView.findViewById(R.id.tvTime);
+            tvTags = itemView.findViewById(R.id.tvTags);
+            cardView = itemView.findViewById(R.id.cardViewEvent);
+        }
+    }
+
+    // ViewHolder for discovery layout
+    static class DiscoveryViewHolder extends RecyclerView.ViewHolder {
+        ImageView eventImage;
+        TextView eventDate, eventTitle, eventSubtitle, eventTags;
+        CardView cardView;
+
+        DiscoveryViewHolder(@NonNull View itemView) {
+            super(itemView);
+            eventImage = itemView.findViewById(R.id.eventImage);
+            eventDate = itemView.findViewById(R.id.eventDate);
+            eventTitle = itemView.findViewById(R.id.eventTitle);
+            eventSubtitle = itemView.findViewById(R.id.eventSubtitle);
+            eventTags = itemView.findViewById(R.id.eventTags);
+            cardView = itemView.findViewById(R.id.eventCard);
         }
     }
 }
