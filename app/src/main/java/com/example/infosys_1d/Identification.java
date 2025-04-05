@@ -5,23 +5,32 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.math.BigInteger;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+import androidx.annotation.NonNull;
+
+import java.math.BigInteger;
+
 public interface Identification {
-    public int getID();
-    public String getAffiliation(); //Renamed description to fit the standards
+    BigInteger getID();
+    String getAffiliation(); // Renamed description to fit the standards
 }
 
 class FifthRowID implements Identification, Parcelable {
-    public int id;
+    public BigInteger id;
     public String fifthRowName;
 
-    public FifthRowID(int id, String fifthRowName){
+    public FifthRowID(BigInteger id, String fifthRowName) {
         this.id = id;
         this.fifthRowName = fifthRowName;
     }
 
     protected FifthRowID(Parcel in) {
-        id = in.readInt();
-        fifthRowName = in.readString();
+        String idString = in.readString();
+        this.id = idString != null ? new BigInteger(idString) : null;
+        this.fifthRowName = in.readString();
     }
 
     public static final Creator<FifthRowID> CREATOR = new Creator<FifthRowID>() {
@@ -37,7 +46,7 @@ class FifthRowID implements Identification, Parcelable {
     };
 
     @Override
-    public int getID() {
+    public BigInteger getID() {
         return id;
     }
 
@@ -53,23 +62,24 @@ class FifthRowID implements Identification, Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(id != null ? id.toString() : null);
         dest.writeString(fifthRowName);
     }
-};
+}
 
-class FacultyID implements Identification, Parcelable{
-    public int id;
+class FacultyID implements Identification, Parcelable {
+    public BigInteger id;
     public String facultyName;
 
-    public FacultyID(int id, String facultyName){
+    public FacultyID(BigInteger id, String facultyName) {
         this.id = id;
         this.facultyName = facultyName;
     }
 
     protected FacultyID(Parcel in) {
-        id = in.readInt();
-        facultyName = in.readString();
+        String idString = in.readString();
+        this.id = idString != null ? new BigInteger(idString) : null;
+        this.facultyName = in.readString();
     }
 
     public static final Creator<FacultyID> CREATOR = new Creator<FacultyID>() {
@@ -85,7 +95,7 @@ class FacultyID implements Identification, Parcelable{
     };
 
     @Override
-    public int getID() {
+    public BigInteger getID() {
         return id;
     }
 
@@ -101,7 +111,7 @@ class FacultyID implements Identification, Parcelable{
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeString(this.facultyName);
+        dest.writeString(id != null ? id.toString() : null);
+        dest.writeString(facultyName);
     }
 }
