@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Ignore Gradle files
 .gradle/
 *.iml
@@ -10,3 +11,20 @@ captures/
 .gradle/buildOutputCleanup/outputFiles.bin
 local.properties
 .idea/
+=======
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+>>>>>>> d45d82a8797a8094564515e5e14a5a0d4e0326b7

@@ -13,4 +13,15 @@
     <color name="light_blue">#99DDFF</color>
     <color name="light_green">#99E6A9</color>
     <color name="purple_500">#6200EE</color>
+    <color name="border_grey">#424242</color>
+    <color name="grey">#808080</color>
+    <color name="highlight_red">#FF526A</color>
+    <color name="event_yellow">#FFF9C4</color>
+
+    <!-- Primary Theme Colors -->
+    <color name="colorPrimary">#FFFFFF</color>  <!-- White Background -->
+    <color name="colorPrimaryVariant">#F5F5F5</color>  <!-- Light Grey Variant -->
+    <color name="colorAccent">@color/highlight_red</color>  <!-- Highlight color for selection -->
+    <color name="textColorPrimary">@color/dark_grey</color>  <!-- Dark Grey Text -->
+    <color name="light_gray">#E0E0E0</color>
 </resources>

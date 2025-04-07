@@ -57,4 +57,22 @@
         android:layout_marginTop="16dp"
         android:layout_alignParentBottom="true" />
 
+    <!-- Empty View -->
+    <RelativeLayout
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No events to show"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/orange"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

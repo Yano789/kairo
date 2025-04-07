@@ -1,5 +1,6 @@
 package com.example.infosys_1d;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,7 +15,10 @@ public class EventDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_detail);
 
         // Get the Event object from the Intent
-        Event event = getIntent().getParcelableExtra("event", Event.class);
+        Event event = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            event = getIntent().getParcelableExtra("event", Event.class);
+        }
 
         // Find views
         ImageView eventImage = findViewById(R.id.detailEventImage);

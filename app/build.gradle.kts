@@ -34,6 +34,8 @@ android {
 dependencies {
 
     implementation(libs.material)
+    implementation(libs.threetenabp.v131)
+    implementation(libs.material)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -43,11 +45,15 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)
-    implementation(libs.material.v190)
     implementation(libs.androidx.recyclerview)
     implementation(libs.materialCalendarView)
     implementation(libs.threetenabp)
     implementation(libs.androidx.cardview)
     implementation(libs.guava)
     implementation(libs.androidx.core)
-}
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.cardview)
+    implementation(libs.material.v190)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    }
