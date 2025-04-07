@@ -23,4 +23,5 @@
     <color name="colorPrimaryVariant">#F5F5F5</color>  <!-- Light Grey Variant -->
     <color name="colorAccent">@color/highlight_red</color>  <!-- Highlight color for selection -->
     <color name="textColorPrimary">@color/dark_grey</color>  <!-- Dark Grey Text -->
+    <color name="light_gray">#E0E0E0</color>
 </resources>

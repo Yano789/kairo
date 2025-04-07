@@ -28,8 +28,8 @@
 
 
     <!-- Bottom Navigation Active Item -->
-<!--        <item name="bottomNavigationStyle">@style/CustomBottomNavigation</item>    -->
+    <!--        <item name="bottomNavigationStyle">@style/CustomBottomNavigation</item>    -->
 
-<!--    <style name="Theme.Infosys1d" parent="Base.Theme.Infosys1d" />-->
+    <!--    <style name="Theme.Infosys1d" parent="Base.Theme.Infosys1d" />-->
 
 </resources>
