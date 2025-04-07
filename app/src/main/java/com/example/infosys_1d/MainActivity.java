@@ -24,7 +24,9 @@ public class MainActivity extends AppCompatActivity {
         Fragment calendarFragment = new CalendarFragment();
         Fragment notificationsFragment = new NotificationsFragment();
         Fragment scheduleFragment = new ScheduleFragment();
-        Fragment profileFragment = new ProfileFragment();
+        Fragment profileFragmentStudent = new ProfileFragmentStudent();
+        Fragment profileFragmentStaff = new ProfileFragmentStaff();
+        Fragment profileFragmentOrg = new ProfileFragmentOrg();
 
         setCurrentFragment(homeFragment);
 
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.schedule) {
                 setCurrentFragment(scheduleFragment);
             } else if (id == R.id.profile) {
-                setCurrentFragment(profileFragment);
+                setCurrentFragment(profileFragmentStudent);
             }
 
             return true;
