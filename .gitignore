@@ -1,0 +1,12 @@
+# Ignore Gradle files
+.gradle/
+*.iml
+/local.properties
+/.idea/
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+.gradle/buildOutputCleanup/outputFiles.bin
+local.properties
+.idea/
