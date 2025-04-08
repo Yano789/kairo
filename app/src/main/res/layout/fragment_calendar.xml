@@ -50,7 +50,7 @@
 
     <!-- BOTTOM HALF: Event List -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewEvents"
+        android:id="@+id/recyclerViewCalendar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -59,7 +59,7 @@
 
     <!-- Empty view to show when no events are available -->
     <TextView
-        android:id="@+id/emptyView"
+        android:id="@+id/emptyViewCalendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

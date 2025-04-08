@@ -19,45 +19,94 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.infosys_1d.Event.Event;
+import com.example.infosys_1d.Event.EventAdapter;
+import com.example.infosys_1d.Event.EventRepository;
+import com.example.infosys_1d.Event.EventViewModel;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import androidx.lifecycle.ViewModelProvider;
+
 
 public class HomeFragment extends Fragment {
 
-    // UI Components
     private RecyclerView recyclerView;
     private Button toggleEventTypeButton;
     private ImageButton filterButton;
 
-    // Data Components
     private EventAdapter eventAdapter;
     private EventViewModel eventViewModel;
     private final List<Event> displayedEvents = new ArrayList<>();
     private final Set<String> selectedTags = new HashSet<>();
     private boolean showFifthrowEvents = false;
 
+    private EventAdapter.OnEventActionListener onEventActionListener;
+
+    private View emptyView;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+        eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class); // Shared ViewModel
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the fragment's layout
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        setupViews(view);
+
+        // Load the dummy data
+        EventRepository.loadDummyEvents(getContext());
+
+        // Your other initialization code for RecyclerView or any other UI elements
+        recyclerView = view.findViewById(R.id.recyclerViewEvents);
+        emptyView = view.findViewById(R.id.emptyView);
+
+        // Set up RecyclerView with data from EventRepository
+        List<Event> events = EventRepository.getCalendarEvents();
+        if (events.isEmpty()) {
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            // Your adapter code here to display events in RecyclerView
+            EventAdapter eventAdapter = new EventAdapter(getContext(), events, 0, onEventActionListener);
+            recyclerView.setAdapter(eventAdapter);
+        }
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Find the views you need to set up the button listeners
+        toggleEventTypeButton = view.findViewById(R.id.toggleEventTypeButton);
+        filterButton = view.findViewById(R.id.filterButton);
+
+        // Set up the button listeners
+        if (toggleEventTypeButton != null) {
+            toggleEventTypeButton.setOnClickListener(v -> {
+                showFifthrowEvents = !showFifthrowEvents;
+                toggleEventTypeButton.setText(showFifthrowEvents ? "Fifthrow" : "General");
+                eventViewModel.refreshEvents();  // Refresh events when toggling between types
+            });
+
+        }
+
+        if (filterButton != null) {
+            filterButton.setOnClickListener(v -> showTagFilterDialog());
+        }
+
+        // Set up the RecyclerView
         setupRecyclerView();
+
+        // Set up the observers
         setupObservers();
-        setupButtonListeners();
     }
 
     private void setupViews(View view) {
@@ -67,22 +116,39 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        eventAdapter = new EventAdapter(requireContext(), displayedEvents, R.layout.discovery_item_event);
+
+        eventAdapter = new EventAdapter(requireContext(), displayedEvents,
+                R.layout.discovery_item_event, new EventAdapter.OnEventActionListener() {
+            @Override
+            public void onAddToCalendar(Event event) {
+                // Move to calendar and refresh
+                EventRepository.moveToCalendar(event);
+                eventViewModel.refreshEvents();  // Automatically updates both fragments
+            }
+
+            @Override
+            public void onRemoveFromCalendar(Event event) {
+                // leave empty if not used
+            }
+        });
+
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(eventAdapter);
     }
 
     private void setupObservers() {
-        eventViewModel.getAllEvents().observe(getViewLifecycleOwner(), events -> {
-            filterAndDisplayEvents(events);
-        });
+        eventViewModel.getGeneralEvents().observe(getViewLifecycleOwner(), this::filterAndDisplayEvents);
+
+        eventViewModel.getFifthrowEvents().observe(getViewLifecycleOwner(), this::filterAndDisplayEvents);
     }
+
+
 
     private void setupButtonListeners() {
         toggleEventTypeButton.setOnClickListener(v -> {
             showFifthrowEvents = !showFifthrowEvents;
             toggleEventTypeButton.setText(showFifthrowEvents ? "Fifthrow" : "General");
-            eventViewModel.refreshEvents(); // Triggers new filtering
+            eventViewModel.refreshEvents();
         });
 
         filterButton.setOnClickListener(v -> showTagFilterDialog());
@@ -92,12 +158,8 @@ public class HomeFragment extends Fragment {
         displayedEvents.clear();
 
         for (Event event : allEvents) {
-            // Check event type filter
             boolean matchesType = showFifthrowEvents == event.getTags().contains("fifthrow");
-
-            // Check tag filter
-            boolean matchesTags = selectedTags.isEmpty() ||
-                    containsAny(event.getTags(), selectedTags);
+            boolean matchesTags = selectedTags.isEmpty() || containsAny(event.getTags(), selectedTags);
 
             if (matchesType && matchesTags) {
                 displayedEvents.add(event);
@@ -108,11 +170,10 @@ public class HomeFragment extends Fragment {
         updateEmptyView();
     }
 
+
     private boolean containsAny(List<String> eventTags, Set<String> selectedTags) {
         for (String tag : eventTags) {
-            if (selectedTags.contains(tag)) {
-                return true;
-            }
+            if (selectedTags.contains(tag)) return true;
         }
         return false;
     }
@@ -121,10 +182,8 @@ public class HomeFragment extends Fragment {
         View rootView = getView();
         if (rootView != null) {
             boolean showEmptyView = displayedEvents.isEmpty();
-            rootView.findViewById(R.id.emptyView).setVisibility(
-                    showEmptyView ? View.VISIBLE : View.GONE);
-            recyclerView.setVisibility(
-                    showEmptyView ? View.GONE : View.VISIBLE);
+            rootView.findViewById(R.id.emptyView).setVisibility(showEmptyView ? View.VISIBLE : View.GONE);
+            recyclerView.setVisibility(showEmptyView ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -132,11 +191,9 @@ public class HomeFragment extends Fragment {
         List<String> allTags = eventViewModel.getAllTags();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        View dialogView = LayoutInflater.from(requireActivity())
-                .inflate(R.layout.dialog_tag_filter, null);
+        View dialogView = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_tag_filter, null);
         builder.setView(dialogView);
 
-        // Setup dialog components
         ListView tagListView = dialogView.findViewById(R.id.tagListView);
         EditText searchBar = dialogView.findViewById(R.id.searchBar);
         Button applyButton = dialogView.findViewById(R.id.applyButton);
@@ -144,14 +201,12 @@ public class HomeFragment extends Fragment {
         TagFilterAdapter tagAdapter = new TagFilterAdapter(requireActivity(), allTags);
         tagListView.setAdapter(tagAdapter);
 
-        // Set initial checked states
         boolean[] checkedStates = new boolean[allTags.size()];
         for (int i = 0; i < allTags.size(); i++) {
             checkedStates[i] = selectedTags.contains(allTags.get(i));
         }
         tagAdapter.setCheckedStates(checkedStates);
 
-        // Search functionality
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -169,7 +224,7 @@ public class HomeFragment extends Fragment {
                     selectedTags.add(allTags.get(i));
                 }
             }
-            eventViewModel.refreshEvents(); // Triggers new filtering
+            eventViewModel.refreshEvents();
             dialog.dismiss();
         });
 

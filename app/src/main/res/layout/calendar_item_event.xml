@@ -85,6 +85,12 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="@color/black"/>
+            <Button
+                android:id="@+id/btnAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Action"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
