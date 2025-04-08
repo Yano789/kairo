@@ -14,8 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.Infosys1d"
         tools:targetApi="31">
-        <activity
-            android:name=".MainActivity"
+
+        <!-- make LoginActivity the launcher -->
+        <activity android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,6 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- your main app screen, no launcher tag needed -->
+        <activity android:name=".MainActivity" android:exported="true" />
+
         <activity
             android:name=".EventDetailActivity"
             android:exported="false" />
