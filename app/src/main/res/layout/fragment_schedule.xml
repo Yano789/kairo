@@ -109,7 +109,7 @@
                 android:scrollbars="vertical"
                 android:clipToPadding="false"/>
 
-            <com.example.infosys_1d.EventCanvasView
+            <com.example.infosys_1d.Event.EventCanvasView
                 android:id="@+id/eventCanvas"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

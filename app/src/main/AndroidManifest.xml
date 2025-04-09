@@ -29,8 +29,12 @@
         <activity android:name=".MainActivity" android:exported="true" />
 
         <activity
-            android:name=".EventDetailActivity"
+            android:name=".Event.EventDetailActivity"
             android:exported="false" />
+
+        <!-- your main app screen, no launcher tag needed -->
+        <activity android:name=".MainActivity" android:exported="true" />
+
     </application>
 
 </manifest>

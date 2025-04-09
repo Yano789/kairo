@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
-            android:adjustViewBounds="true" />
+            android:adjustViewBounds="true"
+            android:src="@drawable/default_event_image"/>
 
         <!-- Event Name -->
         <TextView
@@ -27,17 +28,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
-            android:layout_marginTop="8dp " />
-
-        <!-- Event Date -->
-        <TextView
-            android:id="@+id/detailEventDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event Date"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="8dp" />
 
         <!-- Event Description -->
         <TextView
@@ -48,6 +39,16 @@
             android:textSize="16sp"
             android:textColor="@android:color/black"
             android:layout_marginTop="8dp" />
+
+        <!-- Event Date -->
+        <TextView
+            android:id="@+id/detailEventDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Date"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="4dp" />
 
         <!-- Event Start Time -->
         <TextView
