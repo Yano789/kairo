@@ -34,6 +34,8 @@ public class Student extends User implements Parcelable {
         this.facultyName = in.readString();
         this.facultyID = in.readParcelable(FacultyID.class.getClassLoader());
         in.readTypedList(fifthRows, FifthRowID.CREATOR);
+        this.generalCalendar = in.readParcelable(Calendar.class.getClassLoader());
+        this.personalCalendar = in.readParcelable(Calendar.class.getClassLoader());
     }
 
     public static final Creator<Student> CREATOR = new Creator<Student>() {
@@ -61,8 +63,8 @@ public class Student extends User implements Parcelable {
         dest.writeString(facultyName);
         dest.writeParcelable(facultyID, flags);
         dest.writeTypedList(fifthRows);
-        //dest.writeParcelable(generalCalendar, flags); need to update calendar for this to work
-        //dest.writeParcelable(personalCalendar, flags);
+        dest.writeParcelable(generalCalendar, flags); // need to update calendar for this to work
+        dest.writeParcelable(personalCalendar, flags);
     }
 
 
