@@ -217,17 +217,10 @@ public class CalendarFragment extends Fragment {
     private void filterEventsForDate(CalendarDay date) {
         List<Event> filteredEvents = eventViewModel.getCalendarEvents().getValue().stream()
                 .filter(event -> isSameDate(event.getStartTime(), date))
+                .sorted(Comparator.comparingLong(Event::getStartTime)) // Sort by start time
                 .collect(Collectors.toList());
 
-        if (filteredEvents.isEmpty()) {
-            emptyView.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            emptyView.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-            calendarAdapter.setEvents(filteredEvents);
-            calendarAdapter.notifyDataSetChanged();
-        }
+        updateEventDisplay(filteredEvents);
     }
 
     private boolean isSameDate(long timestamp, CalendarDay date) {
@@ -244,32 +237,12 @@ public class CalendarFragment extends Fragment {
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(e.getStartTime());
                     return cal.get(Calendar.YEAR) == year
-                            && cal.get(Calendar.MONTH) == (month - 1); // Adjust for 1-based month
+                            && cal.get(Calendar.MONTH) == (month - 1);
                 })
-                .sorted(Comparator.comparingLong(e -> e.getStartTime()))
+                .sorted(Comparator.comparingLong(Event::getStartTime)) // Sort by start time
                 .collect(Collectors.toList());
 
-        // Ensure the adapter is initialized
-        if (calendarAdapter == null) {
-            calendarAdapter = new EventAdapter(requireContext(), new ArrayList<>(), R.layout.calendar_item_event, new EventAdapter.OnEventActionListener() {
-                @Override
-                public void onAddToCalendar(Event event) {
-                    // Not applicable
-                }
-
-                @Override
-                public void onRemoveFromCalendar(Event event) {
-                    EventRepository.removeFromCalendar(event);
-                    refreshAndUpdateUI(); // Use the new method instead
-                }
-            });
-        }
-
-        // Set the filtered events to the adapter
-        calendarAdapter.setEvents(filteredEvents);
-        calendarAdapter.notifyDataSetChanged();
-
-        updateEmptyView(filteredEvents);  // Update the empty view
+        updateEventDisplay(filteredEvents);
     }
     private void refreshAndUpdateUI() {
         // Show loading state if needed
@@ -292,5 +265,27 @@ public class CalendarFragment extends Fragment {
                 updateEmptyView(events);
             });
         }
+    }
+    private void updateEventDisplay(List<Event> events) {
+        if (calendarAdapter == null) {
+            calendarAdapter = new EventAdapter(requireContext(), new ArrayList<>(),
+                    R.layout.calendar_item_event, new EventAdapter.OnEventActionListener() {
+                @Override
+                public void onAddToCalendar(Event event) {
+                    // Not applicable
+                }
+
+                @Override
+                public void onRemoveFromCalendar(Event event) {
+                    EventRepository.removeFromCalendar(event);
+                    refreshAndUpdateUI();
+                }
+            });
+            recyclerView.setAdapter(calendarAdapter);
+        }
+
+        calendarAdapter.setEvents(events);
+        calendarAdapter.notifyDataSetChanged();
+        updateEmptyView(events);
     }
 }

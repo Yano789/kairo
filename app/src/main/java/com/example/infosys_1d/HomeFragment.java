@@ -26,6 +26,8 @@ import com.example.infosys_1d.Event.EventRepository;
 import com.example.infosys_1d.Event.EventViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -146,22 +148,20 @@ public class HomeFragment extends Fragment {
 
     private void filterAndDisplayEvents(List<Event> allEvents) {
         displayedEvents.clear();
-        Log.d("HomeFragment", "Filtering from " + allEvents.size() + " total events");
 
         for (Event event : allEvents) {
             boolean isFifthrow = event.getTags().contains("fifthrow");
             boolean matchesType = (showFifthrowEvents == isFifthrow);
             boolean matchesTags = selectedTags.isEmpty() || containsAny(event.getTags(), selectedTags);
 
-            Log.d("HomeFragment", "Evaluating: " + event.getTitle() + ", isFifthrow=" + isFifthrow +
-                    ", matchesType=" + matchesType + ", matchesTags=" + matchesTags);
-
             if (matchesType && matchesTags) {
                 displayedEvents.add(event);
             }
         }
 
-        Log.d("HomeFragment", "Displaying " + displayedEvents.size() + " events");
+        // Sort by start time (earliest first)
+        displayedEvents.sort(Comparator.comparingLong(Event::getStartTime));
+
         eventAdapter.notifyDataSetChanged();
         updateEmptyView();
     }
