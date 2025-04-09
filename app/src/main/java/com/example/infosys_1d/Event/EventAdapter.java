@@ -91,14 +91,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.tvTime.setText(formattedTime);
         holder.cardView.setCardBackgroundColor(event.getColor());
 
-        // Set tags if available
-        if (event.getTags() != null && !event.getTags().isEmpty()) {
-            holder.tvTags.setText(String.join(", ", event.getTags()));
-            holder.tvTags.setVisibility(View.VISIBLE);
-        } else {
-            holder.tvTags.setVisibility(View.GONE);
-        }
-
         // For calendar events, show remove icon and set click listener
         holder.btnAction.setImageResource(R.drawable.ic_delete); // Set trash icon
         holder.btnAction.setContentDescription("Remove event"); // Accessibility
@@ -141,14 +133,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.eventTitle.setText(event.getTitle());
         holder.eventSubtitle.setText(event.getSubtitle());
 
-        // Set tags if available
-        if (event.getTags() != null && !event.getTags().isEmpty()) {
-            holder.eventTags.setText(String.join(", ", event.getTags()));
-            holder.eventTags.setVisibility(View.VISIBLE);
-        } else {
-            holder.eventTags.setVisibility(View.GONE);
-        }
-
         // Set image
         if (event.getImageResId() != -1) {
             holder.eventImage.setImageResource(event.getImageResId());
@@ -189,7 +173,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     static class CalendarViewHolder extends RecyclerView.ViewHolder {
-        TextView tvEventDay, eventDayOfWeek, tvTitle, tvDescription, tvTime, tvTags;
+        TextView tvEventDay, eventDayOfWeek, tvTitle, tvDescription, tvTime;
         CardView cardView;
         ImageButton btnAction;
 
@@ -200,7 +184,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTime = itemView.findViewById(R.id.tvTime);
-            tvTags = itemView.findViewById(R.id.tvTags);
             cardView = itemView.findViewById(R.id.cardViewEvent);
             btnAction = itemView.findViewById(R.id.btnAction);
         }
@@ -212,7 +195,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     static class DiscoveryViewHolder extends RecyclerView.ViewHolder {
         ImageView eventImage;
-        TextView eventDate, eventTitle, eventSubtitle, eventTags;
+        TextView eventDate, eventTitle, eventSubtitle;
         CardView cardView;
         ImageButton btnAction;
 
@@ -222,7 +205,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             eventDate = itemView.findViewById(R.id.eventDate);
             eventTitle = itemView.findViewById(R.id.eventTitle);
             eventSubtitle = itemView.findViewById(R.id.eventSubtitle);
-            eventTags = itemView.findViewById(R.id.eventTags);
             cardView = itemView.findViewById(R.id.eventCard);
             btnAction = itemView.findViewById(R.id.btnAction);
         }

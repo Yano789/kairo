@@ -17,9 +17,9 @@
         <ImageView
             android:id="@+id/eventImage"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true" />
+            android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true" />
 
         <!-- Date in top-right corner -->
         <TextView
@@ -27,15 +27,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:padding="8dp"
-            android:text="22\nFEB"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:elevation="4dp" />
+            android:padding="6dp"
+        android:text="22\nFEB"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:elevation="4dp" />
 
         <!-- Bottom section container -->
         <LinearLayout
@@ -44,60 +44,53 @@
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
             android:background="#CCFFFFFF"
-        android:padding="16dp">
+            android:padding="12dp">
 
-        <!-- Event details -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/eventTitle"
-                android:layout_width="wrap_content"
+            <!-- Event details -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="The World's First Design AI"
-                android:textSize="24sp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/eventTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="The World's First Design AI"
+                    android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />
 
-            <TextView
-                android:id="@+id/eventSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Open House 2025"
-                android:textSize="16sp"
+                <TextView
+                    android:id="@+id/eventSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Open House 2025"
+                    android:textSize="14sp"
                 android:textColor="@color/purple_500"
-                android:layout_marginTop="4dp" />
+                android:layout_marginTop="2dp" />
 
-            <TextView
-                android:id="@+id/eventTags"
+                <!-- Removed the tags TextView completely -->
+            </LinearLayout>
+
+            <!-- Add Button aligned to bottom-right of details section -->
+            <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="tech, ai, design"
-                android:textSize="14sp"
-                android:textColor="@color/purple_500"
-                android:layout_marginTop="8dp" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="12dp">
 
-        <!-- Add Button aligned to bottom-right of details section -->
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="16dp">
-
-            <ImageButton
-                android:id="@+id/btnAction"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                <ImageButton
+                    android:id="@+id/btnAction"
+                    android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/ic_add"
                 android:background="#99000000"
-            android:contentDescription="Add to calendar"
+                android:contentDescription="Add to calendar"
                 android:elevation="4dp"
                 app:tint="@android:color/white" />
-        </FrameLayout>
-    </LinearLayout>
-</RelativeLayout>
-    </androidx.cardview.widget.CardView>
+            </FrameLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
