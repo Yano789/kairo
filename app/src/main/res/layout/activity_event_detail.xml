@@ -19,28 +19,35 @@
             android:adjustViewBounds="true"
             android:src="@drawable/default_event_image"/>
 
-        <!-- Event Name -->
-        <TextView
+        <!-- Event Name (now EditText) -->
+        <EditText
             android:id="@+id/detailEventName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Event Name"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
-            android:layout_marginTop="8dp" />
+            android:background="@android:color/transparent"
+            android:inputType="textCapSentences"
+            android:layout_marginTop="8dp"
+            android:focusable="false" />
 
-        <!-- Event Description -->
-        <TextView
+        <!-- Event Description (now EditText) -->
+        <EditText
             android:id="@+id/detailEventDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Event Description"
             android:textSize="16sp"
             android:textColor="@android:color/black"
-            android:layout_marginTop="8dp" />
+            android:background="@android:color/transparent"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:layout_marginTop="8dp"
+            android:focusable="false" />
 
-        <!-- Event Date -->
+        <!-- Event Date (remains TextView) -->
         <TextView
             android:id="@+id/detailEventDate"
             android:layout_width="wrap_content"
@@ -50,7 +57,7 @@
             android:textColor="@android:color/black"
             android:layout_marginTop="4dp" />
 
-        <!-- Event Start Time -->
+        <!-- Event Start Time (remains TextView) -->
         <TextView
             android:id="@+id/detailEventStartTime"
             android:layout_width="wrap_content"
@@ -60,7 +67,7 @@
             android:textColor="@android:color/black"
             android:layout_marginTop="8dp" />
 
-        <!-- Event End Time -->
+        <!-- Event End Time (remains TextView but will be hidden) -->
         <TextView
             android:id="@+id/detailEventEndTime"
             android:layout_width="wrap_content"
@@ -68,19 +75,23 @@
             android:text="End Time"
             android:textSize="16sp"
             android:textColor="@android:color/black"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:visibility="gone" />
 
-        <!-- Event Location -->
-        <TextView
+        <!-- Event Location (now EditText) -->
+        <EditText
             android:id="@+id/detailEventLocation"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Location"
             android:textSize="16sp"
             android:textColor="@android:color/black"
-            android:layout_marginTop="4dp" />
+            android:background="@android:color/transparent"
+            android:inputType="textCapSentences"
+            android:layout_marginTop="4dp"
+            android:focusable="false" />
 
-        <!-- Event Tags -->
+        <!-- Event Tags (remains TextView) -->
         <TextView
             android:id="@+id/detailEventTags"
             android:layout_width="wrap_content"
@@ -89,5 +100,15 @@
             android:textSize="14sp"
             android:textColor="@color/purple_500"
             android:layout_marginTop="8dp" />
+
+        <!-- Save Button (new addition) -->
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Changes"
+            android:layout_gravity="end"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
     </LinearLayout>
 </ScrollView>

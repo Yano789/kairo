@@ -141,5 +141,51 @@ public class Event implements Parcelable {
         return android.graphics.Color.rgb(red, green, blue);
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setImageResId(int imageResId) {
+        this.imageResId = imageResId;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags != null ? tags : new ArrayList<>();
+    }
+
+    // Optional: If you want to allow adding individual tags
+    public void addTag(String tag) {
+        if (this.tags == null) {
+            this.tags = new ArrayList<>();
+        }
+        this.tags.add(tag);
+    }
+
+    public void removeTag(String tag) {
+        if (this.tags != null) {
+            this.tags.remove(tag);
+        }
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
 }
 

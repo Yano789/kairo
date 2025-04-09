@@ -114,4 +114,16 @@ public class EventRepository {
         // Ensure it's not in general events
         generalEvents.remove(event);
     }
+
+    public static void updateCalendarEvent(Event updatedEvent) {
+        for (Event event : calendarEvents) {
+            if (event == updatedEvent) { // Same object reference
+                // Update fields directly
+                event.setTitle(updatedEvent.getTitle());
+                event.setDescription(updatedEvent.getDescription());
+                event.setLocation(updatedEvent.getLocation());
+                break;
+            }
+        }
+    }
 }

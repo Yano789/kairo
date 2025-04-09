@@ -50,4 +50,5 @@ public class EventViewModel extends ViewModel {
         }
         return new ArrayList<>(allTags);
     }
+
 }
