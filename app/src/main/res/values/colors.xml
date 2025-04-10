@@ -17,6 +17,8 @@
     <color name="grey">#808080</color>
     <color name="highlight_red">#FF526A</color>
     <color name="event_yellow">#FFF9C4</color>
+    <color name="schedule_green">#37C2B1</color>
+    <color name="schedule_light_green">#CDF0EC</color>
 
     <!-- Primary Theme Colors -->
     <color name="colorPrimary">#FFFFFF</color>  <!-- White Background -->
