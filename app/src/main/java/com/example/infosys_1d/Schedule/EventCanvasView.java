@@ -1,4 +1,4 @@
-package com.example.infosys_1d.Event;
+package com.example.infosys_1d.Schedule;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.infosys_1d.Event.MyEvent;
 import com.example.infosys_1d.R;
 
 import java.time.LocalDate;

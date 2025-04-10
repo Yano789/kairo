@@ -1,10 +1,9 @@
-package com.example.infosys_1d;
+package com.example.infosys_1d.Discovery;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +23,13 @@ import com.example.infosys_1d.Event.Event;
 import com.example.infosys_1d.Event.EventAdapter;
 import com.example.infosys_1d.Event.EventRepository;
 import com.example.infosys_1d.Event.EventViewModel;
+import com.example.infosys_1d.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import androidx.lifecycle.ViewModelProvider;
 
 
 public class HomeFragment extends Fragment {

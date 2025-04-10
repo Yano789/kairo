@@ -1,14 +1,15 @@
-package com.example.infosys_1d;
+package com.example.infosys_1d.Schedule;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.TypedValue;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.infosys_1d.R;
 
 public class TimetableItemDecoration extends RecyclerView.ItemDecoration {
     private final Paint linePaint;

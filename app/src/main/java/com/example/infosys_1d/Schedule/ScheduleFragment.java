@@ -1,17 +1,21 @@
-package com.example.infosys_1d;
+package com.example.infosys_1d.Schedule;
 
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,12 +25,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.infosys_1d.Calendar.CalendarAdapter;
-import com.example.infosys_1d.Event.EventCanvasView;
+import com.example.infosys_1d.DateHolder;
 import com.example.infosys_1d.Event.MyEvent;
+import com.example.infosys_1d.R;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItemListener {
@@ -35,6 +39,8 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
     private RecyclerView timetableRecyclerView;
     private LocalDate currentWeekStart;
     private LocalDate selectedDate = LocalDate.now();
+    private DateHolder selectedDateHolder = new DateHolder(LocalDate.now());
+
     private TimetableAdapter timetableAdapter;
 
     private EventCanvasView eventCanvas;
@@ -42,7 +48,7 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
     private com.google.android.material.floatingactionbutton.FloatingActionButton fab;
 
     private int rowHeightPx = -1;
-    private List<MyEvent> eventList = new ArrayList<>();
+    private static List<MyEvent> eventList = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,7 +63,7 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
 
         calendarRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 8));
         timetableRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        timetableRecyclerView.setHasFixedSize(true);
+//        timetableRecyclerView.setHasFixedSize(true);
 
         timetableRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -78,6 +84,19 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadTimetable();
+
+        if (rowHeightPx > 0) {
+            eventCanvas.setData(eventList, currentWeekStart, rowHeightPx);
+            eventCanvas.invalidate();
+        }
+    }
+
+
+
     private void loadWeeklyCalendar() {
         ArrayList<LocalDate> weekDays = new ArrayList<>();
         weekDays.add(null);
@@ -94,24 +113,31 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
         if (timetableAdapter == null) {
             timetableAdapter = new TimetableAdapter(getContext(), eventList, currentWeekStart);
             timetableRecyclerView.setAdapter(timetableAdapter);
-            timetableRecyclerView.addItemDecoration(new TimetableItemDecoration(getContext()));
         } else {
             timetableAdapter.setEventList(eventList);
+            timetableAdapter.notifyDataSetChanged();
         }
 
-        timetableRecyclerView.post(() -> {
-            View rowView = timetableRecyclerView.getLayoutManager().findViewByPosition(0);
-            if (rowView != null && rowView.getHeight() > 0) {
-                rowHeightPx = rowView.getHeight();
-                eventCanvas.setData(eventList, currentWeekStart, rowHeightPx);
-            } else {
-                timetableRecyclerView.postDelayed(this::loadTimetable, 50);
+        while (timetableRecyclerView.getItemDecorationCount() > 0) {
+            timetableRecyclerView.removeItemDecorationAt(0);
+        }
+        timetableRecyclerView.addItemDecoration(new TimetableItemDecoration(getContext()));
+
+        timetableRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                View rowView = timetableRecyclerView.getLayoutManager().findViewByPosition(0);
+                if (rowView != null && rowView.getHeight() > 0) {
+                    rowHeightPx = rowView.getHeight();
+                    eventCanvas.setData(eventList, currentWeekStart, rowHeightPx);
+                    eventCanvas.invalidate();
+                    timetableRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
             }
         });
+
+        Log.d("ScheduleFragment", "loadTimetable: eventList size = " + eventList.size());
     }
-
-
-
 
     private void updateWeek(int weekChange) {
         currentWeekStart = currentWeekStart.plusWeeks(weekChange);
@@ -156,10 +182,17 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
         endMinute.setMinValue(0); endMinute.setMaxValue(11);
         endMinute.setDisplayedValues(minutes);
 
-        final LocalDate[] selectedDateHolder = {this.selectedDate};
-        eventDate.setText("Date: " + selectedDateHolder[0].toString());
+//        DateHolder selectedDateHolder = new DateHolder(this.selectedDate); // or LocalDate.now()
 
-        eventDate.setOnClickListener(v -> selectDateDialog(eventDate));
+//        final LocalDate[] selectedDateHolder = {this.selectedDate};
+        eventDate.setOnClickListener(v -> {
+            Log.d("ScheduleFragment", "Date TextView clicked");
+            selectDateDialog(eventDate, selectedDateHolder);
+        });
+        eventDate.setText(formatDate(selectedDateHolder.getDate()));
+
+
+
 
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setView(dialogView)
@@ -189,32 +222,47 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
                 return;
             }
 
-            MyEvent newEvent = new MyEvent(name, selectedDateHolder[0], startTime, endTime);
+            MyEvent newEvent = new MyEvent(name, selectedDateHolder.getDate(), startTime, endTime);
             eventList.add(newEvent);
             timetableAdapter.setEventList(eventList);
 
             if (!newEvent.getDate().isBefore(currentWeekStart) && !newEvent.getDate().isAfter(currentWeekStart.plusDays(6))) {
-                eventCanvas.setData(eventList, currentWeekStart, rowHeightPx);
+                if (rowHeightPx > 0) {
+                    eventCanvas.setData(eventList, currentWeekStart, rowHeightPx);
+                    eventCanvas.invalidate();
+                }
             }
+
 
             Toast.makeText(getContext(), "Event \"" + name + "\" saved!", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
     }
 
-    private void selectDateDialog(TextView eventDate) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+    private void selectDateDialog(TextView eventDate, DateHolder selectedDateHolder) {
+        LocalDate currentDate = selectedDateHolder.getDate();
+        int year = currentDate.getYear();
+        int month = currentDate.getMonthValue() - 1; // Java Calendar months are 0-based
+        int day = currentDate.getDayOfMonth();
 
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), (datePicker, selectedYear, selectedMonth, selectedDay) -> {
-            String formattedDate = String.format("Date: %02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear);
-            eventDate.setText(formattedDate);
-            selectedDate = LocalDate.of(selectedYear, selectedMonth + 1, selectedDay);
+        DatePickerDialog dialog = new DatePickerDialog(requireContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                // Update the DateHolder value
+                LocalDate pickedDate = LocalDate.of(year, month + 1, dayOfMonth);
+                selectedDateHolder.setDate(pickedDate);
+
+                // Update the UI
+                eventDate.setText(formatDate(pickedDate));
+            }
         }, year, month, day);
 
         dialog.show();
     }
+
+    private String formatDate(LocalDate date) {
+        return String.format("Date: %02d/%02d/%04d", date.getDayOfMonth(), date.getMonthValue(), date.getYear());
+    }
+
 
 }

@@ -1,141 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/schedule_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ScheduleFragment"
+    tools:context="com.example.infosys_1d.Schedule.ScheduleFragment"
     android:paddingHorizontal="10dp"
     android:paddingTop="10dp">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Top Title -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/schedule"
+        android:textColor="@color/schedule_green"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:gravity="start"
+        android:textAlignment="viewStart"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Week Selector Row -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/weekSelectorRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/previousWeekButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:text="@string/back_arrow"
+            android:background="@android:color/white"
+            android:textColor="@color/dark_grey"
+            android:textStyle="bold"
+            android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textAlignment="viewStart"
-                android:gravity="start"
-                android:textColor="@color/green"
-                android:textSize="36sp"
-                android:text="@string/schedule"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/monthYearTV"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_weight="2"
+            android:text="March 2025"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:textColor="@color/dark_grey" />
 
-
-            <Button
-                android:id="@+id/previousWeekButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/back_arrow"
-                android:background="@android:color/white"
-                android:textColor="@color/dark_grey"
-                android:textStyle="bold"
-                android:onClick="previousWeekAction"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/monthYearTV"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="March 2025"
-                android:textSize="20sp"
-                android:textAlignment="center"
-                android:textColor="@color/dark_grey" />
-
-            <Button
-                android:id="@+id/nextWeekButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/next_arrow"
-                android:background="@android:color/transparent"
-                android:textColor="@color/dark_grey"
-                android:textStyle="bold"
-                android:onClick="nextWeekAction"
-                android:textSize="20sp" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/border_grey"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Week RecyclerView (Dates) -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/weekRecyclerView"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/nextWeekButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:spanCount="8" /> <!-- 8 columns: 1 empty + 7 days -->
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.8dp"
-            android:background="@color/border_grey" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipChildren="false"
-            android:clipToPadding="false">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/timetableRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                android:clipToPadding="false"/>
-
-            <com.example.infosys_1d.Event.EventCanvasView
-                android:id="@+id/eventCanvas"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipChildren="false"
-                android:clipToPadding="false" />
-
-
-        </FrameLayout>
-
-
+            android:text="@string/next_arrow"
+            android:background="@android:color/transparent"
+            android:textColor="@color/dark_grey"
+            android:textStyle="bold"
+            android:textSize="20sp" />
     </LinearLayout>
 
+    <!-- Divider -->
+    <View
+        android:id="@+id/topDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/border_grey"
+        app:layout_constraintTop_toBottomOf="@+id/weekSelectorRow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <!-- Week RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/weekRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:spanCount="8"
+        app:layout_constraintTop_toBottomOf="@id/topDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Divider -->
+    <View
+        android:id="@+id/midDivider"
+        android:layout_width="0dp"
+        android:layout_height="0.8dp"
+        android:background="@color/border_grey"
+        app:layout_constraintTop_toBottomOf="@+id/weekRecyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Timetable & Canvas container -->
+    <FrameLayout
+        android:id="@+id/timetableContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@+id/midDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/timetableRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:clipToPadding="false" />
+
+        <com.example.infosys_1d.Schedule.EventCanvasView
+            android:id="@+id/eventCanvas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:elevation="2dp"
+            android:clipChildren="false"
+            android:clipToPadding="false" />
+    </FrameLayout>
+
+    <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_gravity="bottom|end"
-        app:backgroundTint="@color/light_green"
-        android:tint="@color/white"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
+        app:backgroundTint="@color/schedule_light_green"
+        android:tint="@color/white"
         android:elevation="8dp"
         app:srcCompat="@android:drawable/ic_input_add"
         app:shapeAppearanceOverlay="@style/RoundedFAB"
-        app:fabSize="mini"/>
-
-
-
-</FrameLayout>
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

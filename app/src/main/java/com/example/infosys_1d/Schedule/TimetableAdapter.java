@@ -1,4 +1,4 @@
-package com.example.infosys_1d;
+package com.example.infosys_1d.Schedule;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,13 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.infosys_1d.Event.MyEvent;
+import com.example.infosys_1d.R;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class TimetableAdapter extends RecyclerView.Adapter<TimetableViewHolder> {
     private List<MyEvent> eventList;
-    private final LocalDate currentWeekStart;
+    private LocalDate currentWeekStart;
 
     public TimetableAdapter(Context context, List<MyEvent> eventList, LocalDate currentWeekStart) {
         this.eventList = eventList;
@@ -39,6 +40,12 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableViewHolder> 
     public void onBindViewHolder(@NonNull TimetableViewHolder holder, int position) {
 
     }
+
+    public void setCurrentWeekStart(LocalDate currentWeekStart) {
+        this.currentWeekStart = currentWeekStart;
+        notifyDataSetChanged();
+    }
+
 
 
     private String formatTime(int minutes) {
