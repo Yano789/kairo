@@ -17,7 +17,7 @@ import android.widget.ImageView;
 public class ProfileFragmentStudent extends Fragment {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView backgroundImage;
+    private ImageView background;
     private ImageView profileImage;
 
     private boolean isProfileImageSelected = false;
@@ -53,11 +53,11 @@ public class ProfileFragmentStudent extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_student, container, false);
 
-        backgroundImage = view.findViewById(R.id.backgroundImage);
+        background = view.findViewById(R.id.background);
         profileImage = view.findViewById(R.id.profileImage);
 
         // when background image is clicked
-        backgroundImage.setOnClickListener(new View.OnClickListener() {
+        background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isProfileImageSelected = false;
@@ -94,7 +94,7 @@ public class ProfileFragmentStudent extends Fragment {
             if (isProfileImageSelected) {
                 profileImage.setImageURI(imageUri);
             } else {
-                backgroundImage.setImageURI(imageUri);
+                background.setImageURI(imageUri);
             }
         }
     }
