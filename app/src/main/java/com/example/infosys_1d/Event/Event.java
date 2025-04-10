@@ -28,7 +28,7 @@ public class Event implements Parcelable {
         this.endTime = endTime;
         this.date = date;
         this.tags = tags != null ? tags : new ArrayList<>();
-        this.color = color;
+        this.color = (color == -1) ? getRandomPastelColor() : color;
         this.title = title;
         this.subtitle = subtitle;
         this.imageResId = imageResId;
@@ -131,4 +131,61 @@ public class Event implements Parcelable {
     public int getImageResId() {
         return imageResId;
     }
+
+    private int getRandomPastelColor() {
+        java.util.Random random = new java.util.Random();
+        final int base = 128; // Light base to ensure pastel
+        int red = base + random.nextInt(128);
+        int green = base + random.nextInt(128);
+        int blue = base + random.nextInt(128);
+        return android.graphics.Color.rgb(red, green, blue);
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setImageResId(int imageResId) {
+        this.imageResId = imageResId;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags != null ? tags : new ArrayList<>();
+    }
+
+    // Optional: If you want to allow adding individual tags
+    public void addTag(String tag) {
+        if (this.tags == null) {
+            this.tags = new ArrayList<>();
+        }
+        this.tags.add(tag);
+    }
+
+    public void removeTag(String tag) {
+        if (this.tags != null) {
+            this.tags.remove(tag);
+        }
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
 }
+

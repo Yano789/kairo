@@ -24,13 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Event.EventDetailActivity"
-            android:exported="false" />
 
         <!-- your main app screen, no launcher tag needed -->
         <activity android:name=".MainActivity" android:exported="true" />
 
+        <activity
+            android:name=".Event.EventDetailActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

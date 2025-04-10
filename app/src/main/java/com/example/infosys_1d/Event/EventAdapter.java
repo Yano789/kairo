@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -86,26 +87,27 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         // Set event details
         holder.tvTitle.setText(event.getTitle());
         holder.tvDescription.setText(event.getDescription());
-        holder.tvTime.setText(event.getStartTime() + " - " + event.getEndTime());
-
-        // Set tags if available
-        if (event.getTags() != null && !event.getTags().isEmpty()) {
-            holder.tvTags.setText(String.join(", ", event.getTags()));
-            holder.tvTags.setVisibility(View.VISIBLE);
-        } else {
-            holder.tvTags.setVisibility(View.GONE);
-        }
-
-        // Set card color
+        String formattedTime = formatTimeRange(event.getStartTime(), event.getEndTime());
+        holder.tvTime.setText(formattedTime);
         holder.cardView.setCardBackgroundColor(event.getColor());
 
-        // For calendar events, show remove button
-        holder.btnAction.setText("Remove");
+        // For calendar events, show remove icon and set click listener
+        holder.btnAction.setImageResource(R.drawable.ic_delete); // Set trash icon
+        holder.btnAction.setContentDescription("Remove event"); // Accessibility
         holder.btnAction.setOnClickListener(v -> {
             if (actionListener != null) {
                 actionListener.onRemoveFromCalendar(event);
             }
         });
+    }
+
+    private String formatTimeRange(long startMillis, long endMillis) {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
+
+        String startTime = timeFormat.format(new Date(startMillis));
+        String endTime = timeFormat.format(new Date(endMillis));
+
+        return startTime + " to " + endTime;
     }
 
     private void bindDiscoveryViewHolder(DiscoveryViewHolder holder, Event event) {
@@ -131,14 +133,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.eventTitle.setText(event.getTitle());
         holder.eventSubtitle.setText(event.getSubtitle());
 
-        // Set tags if available
-        if (event.getTags() != null && !event.getTags().isEmpty()) {
-            holder.eventTags.setText(String.join(", ", event.getTags()));
-            holder.eventTags.setVisibility(View.VISIBLE);
-        } else {
-            holder.eventTags.setVisibility(View.GONE);
-        }
-
         // Set image
         if (event.getImageResId() != -1) {
             holder.eventImage.setImageResource(event.getImageResId());
@@ -146,8 +140,9 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.eventImage.setImageResource(R.drawable.default_event_image);
         }
 
-        // For discovery events, show add to calendar button
-        holder.btnAction.setText("Add to Calendar");
+        // For discovery events, show add to calendar icon
+        holder.btnAction.setImageResource(R.drawable.ic_add); // You'll need this icon
+        holder.btnAction.setContentDescription("Add to calendar"); // Accessibility
         holder.btnAction.setOnClickListener(v -> {
             if (actionListener != null) {
                 actionListener.onAddToCalendar(event);
@@ -178,9 +173,9 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     static class CalendarViewHolder extends RecyclerView.ViewHolder {
-        TextView tvEventDay, eventDayOfWeek, tvTitle, tvDescription, tvTime, tvTags;
+        TextView tvEventDay, eventDayOfWeek, tvTitle, tvDescription, tvTime;
         CardView cardView;
-        Button btnAction;
+        ImageButton btnAction;
 
         CalendarViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -189,7 +184,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTime = itemView.findViewById(R.id.tvTime);
-            tvTags = itemView.findViewById(R.id.tvTags);
             cardView = itemView.findViewById(R.id.cardViewEvent);
             btnAction = itemView.findViewById(R.id.btnAction);
         }
@@ -201,9 +195,9 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     static class DiscoveryViewHolder extends RecyclerView.ViewHolder {
         ImageView eventImage;
-        TextView eventDate, eventTitle, eventSubtitle, eventTags;
+        TextView eventDate, eventTitle, eventSubtitle;
         CardView cardView;
-        Button btnAction;
+        ImageButton btnAction;
 
         DiscoveryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -211,7 +205,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             eventDate = itemView.findViewById(R.id.eventDate);
             eventTitle = itemView.findViewById(R.id.eventTitle);
             eventSubtitle = itemView.findViewById(R.id.eventSubtitle);
-            eventTags = itemView.findViewById(R.id.eventTags);
             cardView = itemView.findViewById(R.id.eventCard);
             btnAction = itemView.findViewById(R.id.btnAction);
         }

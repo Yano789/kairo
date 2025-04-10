@@ -16,7 +16,9 @@
     <color name="border_grey">#424242</color>
     <color name="grey">#808080</color>
     <color name="highlight_red">#FF526A</color>
-    <color name="event_yellow">#FFF9C4</color>
+    <color name="light_yellow">#FFF9C4</color>
+    <color name="light_purple">#C3B1E1</color>
+
 
     <!-- Primary Theme Colors -->
     <color name="colorPrimary">#FFFFFF</color>  <!-- White Background -->

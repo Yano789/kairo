@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import com.example.infosys_1d.Event.EventRepository;
 import com.example.infosys_1d.Event.EventViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,6 +54,8 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class); // Shared ViewModel
+        // Load the dummy data
+        EventRepository.loadDummyEvents(getContext());
     }
 
     @Override
@@ -59,23 +64,12 @@ public class HomeFragment extends Fragment {
         // Inflate the fragment's layout
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Load the dummy data
-        EventRepository.loadDummyEvents(getContext());
-
         // Your other initialization code for RecyclerView or any other UI elements
         recyclerView = view.findViewById(R.id.recyclerViewEvents);
         emptyView = view.findViewById(R.id.emptyView);
 
-        // Set up RecyclerView with data from EventRepository
-        List<Event> events = EventRepository.getCalendarEvents();
-        if (events.isEmpty()) {
-            emptyView.setVisibility(View.VISIBLE);
-        } else {
-            emptyView.setVisibility(View.GONE);
-            // Your adapter code here to display events in RecyclerView
-            EventAdapter eventAdapter = new EventAdapter(getContext(), events, 0, onEventActionListener);
-            recyclerView.setAdapter(eventAdapter);
-        }
+        // Only set visibility for now; adapter will be handled in setupRecyclerView
+        emptyView.setVisibility(View.GONE);
 
         return view;
     }
@@ -137,11 +131,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupObservers() {
-        eventViewModel.getGeneralEvents().observe(getViewLifecycleOwner(), this::filterAndDisplayEvents);
-
-        eventViewModel.getFifthrowEvents().observe(getViewLifecycleOwner(), this::filterAndDisplayEvents);
+        eventViewModel.getAllEvents().observe(getViewLifecycleOwner(), this::filterAndDisplayEvents);
+        eventViewModel.refreshEvents();
     }
-
 
 
     private void setupButtonListeners() {
@@ -158,7 +150,8 @@ public class HomeFragment extends Fragment {
         displayedEvents.clear();
 
         for (Event event : allEvents) {
-            boolean matchesType = showFifthrowEvents == event.getTags().contains("fifthrow");
+            boolean isFifthrow = event.getTags().contains("fifthrow");
+            boolean matchesType = (showFifthrowEvents == isFifthrow);
             boolean matchesTags = selectedTags.isEmpty() || containsAny(event.getTags(), selectedTags);
 
             if (matchesType && matchesTags) {
@@ -166,9 +159,13 @@ public class HomeFragment extends Fragment {
             }
         }
 
+        // Sort by start time (earliest first)
+        displayedEvents.sort(Comparator.comparingLong(Event::getStartTime));
+
         eventAdapter.notifyDataSetChanged();
         updateEmptyView();
     }
+
 
 
     private boolean containsAny(List<String> eventTags, Set<String> selectedTags) {

@@ -1,5 +1,7 @@
 package com.example.infosys_1d.Event;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,13 +14,17 @@ import java.util.Set;
 public class EventViewModel extends ViewModel {
     private MutableLiveData<List<Event>> generalEvents = new MutableLiveData<>();
     private MutableLiveData<List<Event>> fifthrowEvents = new MutableLiveData<>();
-    private MutableLiveData<List<Event>> calendarEvents = new MutableLiveData<>();  // Add this line
+    private MutableLiveData<List<Event>> calendarEvents = new MutableLiveData<>();
+    private final MutableLiveData<List<Event>> allEvents = new MutableLiveData<>();
 
     // Getters for LiveData
     public LiveData<List<Event>> getGeneralEvents() {
         return generalEvents;
     }
 
+    public LiveData<List<Event>> getAllEvents() {
+        return allEvents;
+    }
     public LiveData<List<Event>> getFifthrowEvents() {
         return fifthrowEvents;
     }
@@ -29,19 +35,11 @@ public class EventViewModel extends ViewModel {
 
     // Method to refresh events (called when data changes)
     public void refreshEvents() {
-        generalEvents.setValue(EventRepository.getGeneralEvents());
-
-        // Filter the fifthrow events based on tags
-        List<Event> filteredFifthrowEvents = new ArrayList<>();
-        for (Event event : EventRepository.getGeneralEvents()) {
-            if (event.getTags().contains("fifthrow")) {
-                filteredFifthrowEvents.add(event);
-            }
-        }
-        fifthrowEvents.setValue(filteredFifthrowEvents);
-
-        // Update calendar events
-        calendarEvents.setValue(EventRepository.getCalendarEvents());
+        List<Event> events = EventRepository.getAllEvents();
+        Log.d("EventViewModel", "Refreshing with " + events.size() + " events");
+        allEvents.setValue(events);
+        List<Event> fetchedEvents = EventRepository.getCalendarEvents(); // Example
+        calendarEvents.setValue(fetchedEvents);
     }
 
     // Get all tags from events
@@ -52,4 +50,5 @@ public class EventViewModel extends ViewModel {
         }
         return new ArrayList<>(allTags);
     }
+
 }
