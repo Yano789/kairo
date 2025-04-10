@@ -1,9 +1,10 @@
-package com.example.infosys_1d;
+package com.example.infosys_1d.Schedule;
 
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.infosys_1d.Calendar.CalendarAdapter;
 import com.example.infosys_1d.Event.EventCanvasView;
 import com.example.infosys_1d.Event.MyEvent;
+import com.example.infosys_1d.R;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,6 +40,10 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
     private TimetableAdapter timetableAdapter;
 
     private EventCanvasView eventCanvas;
+
+    private boolean isTimetableInitialized = false;
+
+    private LocalDate previousWeekStart = null;
 
     private com.google.android.material.floatingactionbutton.FloatingActionButton fab;
 
@@ -78,6 +84,33 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        isTimetableInitialized = false;
+        loadTimetable(); // Ensure the timetable is loaded
+        loadWeeklyCalendar(); // Re-load calendar if necessary
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("eventList", (ArrayList<MyEvent>) eventList);
+        outState.putSerializable("currentWeekStart", currentWeekStart);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) {
+            eventList = (ArrayList<MyEvent>) savedInstanceState.getSerializable("eventList");
+            currentWeekStart = (LocalDate) savedInstanceState.getSerializable("currentWeekStart");
+            loadTimetable();
+        }
+    }
+
+
     private void loadWeeklyCalendar() {
         ArrayList<LocalDate> weekDays = new ArrayList<>();
         weekDays.add(null);
@@ -91,33 +124,44 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
     }
 
     private void loadTimetable() {
-        if (timetableAdapter == null) {
+        if (!isTimetableInitialized) {
             timetableAdapter = new TimetableAdapter(getContext(), eventList, currentWeekStart);
             timetableRecyclerView.setAdapter(timetableAdapter);
+            timetableRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            timetableRecyclerView.setHasFixedSize(true);
             timetableRecyclerView.addItemDecoration(new TimetableItemDecoration(getContext()));
+            isTimetableInitialized = true;
         } else {
             timetableAdapter.setEventList(eventList);
+            timetableAdapter.setCurrentWeekStart(currentWeekStart);
+            timetableAdapter.notifyDataSetChanged();
         }
 
-        timetableRecyclerView.post(() -> {
-            View rowView = timetableRecyclerView.getLayoutManager().findViewByPosition(0);
-            if (rowView != null && rowView.getHeight() > 0) {
-                rowHeightPx = rowView.getHeight();
-                eventCanvas.setData(eventList, currentWeekStart, rowHeightPx);
-            } else {
-                timetableRecyclerView.postDelayed(this::loadTimetable, 50);
-            }
-        });
+        // Make sure the layout is rendered even without events
+        timetableRecyclerView.setVisibility(View.VISIBLE);
     }
+
+
 
 
 
 
     private void updateWeek(int weekChange) {
         currentWeekStart = currentWeekStart.plusWeeks(weekChange);
+        isTimetableInitialized = false;
         loadWeeklyCalendar();
         loadTimetable();
+
+        // Update the month and year display only when the month changes
+        if (previousWeekStart == null || !currentWeekStart.getMonth().equals(previousWeekStart.getMonth())) {
+            monthYearTV.setText(currentWeekStart.getMonth() + " " + currentWeekStart.getYear());
+            previousWeekStart = currentWeekStart;
+        }
     }
+
+
+
+
 
     @Override
     public void onItemClick(int position, LocalDate date) {
@@ -192,10 +236,17 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
             MyEvent newEvent = new MyEvent(name, selectedDateHolder[0], startTime, endTime);
             eventList.add(newEvent);
             timetableAdapter.setEventList(eventList);
+            timetableAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
 
-            if (!newEvent.getDate().isBefore(currentWeekStart) && !newEvent.getDate().isAfter(currentWeekStart.plusDays(6))) {
+            if (rowHeightPx == -1) {
+                timetableRecyclerView.post(() -> {
+                    rowHeightPx = timetableRecyclerView.getHeight() / timetableAdapter.getItemCount();
+                    eventCanvas.setData(eventList, currentWeekStart, rowHeightPx);
+                });
+            } else {
                 eventCanvas.setData(eventList, currentWeekStart, rowHeightPx);
             }
+
 
             Toast.makeText(getContext(), "Event \"" + name + "\" saved!", Toast.LENGTH_SHORT).show();
             dialog.dismiss();

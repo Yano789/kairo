@@ -1,4 +1,4 @@
-package com.example.infosys_1d;
+package com.example.infosys_1d.Calendar;
 
 import android.view.View;
 import android.widget.TextView;
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import com.example.infosys_1d.Calendar.CalendarAdapter;
+import com.example.infosys_1d.R;
 
 public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 {

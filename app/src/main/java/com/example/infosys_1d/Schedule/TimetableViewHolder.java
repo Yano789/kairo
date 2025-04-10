@@ -1,10 +1,12 @@
-package com.example.infosys_1d;
+package com.example.infosys_1d.Schedule;
 
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.infosys_1d.R;
 
 public class TimetableViewHolder extends RecyclerView.ViewHolder {
     public final TextView timeTextView;

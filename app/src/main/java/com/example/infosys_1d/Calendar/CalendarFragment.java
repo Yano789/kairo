@@ -1,13 +1,9 @@
-package com.example.infosys_1d;
+package com.example.infosys_1d.Calendar;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,11 +15,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.infosys_1d.Calendar.MultiDotDecorator;
 import com.example.infosys_1d.Event.Event;
 import com.example.infosys_1d.Event.EventAdapter;
 import com.example.infosys_1d.Event.EventRepository;
 import com.example.infosys_1d.Event.EventViewModel;
+import com.example.infosys_1d.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 

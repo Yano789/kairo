@@ -1,4 +1,4 @@
-package com.example.infosys_1d;
+package com.example.infosys_1d.Discovery;
 
 import android.content.Context;
 import android.view.LayoutInflater;
