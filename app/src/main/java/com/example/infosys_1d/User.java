@@ -6,7 +6,7 @@ public abstract class User {
 
     public BigInteger id;
     public String email;
-    private String password;
+    public String password;
 
     public String name;
 
@@ -20,5 +20,9 @@ public abstract class User {
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword(){
+        return password;
     }
 }

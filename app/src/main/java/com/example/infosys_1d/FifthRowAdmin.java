@@ -6,10 +6,11 @@ import java.math.BigInteger;
 
 public class FifthRowAdmin extends Admin {
 
-    public FifthRowAdmin(String email, String name, BigInteger id) {
+    public FifthRowAdmin(String email, String name, BigInteger id, String password) {
         this.email = email;
         this.name = name;
         this.id = id;
+        this.password = password;
     }
 
     protected FifthRowAdmin(Parcel in) {

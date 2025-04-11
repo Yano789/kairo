@@ -12,25 +12,34 @@ import java.util.ArrayList;
 public class Student extends User implements Parcelable {
     public ArrayList<FifthRowID> fifthRows = new ArrayList<>();
     public String facultyName;
-    private FacultyID facultyID = new FacultyID(id, facultyName);
     public Calendar generalCalendar = new Calendar();
     public Calendar personalCalendar = new Calendar();
+    private FacultyID facultyID;
 
-    Student(String facultyName, FacultyID facultyID){
+    Student(BigInteger id, String email, String name, String facultyName, String password){
         this.facultyName = facultyName;
-        this.facultyID = facultyID;
+        this.password = password;
+        this.id = id;
+        this.facultyID = new FacultyID(id, facultyName);
+        this.email = email;
+        this.name = name;
     }
 
-    public Student(String facultyName, FacultyID facultyID, ArrayList<FifthRowID> fifthRows){ //if they even have fifthrows
+    public Student(String facultyName, ArrayList<FifthRowID> fifthRows, String password, BigInteger id, String email, String name){ //if they even have fifthrows
         this.facultyName = facultyName;
-        this.facultyID = facultyID;
+        this.id = id;
+        this.facultyID = new FacultyID(id, facultyName);
         this.fifthRows = fifthRows;
+        this.password= password;
+        this.email = email;
+        this.name = name;
     }
 
     protected Student(Parcel in) {
         this.id = new BigInteger(in.readString());
         this.email = in.readString();
         this.name = in.readString();
+        this.password = in.readString();
         this.facultyName = in.readString();
         this.facultyID = in.readParcelable(FacultyID.class.getClassLoader());
         in.readTypedList(fifthRows, FifthRowID.CREATOR);
@@ -61,6 +70,7 @@ public class Student extends User implements Parcelable {
         dest.writeString(email);
         dest.writeString(name);
         dest.writeString(facultyName);
+        dest.writeString(password);
         dest.writeParcelable(facultyID, flags);
         dest.writeTypedList(fifthRows);
         dest.writeParcelable(generalCalendar, flags); // need to update calendar for this to work

@@ -5,10 +5,11 @@ import android.os.Parcel;
 import java.math.BigInteger;
 
 public class FacultyAdmin extends Admin {
-    public FacultyAdmin(String email, String name, BigInteger id) {
+    public FacultyAdmin(String email, String name, BigInteger id, String password) {
         this.email = email;
         this.name = name;
         this.id = id;
+        this.password = password;
     }
 
     protected FacultyAdmin(Parcel in) {

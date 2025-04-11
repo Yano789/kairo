@@ -15,6 +15,7 @@ public abstract class Admin extends User implements Parcelable {
         this.email = in.readString();
         this.name = in.readString();
         this.generalCalendar = in.readParcelable(Calendar.class.getClassLoader());
+        this.password = in.readString();
     }
 
     @Override
@@ -22,6 +23,7 @@ public abstract class Admin extends User implements Parcelable {
         dest.writeString(id != null ? id.toString() : null);
         dest.writeString(email);
         dest.writeString(name);
+        dest.writeString(password);
         dest.writeParcelable(generalCalendar, flags);
     }
 
