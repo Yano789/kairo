@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.infosys_1d.Event.MyEvent;
 import com.example.infosys_1d.R;
 
 import java.time.LocalDate;
