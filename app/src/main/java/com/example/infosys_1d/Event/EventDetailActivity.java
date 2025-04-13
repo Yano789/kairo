@@ -1,9 +1,12 @@
 package com.example.infosys_1d.Event;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,14 +17,20 @@ import com.example.infosys_1d.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+
+import androidx.core.content.ContextCompat;
+import com.google.android.flexbox.FlexboxLayout;
+
 
 public class EventDetailActivity extends AppCompatActivity {
 
     private Event event;
-    private EditText editEventName, editEventDescription, editEventLocation;
-    private TextView eventDate, eventStartTime, eventTags;
+    private TextView eventNameView, eventDescriptionView, eventLocationView;
+    private TextView eventDate, eventStartTime;
     private Button saveButton;
+    private ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,26 +42,34 @@ public class EventDetailActivity extends AppCompatActivity {
 
         // Find views
         ImageView eventImage = findViewById(R.id.detailEventImage);
-        TextView eventName = findViewById(R.id.detailEventName);
-        editEventName = findViewById(R.id.detailEventName); // Will be converted to EditText in XML
+        eventNameView = findViewById(R.id.detailEventName);
+        eventDescriptionView = findViewById(R.id.detailEventDescription);
+        eventLocationView = findViewById(R.id.detailEventLocation);
         eventDate = findViewById(R.id.detailEventDate);
-        TextView eventDescription = findViewById(R.id.detailEventDescription);
-        editEventDescription = findViewById(R.id.detailEventDescription);
-        TextView eventStartTime = findViewById(R.id.detailEventStartTime);
-        TextView eventLocation = findViewById(R.id.detailEventLocation);
-        editEventLocation = findViewById(R.id.detailEventLocation);
-        eventTags = findViewById(R.id.detailEventTags);
+        eventStartTime = findViewById(R.id.detailEventTime);
         saveButton = findViewById(R.id.saveButton);
+        ImageButton backButton = findViewById(R.id.backButton);
 
         // Check if this is a personal event
         boolean isPersonal = event != null && event.getTags().contains("personal");
 
+        if (event != null && event.getTags() != null && !event.getTags().isEmpty()){
+            renderTagChips(event.getTags());
+        }
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // this will close the current activity
+            }
+        });
+
         // Set editability based on tag
         if (isPersonal) {
             // Make views editable
-            editEventName.setFocusableInTouchMode(true);
-            editEventDescription.setFocusableInTouchMode(true);
-            editEventLocation.setFocusableInTouchMode(true);
+            eventNameView.setFocusableInTouchMode(true);
+            eventDescriptionView.setFocusableInTouchMode(true);
+            eventLocationView.setFocusableInTouchMode(true);
 
             // Show save button
             saveButton.setVisibility(View.VISIBLE);
@@ -61,9 +78,9 @@ public class EventDetailActivity extends AppCompatActivity {
             saveButton.setOnClickListener(v -> saveChanges());
         } else {
             // Make views non-editable
-            editEventName.setFocusable(false);
-            editEventDescription.setFocusable(false);
-            editEventLocation.setFocusable(false);
+            eventNameView.setFocusable(false);
+            eventDescriptionView.setFocusable(false);
+            eventLocationView.setFocusable(false);
 
             // Hide save button
             saveButton.setVisibility(View.GONE);
@@ -71,8 +88,8 @@ public class EventDetailActivity extends AppCompatActivity {
 
         // Set the event details
         if (event != null) {
-            editEventName.setText(event.getTitle());
-            eventDescription.setText(event.getDescription());
+            eventNameView.setText(event.getTitle());
+            eventDescriptionView.setText(event.getDescription());
 
             // Format date
             Date startDate = new Date(event.getStartTime());
@@ -87,11 +104,8 @@ public class EventDetailActivity extends AppCompatActivity {
 
             eventDate.setText(formattedDate);
             eventStartTime.setText(formattedStartTime + " - " + formattedEndTime);
-            eventLocation.setText(event.getLocation());
+            eventLocationView.setText(event.getLocation());
 
-            // Set the tags
-            String tags = "Tags: " + String.join(", ", event.getTags());
-            eventTags.setText(tags);
 
             // Set the image
             if (event.getImageResId() == -1) {
@@ -105,9 +119,9 @@ public class EventDetailActivity extends AppCompatActivity {
     private void saveChanges() {
         if (event != null) {
             // Update the event object with edited values
-            event.setTitle(editEventName.getText().toString());
-            event.setDescription(editEventDescription.getText().toString());
-            event.setLocation(editEventLocation.getText().toString());
+            event.setTitle(eventNameView.getText().toString());
+            event.setDescription(eventDescriptionView.getText().toString());
+            event.setLocation(eventLocationView.getText().toString());
 
             // Here you would typically save the changes to your database
             // For now just show a toast
@@ -115,6 +129,29 @@ public class EventDetailActivity extends AppCompatActivity {
 
             // Optional: Close the activity after saving
             // finish();
+        }
+    }
+
+    private void renderTagChips(List<String> tags){
+        FlexboxLayout tagsContainer = findViewById(R.id.tagsContainer);
+        tagsContainer.removeAllViews();
+
+        for (String tag : tags){
+            TextView chip = new TextView(this);
+            chip.setText(tag);
+            chip.setTextSize(13);
+            chip.setTextColor(Color.parseColor("#444444"));
+            chip.setBackground(ContextCompat.getDrawable(this,R.drawable.chip_bg));
+            chip.setPadding(32,16,32,16);
+
+            FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0,0,16,16);
+            chip.setLayoutParams(params);
+
+            tagsContainer.addView(chip);
+
         }
     }
 }

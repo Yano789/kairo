@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.threetenabp)
     implementation(libs.androidx.cardview)
     implementation(libs.guava)
+    implementation(libs.flexbox)
     implementation(libs.androidx.core)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)

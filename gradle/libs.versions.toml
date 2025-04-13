@@ -39,7 +39,7 @@ androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-cor
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", version.ref = "threetenabp" }
 threetenabp-v131 = { module = "com.jakewharton.threetenabp:threetenabp", version.ref = "threetenabpVersion" }
-
+flexbox = { group = "com.google.android.flexbox", name = "flexbox", version = "3.0.0" }
 material-v190 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 

@@ -27,10 +27,18 @@ public class UserRepository {
                 "Sharon Ashok",
                 "Computer Science and Design",
                 "kairo123");
+        Student s3 = new Student(
+                "Computer Science and Design",
+                fifthRows,
+                "kairo123",
+                new BigInteger("1008005"),
+                "mariano_perdices@mymail.sutd.edu.sg",
+                "Mariano Perdices");
 
 
         students.add(s1);
         students.add(s2);
+        students.add(s3);
 
         return students;
     }
