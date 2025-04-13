@@ -1,62 +1,82 @@
 package com.example.infosys_1d.Event;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
 
+import com.example.infosys_1d.Login.Student;
+import com.example.infosys_1d.Login.UserRepository;
 import com.example.infosys_1d.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.ZoneId;
-import java.time.Instant;
 import java.util.Locale;
 
 public class EventRepository {
+    private static final String TAG = "EventRepository";
     private static List<Event> generalEvents = new ArrayList<>();
-    private static List<Event> calendarEvents = new ArrayList<>();
 
-    // Retrieve all general events (for HomeFragment)
+    // Retrieve all general events (shared among all users)
     public static List<Event> getGeneralEvents() {
         return new ArrayList<>(generalEvents);
     }
 
-    // Retrieve all calendar events (for CalendarFragment)
-    public static List<Event> getCalendarEvents() {
-        return new ArrayList<>(calendarEvents);
+    // Get combined events (general + user's personal events)
+    public static List<Event> getCombinedEvents(String userEmail) {
+        List<Event> combined = new ArrayList<>(generalEvents);
+        combined.addAll(UserRepository.getUserEvents(userEmail));
+        return combined;
     }
 
-    // Move an event from general to calendar
-    public static void moveToCalendar(Event event) {
-        if (generalEvents.remove(event)) {
-            calendarEvents.add(event);
+    // Add a personal event to a specific user
+    public static void addPersonalEvent(String userEmail, Event event) {
+        UserRepository.addPersonalEventToUser(userEmail, event);
+    }
+
+    // Move an event to user's personal calendar
+    public static void moveToCalendar(String userEmail, Event event) {
+        if (userEmail == null || userEmail.isEmpty()) {
+            Log.w(TAG, "Cannot move event to calendar: userEmail is empty");
+            return;
         }
+        Event personalEvent = new Event(
+                event.getName(),
+                event.getDescription(),
+                event.getLocation(),
+                event.getStartTime(),
+                event.getEndTime(),
+                event.getDate(),
+                new ArrayList<>(event.getTags()),
+                event.getColor(),
+                event.getTitle(),
+                event.getSubtitle(),
+                event.getImageResId()
+        );
+        personalEvent.addTag("personal");
+        UserRepository.addPersonalEventToUser(userEmail, personalEvent);
+        Log.d(TAG, "Moved event '" + event.getName() + "' (title: " + event.getTitle() + ") to calendar for " + userEmail);
     }
 
-    // Add a method to check if an event is personal
+    // Check if an event is personal (has "personal" tag)
     private static boolean isPersonalEvent(Event event) {
-        // Check if event has "personal" tag or other indicator
         return event.getTags() != null && event.getTags().contains("personal");
     }
 
-    // Load dummy data into both lists
+    // Load initial dummy data
     public static void loadDummyEvents(Context context) {
-        if (generalEvents.isEmpty() && calendarEvents.isEmpty()) {
-            // Clear existing events
+        if (generalEvents.isEmpty()) {
+            Log.d(TAG, "Loading dummy events...");
             generalEvents.clear();
-            calendarEvents.clear();
 
-            // General events (will appear in HomeFragment)
+            // Add general events (unchanged)
             generalEvents.add(new Event("Tech Conference 2025", "Annual technology conference", "Convention Center",
                     convertTimeToMillis("2025-04-01", "09:00 AM"),
                     convertTimeToMillis("2025-04-01", "06:00 PM"),
                     "2025-04-01",
-                    List.of("tech", "conference", "networking"),
+                    new ArrayList<>(List.of("tech", "conference", "networking")), // Ensure mutable list
                     ContextCompat.getColor(context, R.color.light_red),
                     "Tech Conference", "Innovation Summit", R.drawable.tech_event));
 
@@ -64,7 +84,7 @@ public class EventRepository {
                     convertTimeToMillis("2025-04-15", "08:00 AM"),
                     convertTimeToMillis("2025-04-15", "12:00 PM"),
                     "2025-04-15",
-                    List.of("sports", "charity", "community", "fifthrow"),
+                    new ArrayList<>(List.of("sports", "charity", "community", "fifthrow")),
                     ContextCompat.getColor(context, R.color.light_green),
                     "Charity Run", "Support Local Causes", R.drawable.charity_event));
 
@@ -72,7 +92,7 @@ public class EventRepository {
                     convertTimeToMillis("2025-05-02", "06:00 PM"),
                     convertTimeToMillis("2025-05-02", "09:00 PM"),
                     "2025-05-02",
-                    List.of("art", "culture", "exhibition", "fifthrow"),
+                    new ArrayList<>(List.of("art", "culture", "exhibition", "fifthrow")),
                     ContextCompat.getColor(context, R.color.light_purple),
                     "Art Exhibition", "New Artists", R.drawable.art_event));
 
@@ -80,7 +100,7 @@ public class EventRepository {
                     convertTimeToMillis("2025-05-20", "11:00 AM"),
                     convertTimeToMillis("2025-05-22", "10:00 PM"),
                     "2025-05-20",
-                    List.of("food", "festival", "family"),
+                    new ArrayList<>(List.of("food", "festival", "family")),
                     ContextCompat.getColor(context, R.color.light_orange),
                     "Food Festival", "Taste the World", R.drawable.food_event));
 
@@ -88,104 +108,52 @@ public class EventRepository {
                     convertTimeToMillis("2025-06-15", "02:00 PM"),
                     convertTimeToMillis("2025-06-17", "11:00 PM"),
                     "2025-06-15",
-                    List.of("music", "summer", "festival"),
+                    new ArrayList<>(List.of("music", "summer", "festival")),
                     ContextCompat.getColor(context, R.color.light_blue),
                     "Music Fest", "Live Performances", R.drawable.music_event));
 
-            // Calendar events (will appear in CalendarFragment)
-            calendarEvents.add(new Event("Team Meeting", "Weekly project sync", "Office - Room 302",
-                    convertTimeToMillis("2025-04-01", "09:30 AM"),
-                    convertTimeToMillis("2025-04-01", "10:30 AM"),
-                    "2025-04-01",
-                    List.of("work", "meeting", "team", "personal"),
-                    ContextCompat.getColor(context, R.color.light_blue),
-                    "Team Sync", "Project Updates", R.drawable.default_event_image));
+// Assign personal events using email to avoid index issues
+            List<Student> students = UserRepository.getSampleStudents();
+            Log.d(TAG, "Students found: " + students.size());
+            if (!students.isEmpty()) {
+                // Jafira
+                Event e1 = new Event("Team Meeting", "Weekly project sync", "Office - Room 302",
+                        convertTimeToMillis("2025-04-01", "09:30 AM"),
+                        convertTimeToMillis("2025-04-01", "10:30 AM"),
+                        "2025-04-01",
+                        new ArrayList<>(List.of("work", "meeting", "team", "personal")),
+                        ContextCompat.getColor(context, R.color.light_blue),
+                        "Team Sync", "Project Updates", R.drawable.default_event_image);
+                UserRepository.addPersonalEventToUser("jafira@mymail.sutd.edu.sg", e1);
 
-            calendarEvents.add(new Event("Dentist Appointment", "Regular dental checkup", "City Dental Clinic",
-                    convertTimeToMillis("2025-04-05", "03:00 PM"),
-                    convertTimeToMillis("2025-04-05", "04:00 PM"),
-                    "2025-04-05",
-                    List.of("health", "appointment", "personal"),
-                    ContextCompat.getColor(context, R.color.light_orange),
-                    "Dentist", "Checkup"));
+                // Sharon
+                Event e2 = new Event("Dentist Appointment", "Regular dental checkup", "City Dental Clinic",
+                        convertTimeToMillis("2025-04-05", "03:00 PM"),
+                        convertTimeToMillis("2025-04-05", "04:00 PM"),
+                        "2025-04-05",
+                        new ArrayList<>(List.of("health", "appointment", "personal")),
+                        ContextCompat.getColor(context, R.color.light_orange),
+                        "Dentist", "Checkup", R.drawable.default_event_image);
+                UserRepository.addPersonalEventToUser("Sharon@mymail.sutd.edu.sg", e2);
 
-            calendarEvents.add(new Event("Job Interview", "Software Engineer position", "Tech Corp HQ - Floor 15",
-                    convertTimeToMillis("2025-04-08", "02:00 PM"),
-                    convertTimeToMillis("2025-04-08", "03:30 PM"),
-                    "2025-04-08",
-                    List.of("career", "interview", "important", "personal"),
-                    ContextCompat.getColor(context, R.color.light_red),
-                    "Interview", "Tech Corp"));
-
-            calendarEvents.add(new Event("Friend's Birthday Party", "Birthday celebration", "123 Main St",
-                    convertTimeToMillis("2025-04-12", "07:00 PM"),
-                    convertTimeToMillis("2025-04-12", "11:30 PM"),
-                    "2025-04-12",
-                    List.of("social", "birthday", "friends", "personal"),
-                    ContextCompat.getColor(context, R.color.light_green),
-                    "Birthday", "Alex's Party"));
-
-            calendarEvents.add(new Event("Car Service", "Regular maintenance", "AutoCare Center",
-                    convertTimeToMillis("2025-04-18", "10:00 AM"),
-                    convertTimeToMillis("2025-04-18", "12:00 PM"),
-                    "2025-04-18",
-                    List.of("car", "maintenance", "personal"),
-                    ContextCompat.getColor(context, R.color.light_yellow),
-                    "Car Service", "Oil Change"));
-
-            calendarEvents.add(new Event("Parent-Teacher Conference", "School meeting", "Maplewood High School",
-                    convertTimeToMillis("2025-04-22", "04:00 PM"),
-                    convertTimeToMillis("2025-04-22", "05:00 PM"),
-                    "2025-04-22",
-                    List.of("family", "education", "personal"),
-                    ContextCompat.getColor(context, R.color.light_purple),
-                    "School Meeting", "Progress Report"));
-
-            calendarEvents.add(new Event("Flight to New York", "Business trip", "International Airport",
-                    convertTimeToMillis("2025-04-25", "06:00 AM"),
-                    convertTimeToMillis("2025-04-25", "09:30 AM"),
-                    "2025-04-25",
-                    List.of("travel", "work", "personal"),
-                    ContextCompat.getColor(context, R.color.light_blue),
-                    "Flight", "JFK Airport"));
-
-            calendarEvents.add(new Event("Anniversary Dinner", "Wedding anniversary", "La Bella Restaurant",
-                    convertTimeToMillis("2025-04-30", "07:30 PM"),
-                    convertTimeToMillis("2025-04-30", "10:00 PM"),
-                    "2025-04-30",
-                    List.of("personal", "anniversary", "dinner", "personal"),
-                    ContextCompat.getColor(context, R.color.light_red),
-                    "Anniversary", "5 Years"));
-
-            // Adding some future events for variety
-            calendarEvents.add(new Event("Conference Call", "Client project discussion", "Zoom",
-                    convertTimeToMillis("2025-05-05", "11:00 AM"),
-                    convertTimeToMillis("2025-05-05", "12:00 PM"),
-                    "2025-05-05",
-                    List.of("work", "meeting", "client", "personal"),
-                    ContextCompat.getColor(context, R.color.light_blue),
-                    "Client Call", "Project X"));
-
-            calendarEvents.add(new Event("Vaccination Appointment", "Annual flu shot", "City Health Center",
-                    convertTimeToMillis("2025-05-10", "09:00 AM"),
-                    convertTimeToMillis("2025-05-10", "09:30 AM"),
-                    "2025-05-10",
-                    List.of("health", "prevention", "personal"),
-                    ContextCompat.getColor(context, R.color.light_green),
-                    "Vaccination", "Flu Shot"));
-        }
-    }
-
-    // Modified removeFromCalendar to handle personal events differently
-    public static void removeFromCalendar(Event event) {
-        if (calendarEvents.remove(event)) {
-            // Only add back to general events if it's not a personal event
-            if (!isPersonalEvent(event)) {
-                generalEvents.add(event);
+                // Mariano
+                Event e3 = new Event("Job Interview", "Software Engineer position", "Tech Corp HQ - Floor 15",
+                        convertTimeToMillis("2025-04-08", "02:00 PM"),
+                        convertTimeToMillis("2025-04-08", "03:30 PM"),
+                        "2025-04-08",
+                        new ArrayList<>(List.of("career", "interview", "important", "personal")),
+                        ContextCompat.getColor(context, R.color.light_red),
+                        "Interview", "Tech Corp", R.drawable.default_event_image);
+                UserRepository.addPersonalEventToUser("mariano_perdices@mymail.sutd.edu.sg", e3);
+            } else {
+                Log.e(TAG, "No students found for personal events");
             }
+        } else {
+            Log.d(TAG, "General events already loaded, skipping...");
         }
     }
 
+    // Helper method to convert date/time strings to milliseconds
     public static long convertTimeToMillis(String date, String time) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
         try {
@@ -196,25 +164,36 @@ public class EventRepository {
         }
     }
 
-    public static List<Event> getAllEvents() {
-        return new ArrayList<>(generalEvents);
+    // Remove an event from user's personal events
+    public static void removeFromCalendar(String userEmail, Event event) {
+        UserRepository.removeUserEvent(userEmail, event);
     }
 
-    public static void addPersonalEventToCalendar(Event event) {
-        calendarEvents.add(event);
-        // Ensure it's not in general events
-        generalEvents.remove(event);
+    // Add a personal event directly to calendar (user's personal events)
+    public static void addPersonalEventToCalendar(String userEmail, Event event) {
+        if (userEmail == null || userEmail.isEmpty()) {
+            Log.w(TAG, "Cannot add event to calendar: userEmail is empty");
+            return;
+        }
+        UserRepository.addPersonalEventToUser(userEmail, event);
+        Log.d(TAG, "Added event '" + event.getName() + "' (title: " + event.getTitle() + ") to calendar for " + userEmail);
     }
 
-    public static void updateCalendarEvent(Event updatedEvent) {
-        for (Event event : calendarEvents) {
-            if (event == updatedEvent) { // Same object reference
-                // Update fields directly
-                event.setTitle(updatedEvent.getTitle());
-                event.setDescription(updatedEvent.getDescription());
-                event.setLocation(updatedEvent.getLocation());
+    // Update an event in user's personal events
+    public static void updateCalendarEvent(String userEmail, Event updatedEvent) {
+        List<Event> userEvents = UserRepository.getUserEvents(userEmail);
+        for (int i = 0; i < userEvents.size(); i++) {
+            Event event = userEvents.get(i);
+            if (event.getId().equals(updatedEvent.getId())) {
+                userEvents.set(i, updatedEvent); // Replace with updated event
                 break;
             }
         }
+        // Update UserRepository with modified list
+        UserRepository.updateUserEvents(userEmail, userEvents);
+    }
+
+    public static List<Event> getCalendarEvents(String userEmail) {
+        return UserRepository.getUserEvents(userEmail);
     }
 }

@@ -1,79 +1,62 @@
 package com.example.infosys_1d.Login;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
+import com.example.infosys_1d.Event.Event;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.List;
 
-public class Student extends User implements Parcelable {
-    public ArrayList<FifthRowID> fifthRows = new ArrayList<>();
-    public String facultyName;
-    private FacultyID facultyID;
+public class Student {
+    private String pillar;
+    private List<FifthRowID> fifthRows;
+    private String password;
+    private BigInteger studentId;
+    private String email;
+    private String name;
+    private List<Event> personalEvents; // Not static, initialized per instance
 
-    Student(BigInteger id, String email, String name, String facultyName, String password){
-        this.facultyName = facultyName;
+    public Student(String pillar, List<FifthRowID> fifthRows, String password, BigInteger studentId, String email, String name) {
+        this.pillar = pillar;
+        this.fifthRows = fifthRows != null ? fifthRows : new ArrayList<>();
         this.password = password;
-        this.id = id;
-        this.facultyID = new FacultyID(id, facultyName);
+        this.studentId = studentId;
         this.email = email;
         this.name = name;
+        this.personalEvents = new ArrayList<>(); // Initialize here
     }
 
-    public Student(String facultyName, ArrayList<FifthRowID> fifthRows, String password, BigInteger id, String email, String name){ //if they even have fifthrows
-        this.facultyName = facultyName;
-        this.id = id;
-        this.facultyID = new FacultyID(id, facultyName);
-        this.fifthRows = fifthRows;
-        this.password= password;
+    public Student(BigInteger studentId, String email, String name, String pillar, String password) {
+        this.studentId = studentId;
         this.email = email;
         this.name = name;
+        this.pillar = pillar;
+        this.password = password;
+        this.fifthRows = new ArrayList<>();
+        this.personalEvents = new ArrayList<>(); // Initialize here
     }
 
-    protected Student(Parcel in) {
-        this.id = new BigInteger(in.readString());
-        this.email = in.readString();
-        this.name = in.readString();
-        this.password = in.readString();
-        this.facultyName = in.readString();
-        this.facultyID = in.readParcelable(FacultyID.class.getClassLoader());
-        in.readTypedList(fifthRows, FifthRowID.CREATOR);
+    public String getEmail() { return email; }
+    public String getName() { return name; }
+    public BigInteger getStudentId() { return studentId; }
+    public String getPillar() { return pillar; }
+    public String getPassword() { return password; }
+    public List<FifthRowID> getFifthRows() { return new ArrayList<>(fifthRows); }
+    public BigInteger getId() { return studentId; }
+    public String getFacultyName() { return pillar != null ? pillar : ""; }
+
+    public List<Event> getPersonalEvents() {
+        return new ArrayList<>(personalEvents); // Defensive copy
     }
 
-    public String getFacultyName() {
-        return facultyName;
+    public void addPersonalEvent(Event event) {
+        personalEvents.add(event);
     }
 
-    public static final Creator<Student> CREATOR = new Creator<Student>() {
-        @Override
-        public Student createFromParcel(Parcel in) {
-            return new Student(in);
-        }
-
-        @Override
-        public Student[] newArray(int size) {
-            return new Student[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public void removePersonalEvent(Event event) {
+        personalEvents.removeIf(e -> e.getId().equals(event.getId()));
     }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(id != null ? id.toString() : null); // BigInteger -> String
-        dest.writeString(email);
-        dest.writeString(name);
-        dest.writeString(facultyName);
-        dest.writeString(password);
-        dest.writeParcelable(facultyID, flags);
-        dest.writeTypedList(fifthRows);
+    public void setPersonalEvents(List<Event> events) {
+        this.personalEvents = new ArrayList<>(events);
     }
-
-
 }

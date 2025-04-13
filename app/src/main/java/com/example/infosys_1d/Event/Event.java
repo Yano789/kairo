@@ -5,8 +5,10 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Event implements Parcelable {
+    private String id;
     private String name;
     private String description;
     private String location;
@@ -21,6 +23,7 @@ public class Event implements Parcelable {
 
     // Constructor with all fields, accepting long for startTime and endTime
     public Event(String name, String description, String location, long startTime, long endTime, String date, List<String> tags, int color, String title, String subtitle, int imageResId) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.description = description;
         this.location = location;
@@ -41,6 +44,7 @@ public class Event implements Parcelable {
 
     // Parcelable implementation
     protected Event(Parcel in) {
+        id = in.readString();
         name = in.readString();
         description = in.readString();
         location = in.readString();
@@ -69,6 +73,7 @@ public class Event implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeString(description);
         dest.writeString(location);
@@ -159,6 +164,14 @@ public class Event implements Parcelable {
 
     public void setTags(List<String> tags) {
         this.tags = tags != null ? tags : new ArrayList<>();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     // Optional: If you want to allow adding individual tags

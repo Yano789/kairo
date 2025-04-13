@@ -1,12 +1,18 @@
 package com.example.infosys_1d;
 
+import static android.content.ContentValues.TAG;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.infosys_1d.Calendar.CalendarFragment;
 import com.example.infosys_1d.Chatbot.ChatFragment;
 import com.example.infosys_1d.Discovery.HomeFragment;
+import com.example.infosys_1d.Event.EventRepository;
 import com.example.infosys_1d.ProfilePage.ProfileFragmentOrg;
 import com.example.infosys_1d.ProfilePage.ProfileFragmentStudent;
 import com.example.infosys_1d.Schedule.ScheduleFragment;
@@ -18,6 +24,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Get email from Intent
+        String userEmail = getIntent().getStringExtra("user_email");
+        if (userEmail != null && !userEmail.isEmpty()) {
+            // Save to SharedPreferences (redundant but ensures consistency)
+            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("user_email", userEmail);
+            editor.apply();
+            Log.d(TAG, "Received and saved user_email: " + userEmail);
+        } else {
+            Log.w(TAG, "No user_email received in Intent");
+        }
+
+        // Ensure dummy events are loaded (handled by MyApplication, but confirm)
+        Log.d(TAG, "General events count: " + EventRepository.getGeneralEvents().size());
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 

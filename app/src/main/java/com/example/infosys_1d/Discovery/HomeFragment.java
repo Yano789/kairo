@@ -1,6 +1,7 @@
 package com.example.infosys_1d.Discovery;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -51,8 +52,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class); // Shared ViewModel
-        // Load the dummy data
+        eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
         EventRepository.loadDummyEvents(getContext());
     }
 
@@ -85,7 +85,7 @@ public class HomeFragment extends Fragment {
             toggleEventTypeButton.setOnClickListener(v -> {
                 showFifthrowEvents = !showFifthrowEvents;
                 toggleEventTypeButton.setText(showFifthrowEvents ? "Fifthrow" : "General");
-                eventViewModel.refreshEvents();  // Refresh events when toggling between types
+                eventViewModel.refreshDiscoverableEvents();  // Refresh events when toggling between types
             });
 
         }
@@ -108,19 +108,16 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-
         eventAdapter = new EventAdapter(requireContext(), displayedEvents,
                 R.layout.discovery_item_event, new EventAdapter.OnEventActionListener() {
             @Override
             public void onAddToCalendar(Event event) {
-                // Move to calendar and refresh
-                EventRepository.moveToCalendar(event);
-                eventViewModel.refreshEvents();  // Automatically updates both fragments
+                EventRepository.moveToCalendar(getCurrentUserEmail(), event);
+                eventViewModel.refreshDiscoverableEvents();
             }
 
             @Override
             public void onRemoveFromCalendar(Event event) {
-                // leave empty if not used
             }
         });
 
@@ -130,7 +127,7 @@ public class HomeFragment extends Fragment {
 
     private void setupObservers() {
         eventViewModel.getAllEvents().observe(getViewLifecycleOwner(), this::filterAndDisplayEvents);
-        eventViewModel.refreshEvents();
+        eventViewModel.refreshDiscoverableEvents();  // Changed to refreshAllEvents
     }
 
 
@@ -138,7 +135,7 @@ public class HomeFragment extends Fragment {
         toggleEventTypeButton.setOnClickListener(v -> {
             showFifthrowEvents = !showFifthrowEvents;
             toggleEventTypeButton.setText(showFifthrowEvents ? "Fifthrow" : "General");
-            eventViewModel.refreshEvents();
+            eventViewModel.refreshDiscoverableEvents();  // Changed to refreshAllEvents
         });
 
         filterButton.setOnClickListener(v -> showTagFilterDialog());
@@ -182,6 +179,11 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private String getCurrentUserEmail() {
+        return requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                .getString("user_email", "");
+    }
+
     private void showTagFilterDialog() {
         List<String> allTags = eventViewModel.getAllTags();
 
@@ -219,7 +221,7 @@ public class HomeFragment extends Fragment {
                     selectedTags.add(allTags.get(i));
                 }
             }
-            eventViewModel.refreshEvents();
+            eventViewModel.refreshDiscoverableEvents();
             dialog.dismiss();
         });
 
