@@ -9,5 +9,12 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@android:color/transparent</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="hintTextColor">#0F54BF</item>
+        <item name="android:textColorHint">#0F54BF</item>
+    </style>
+
 
 </resources>
