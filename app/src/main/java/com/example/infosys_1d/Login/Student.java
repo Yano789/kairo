@@ -43,6 +43,10 @@ public class Student extends User implements Parcelable {
         in.readTypedList(fifthRows, FifthRowID.CREATOR);
     }
 
+    public String getFacultyName() {
+        return facultyName;
+    }
+
     public static final Creator<Student> CREATOR = new Creator<Student>() {
         @Override
         public Student createFromParcel(Parcel in) {

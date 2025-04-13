@@ -8,7 +8,6 @@ import com.example.infosys_1d.Calendar.CalendarFragment;
 import com.example.infosys_1d.Chatbot.ChatFragment;
 import com.example.infosys_1d.Discovery.HomeFragment;
 import com.example.infosys_1d.ProfilePage.ProfileFragmentOrg;
-import com.example.infosys_1d.ProfilePage.ProfileFragmentStaff;
 import com.example.infosys_1d.ProfilePage.ProfileFragmentStudent;
 import com.example.infosys_1d.Schedule.ScheduleFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         Fragment chatFragment = new ChatFragment(); // Replaced notificationsFragment
         Fragment scheduleFragment = new ScheduleFragment();
         Fragment profileFragmentStudent = new ProfileFragmentStudent();
-        Fragment profileFragmentStaff = new ProfileFragmentStaff();
         Fragment profileFragmentOrg = new ProfileFragmentOrg();
 
         setCurrentFragment(homeFragment);

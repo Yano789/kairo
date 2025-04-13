@@ -16,7 +16,7 @@ public class UserRepository {
         Student s1 = new Student(
                 "Computer Science and Design",
                 fifthRows,
-                "password123",
+                "kairo123",
                 new BigInteger("1007916"),
                 "jafira@gmail.com",
                 "Jafira Nassar");
@@ -26,7 +26,8 @@ public class UserRepository {
                 "Sharon@gmail.com",
                 "Sharon Ashok",
                 "Computer Science and Design",
-                "password456");
+                "kairo123");
+
 
         students.add(s1);
         students.add(s2);

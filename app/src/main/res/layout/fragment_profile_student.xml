@@ -26,6 +26,7 @@
                 android:alpha="0.6"/>
 
             <TextView
+                android:id="@+id/greetingTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -86,7 +87,6 @@
                         android:paddingBottom="10dp"/>
 
                     <LinearLayout
-                        android:id="@+id/NameField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -99,9 +99,10 @@
                             android:text="Full Name"/>
 
                         <TextView
+                            android:id="@+id/nameTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Sharon Ashok"
+                            android:text="Your Name"
                             android:textSize="20sp"/>
 
                         <View
@@ -114,7 +115,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/EmailField"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -127,9 +128,10 @@
                             android:text="Email"/>
 
                         <TextView
+                            android:id="@+id/emailTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="sharon_ashok@mymail.sutd.edu.sg"
+                            android:text="your_email@mymail.sutd.edu.sg"
                             android:textSize="20sp"/>
 
                         <View
@@ -142,7 +144,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/IdField"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -155,9 +157,10 @@
                             android:text="ID"/>
 
                         <TextView
+                            android:id="@+id/idTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="1007915"
+                            android:text="0000000"
                             android:textSize="20sp"/>
 
                         <View
@@ -170,7 +173,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/PillarField"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -183,9 +186,10 @@
                             android:text="Pillar"/>
 
                         <TextView
+                            android:id="@+id/pillarTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Computer Science and Design"
+                            android:text="Chosen Pillar"
                             android:textSize="20sp"/>
 
                         <View
@@ -207,7 +211,7 @@
                         android:paddingBottom="10dp"/>
 
                     <LinearLayout
-                        android:id="@+id/GenderField"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -220,6 +224,7 @@
                             android:text="Gender"/>
 
                         <EditText
+                            android:id="@+id/genderEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Add Gender"
@@ -237,7 +242,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/BirthdayField"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -250,6 +255,7 @@
                             android:text="Gender"/>
 
                         <EditText
+                            android:id="@+id/birthdayEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Add Birthday"
@@ -267,7 +273,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/LinkedInField"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -280,6 +286,7 @@
                             android:text="LinkedIn Website"/>
 
                         <EditText
+                            android:id="@+id/linkedinEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Add Website"
@@ -306,7 +313,7 @@
                         android:paddingBottom="10dp"/>
 
                     <LinearLayout
-                        android:id="@+id/MailingField"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -319,6 +326,7 @@
                             android:text="Mailing Address"/>
 
                         <EditText
+                            android:id="@+id/addressEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Add Mailing Address"
@@ -336,7 +344,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/NumberField"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -349,6 +357,7 @@
                             android:text="Phone Number"/>
 
                         <EditText
+                            android:id="@+id/phoneEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Add Phone Number"
