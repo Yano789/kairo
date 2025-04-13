@@ -22,7 +22,7 @@
             android:id="@+id/saveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/green"
+            android:backgroundTint="@color/schedule_green"
             android:text="Save"
             android:textColor="@android:color/white"
             android:layout_alignParentEnd="true"
