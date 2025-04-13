@@ -8,7 +8,7 @@
         <item name="colorOnPrimary">@color/textColorPrimary</item>
 
         <item name="colorSecondary">@color/colorAccent</item>
-        <item name="colorOnSecondary">@android:color/white</item>
+        <item name="colorOnSecondary">@android:color/black</item>
 
         <!-- Status Bar and Navigation Bar -->
         <item name="android:statusBarColor">@color/colorPrimary</item>
@@ -20,11 +20,18 @@
         <!-- Fix background color -->
         <item name="android:windowBackground">@color/colorPrimary</item>
 
+
+
+
+
     </style>
     <style name="RoundedFAB" parent="ShapeAppearance.MaterialComponents.SmallComponent">
         <item name="cornerSize">50%</item>
         <item name="tint">@color/colorPrimary</item>
     </style>
+
+
+
 
 
     <!-- Bottom Navigation Active Item -->
