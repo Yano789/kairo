@@ -45,7 +45,6 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
     private RecyclerView timetableRecyclerView;
     private LocalDate currentWeekStart;
     private LocalDate selectedDate = LocalDate.now();
-//    private DateHolder selectedDateHolder = new DateHolder(LocalDate.now());
 
     private TimetableAdapter timetableAdapter;
 
@@ -202,7 +201,6 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
             picker.show(getParentFragmentManager(), "EVENT_DATE_PICKER");
         });
 
-        // Time pickers setup
         String[] hours = new String[24];
         for (int i = 0; i < 24; i++) hours[i] = String.format("%02d", i);
         startHour.setMinValue(0); startHour.setMaxValue(23); startHour.setDisplayedValues(hours);
@@ -213,9 +211,9 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
         startMinute.setMinValue(0); startMinute.setMaxValue(11); startMinute.setDisplayedValues(minutes);
         endMinute.setMinValue(0); endMinute.setMaxValue(11); endMinute.setDisplayedValues(minutes);
 
-        // Prefill if editing
+
         if (eventToEdit != null) {
-            eventName.setText(eventToEdit.getName());
+            eventName.setText(eventToEdit.getTitle());
             int s = eventToEdit.getStartTime(), e = eventToEdit.getEndTime();
             startHour.setValue(s / 60); startMinute.setValue((s % 60) / 5);
             endHour.setValue(e / 60); endMinute.setValue((e % 60) / 5);
@@ -251,7 +249,7 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
                 MyEvent newEvent = new MyEvent(name, selectedDate[0], startTime, endTime);
                 eventList.add(newEvent);
             } else {
-                eventToEdit.setName(name);
+                eventToEdit.setTitle(name);
                 eventToEdit.setDate(selectedDate[0]);
                 eventToEdit.setStartTime(startTime);
                 eventToEdit.setEndTime(endTime);
@@ -283,30 +281,8 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
                     })
                     .setNegativeButton("Cancel", null)
                     .show();
-
-
-//            new AlertDialog.Builder(requireContext())
-//                    .setTitle("Delete Event")
-//                    .setMessage("Are you sure you want to delete this event?")
-//                    .setPositiveButton("Delete", (d, which) -> {
-//                        eventList.remove(eventToEdit);
-//                        timetableAdapter.setEventList(eventList);
-//                        if (rowHeightPx > 0) {
-//                            eventCanvas.setData(eventList, currentWeekStart, rowHeightPx);
-//                            eventCanvas.invalidate();
-//                        }
-//                        dialog.dismiss();
-//                        Toast.makeText(getContext(), "Event deleted", Toast.LENGTH_SHORT).show();
-//                    })
-//                    .setNegativeButton("Cancel", null)
-//                    .show();
         });
     }
-
-
-
-
-
 
     private String formatDate(LocalDate date) {
         return String.format("Date: %02d/%02d/%04d", date.getDayOfMonth(), date.getMonthValue(), date.getYear());

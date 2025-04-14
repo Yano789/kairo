@@ -89,7 +89,7 @@ public class EventCanvasView extends View {
 
             canvas.drawRect(left, top, right, bottom, boxPaint);
 
-            String displayText = event.getName() + "\n" +
+            String displayText = event.getTitle() + "\n" +
                     formatTime(event.getStartTime()) + " - " + formatTime(event.getEndTime());
 
             StaticLayout layout = StaticLayout.Builder

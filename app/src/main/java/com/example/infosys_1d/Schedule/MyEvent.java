@@ -3,20 +3,20 @@ package com.example.infosys_1d.Schedule;
 import java.time.LocalDate;
 
 public class MyEvent {
-    private String name;
+    private String title;
     private LocalDate date;
     private int startTime;
     private int endTime;
 
-    public MyEvent(String name, LocalDate date, int startTime, int endTime) {
-        this.name = name;
+    public MyEvent(String title, LocalDate date, int startTime, int endTime) {
+        this.title = title;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
     public LocalDate getDate() {
         return date;
@@ -27,8 +27,8 @@ public class MyEvent {
     public int getEndTime() {
         return endTime;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setDate(LocalDate date) {
