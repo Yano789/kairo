@@ -1,7 +1,5 @@
 package com.example.infosys_1d;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,16 +17,21 @@ import com.example.infosys_1d.Schedule.ScheduleFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize AppContext and EventRepository
+        AppContext.setAppContext(this);
+        EventRepository.initialize(this);
+        Log.d(TAG, "Initialized AppContext and EventRepository");
+
         // Get email from Intent
         String userEmail = getIntent().getStringExtra("user_email");
         if (userEmail != null && !userEmail.isEmpty()) {
-            // Save to SharedPreferences (redundant but ensures consistency)
             SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("user_email", userEmail);
@@ -38,14 +41,17 @@ public class MainActivity extends AppCompatActivity {
             Log.w(TAG, "No user_email received in Intent");
         }
 
-        // Ensure dummy events are loaded (handled by MyApplication, but confirm)
+        // Log event counts for debugging
         Log.d(TAG, "General events count: " + EventRepository.getGeneralEvents().size());
+        if (userEmail != null) {
+            Log.d(TAG, "Personal events count for " + userEmail + ": " + EventRepository.getCalendarEvents(userEmail).size());
+        }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         Fragment homeFragment = new HomeFragment();
         Fragment calendarFragment = new CalendarFragment();
-        Fragment chatFragment = new ChatFragment(); // Replaced notificationsFragment
+        Fragment chatFragment = new ChatFragment();
         Fragment scheduleFragment = new ScheduleFragment();
         Fragment profileFragmentStudent = new ProfileFragmentStudent();
         Fragment profileFragmentOrg = new ProfileFragmentOrg();
@@ -60,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.events_calendar) {
                 setCurrentFragment(calendarFragment);
             } else if (id == R.id.notifications) {
-                setCurrentFragment(chatFragment); // Now loads ChatFragment
+                setCurrentFragment(chatFragment);
             } else if (id == R.id.schedule) {
                 setCurrentFragment(scheduleFragment);
             } else if (id == R.id.profile) {

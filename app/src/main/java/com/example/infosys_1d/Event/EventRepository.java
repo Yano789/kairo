@@ -12,31 +12,35 @@ import com.example.infosys_1d.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class EventRepository {
     private static final String TAG = "EventRepository";
     private static List<Event> generalEvents = new ArrayList<>();
 
-    // Retrieve all general events (shared among all users)
+    public static void initialize(Context context) {
+        Log.d(TAG, "Initializing EventRepository");
+        UserRepository.loadEventsFromPreferences(context);
+        loadDummyEvents(context);
+    }
+
     public static List<Event> getGeneralEvents() {
         return new ArrayList<>(generalEvents);
     }
 
-    // Get combined events (general + user's personal events)
     public static List<Event> getCombinedEvents(String userEmail) {
         List<Event> combined = new ArrayList<>(generalEvents);
         combined.addAll(UserRepository.getUserEvents(userEmail));
         return combined;
     }
 
-    // Add a personal event to a specific user
     public static void addPersonalEvent(String userEmail, Event event) {
         UserRepository.addPersonalEventToUser(userEmail, event);
     }
 
-    // Move an event to user's personal calendar
     public static void moveToCalendar(String userEmail, Event event) {
         if (userEmail == null || userEmail.isEmpty()) {
             Log.w(TAG, "Cannot move event to calendar: userEmail is empty");
@@ -60,23 +64,20 @@ public class EventRepository {
         Log.d(TAG, "Moved event '" + event.getName() + "' (title: " + event.getTitle() + ") to calendar for " + userEmail);
     }
 
-    // Check if an event is personal (has "personal" tag)
     private static boolean isPersonalEvent(Event event) {
         return event.getTags() != null && event.getTags().contains("personal");
     }
 
-    // Load initial dummy data
     public static void loadDummyEvents(Context context) {
         if (generalEvents.isEmpty()) {
             Log.d(TAG, "Loading dummy events...");
             generalEvents.clear();
 
-            // Add general events (unchanged)
             generalEvents.add(new Event("Tech Conference 2025", "Annual technology conference", "Convention Center",
                     convertTimeToMillis("2025-04-01", "09:00 AM"),
                     convertTimeToMillis("2025-04-01", "06:00 PM"),
                     "2025-04-01",
-                    new ArrayList<>(List.of("tech", "conference", "networking")), // Ensure mutable list
+                    new ArrayList<>(List.of("tech", "conference", "networking")),
                     ContextCompat.getColor(context, R.color.light_red),
                     "Tech Conference", "Innovation Summit", R.drawable.tech_event));
 
@@ -112,11 +113,9 @@ public class EventRepository {
                     ContextCompat.getColor(context, R.color.light_blue),
                     "Music Fest", "Live Performances", R.drawable.music_event));
 
-// Assign personal events using email to avoid index issues
             List<Student> students = UserRepository.getSampleStudents();
             Log.d(TAG, "Students found: " + students.size());
             if (!students.isEmpty()) {
-                // Jafira
                 Event e1 = new Event("Team Meeting", "Weekly project sync", "Office - Room 302",
                         convertTimeToMillis("2025-04-01", "09:30 AM"),
                         convertTimeToMillis("2025-04-01", "10:30 AM"),
@@ -126,7 +125,6 @@ public class EventRepository {
                         "Team Sync", "Project Updates", R.drawable.default_event_image);
                 UserRepository.addPersonalEventToUser("jafira@mymail.sutd.edu.sg", e1);
 
-                // Sharon
                 Event e2 = new Event("Dentist Appointment", "Regular dental checkup", "City Dental Clinic",
                         convertTimeToMillis("2025-04-05", "03:00 PM"),
                         convertTimeToMillis("2025-04-05", "04:00 PM"),
@@ -136,7 +134,6 @@ public class EventRepository {
                         "Dentist", "Checkup", R.drawable.default_event_image);
                 UserRepository.addPersonalEventToUser("Sharon@mymail.sutd.edu.sg", e2);
 
-                // Mariano
                 Event e3 = new Event("Job Interview", "Software Engineer position", "Tech Corp HQ - Floor 15",
                         convertTimeToMillis("2025-04-08", "02:00 PM"),
                         convertTimeToMillis("2025-04-08", "03:30 PM"),
@@ -153,23 +150,134 @@ public class EventRepository {
         }
     }
 
-    // Helper method to convert date/time strings to milliseconds
     public static long convertTimeToMillis(String date, String time) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
         try {
             return sdf.parse(date + " " + time).getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error parsing time: " + e.getMessage());
             return 0;
         }
     }
 
-    // Remove an event from user's personal events
+    public static String getDateString(String relativeDate, String currentDateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Singapore"));
+        Calendar today = Calendar.getInstance(TimeZone.getTimeZone("Asia/Singapore"));
+
+        // Reset time components to start of day for accurate comparison
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MILLISECOND, 0);
+
+        // Set calendar to current date if provided
+        try {
+            if (currentDateStr != null && !currentDateStr.isEmpty()) {
+                calendar.setTime(sdf.parse(currentDateStr));
+                Log.d(TAG, "Set calendar to currentDateStr: " + currentDateStr);
+            }
+        } catch (ParseException e) {
+            Log.w(TAG, "Invalid current date format: " + currentDateStr);
+        }
+
+        relativeDate = relativeDate.toLowerCase().trim();
+        Log.d(TAG, "Processing relativeDate: " + relativeDate);
+
+        // Handle relative dates
+        if (relativeDate.equals("today")) {
+            Log.d(TAG, "Matched 'today'");
+            // No change needed
+        } else if (relativeDate.equals("tomorrow")) {
+            Log.d(TAG, "Matched 'tomorrow'");
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        } else if (relativeDate.matches("in\\s*\\d+\\s*(day|days|week|weeks|month|months).*")) {
+            try {
+                String[] parts = relativeDate.split("\\s+");
+                int amount = Integer.parseInt(parts[1]);
+                String unit = parts[2].startsWith("day") ? "days" :
+                        parts[2].startsWith("week") ? "weeks" :
+                                parts[2].startsWith("month") ? "months" : "";
+                Log.d(TAG, "Matched relative: amount=" + amount + ", unit=" + unit);
+                switch (unit) {
+                    case "days":
+                        calendar.add(Calendar.DAY_OF_MONTH, amount);
+                        break;
+                    case "weeks":
+                        calendar.add(Calendar.WEEK_OF_YEAR, amount);
+                        break;
+                    case "months":
+                        calendar.add(Calendar.MONTH, amount);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unknown unit: " + unit);
+                }
+            } catch (Exception e) {
+                Log.w(TAG, "Invalid relative date format: " + relativeDate + ", error: " + e.getMessage());
+            }
+        } else {
+            // Try parsing specific date formats
+            SimpleDateFormat[] formats = {
+                    new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()),
+                    new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()),
+                    new SimpleDateFormat("d MMMM yyyy", Locale.getDefault()),
+                    new SimpleDateFormat("d MMM yyyy", Locale.getDefault()),
+                    new SimpleDateFormat("d'th' MMMM yyyy", Locale.getDefault()),
+                    new SimpleDateFormat("d'st' MMMM yyyy", Locale.getDefault()),
+                    new SimpleDateFormat("d'nd' MMMM yyyy", Locale.getDefault()),
+                    new SimpleDateFormat("d'rd' MMMM yyyy", Locale.getDefault()),
+                    new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            };
+            for (SimpleDateFormat format : formats) {
+                format.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
+                try {
+                    calendar.setTime(format.parse(relativeDate.replace(",", "")));
+                    Log.d(TAG, "Parsed specific date: " + relativeDate + " -> " + sdf.format(calendar.getTime()));
+                    // Exit loop if parsing succeeds
+                    break;
+                } catch (ParseException e) {
+                    Log.d(TAG, "Failed format " + format.toPattern() + " for: " + relativeDate);
+                    // Continue to next format
+                }
+            }
+        }
+
+        String result = sdf.format(calendar.getTime());
+        Log.d(TAG, "Initial result: " + result);
+
+        // Validate result
+        try {
+            Calendar resultCal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Singapore"));
+            resultCal.setTime(sdf.parse(result));
+            // Reset time for comparison
+            resultCal.set(Calendar.HOUR_OF_DAY, 0);
+            resultCal.set(Calendar.MINUTE, 0);
+            resultCal.set(Calendar.SECOND, 0);
+            resultCal.set(Calendar.MILLISECOND, 0);
+            // Allow today or future dates
+            if (resultCal.before(today)) {
+                Log.w(TAG, "Resulting date is before today: " + result + ", using currentDateStr: " + currentDateStr);
+                return currentDateStr;
+            }
+        } catch (ParseException e) {
+            Log.w(TAG, "Invalid resulting date: " + result + ", error: " + e.getMessage());
+            return currentDateStr;
+        }
+
+        Log.d(TAG, "Final result: " + result);
+        return result;
+    }
+
     public static void removeFromCalendar(String userEmail, Event event) {
         UserRepository.removeUserEvent(userEmail, event);
     }
 
-    // Add a personal event directly to calendar (user's personal events)
     public static void addPersonalEventToCalendar(String userEmail, Event event) {
         if (userEmail == null || userEmail.isEmpty()) {
             Log.w(TAG, "Cannot add event to calendar: userEmail is empty");
@@ -179,17 +287,15 @@ public class EventRepository {
         Log.d(TAG, "Added event '" + event.getName() + "' (title: " + event.getTitle() + ") to calendar for " + userEmail);
     }
 
-    // Update an event in user's personal events
     public static void updateCalendarEvent(String userEmail, Event updatedEvent) {
         List<Event> userEvents = UserRepository.getUserEvents(userEmail);
         for (int i = 0; i < userEvents.size(); i++) {
             Event event = userEvents.get(i);
             if (event.getId().equals(updatedEvent.getId())) {
-                userEvents.set(i, updatedEvent); // Replace with updated event
+                userEvents.set(i, updatedEvent);
                 break;
             }
         }
-        // Update UserRepository with modified list
         UserRepository.updateUserEvents(userEmail, userEvents);
     }
 

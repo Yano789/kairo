@@ -13,16 +13,16 @@ public class Student {
     private BigInteger studentId;
     private String email;
     private String name;
-    private List<Event> personalEvents; // Not static, initialized per instance
+    private List<Event> personalEvents;
 
     public Student(String pillar, List<FifthRowID> fifthRows, String password, BigInteger studentId, String email, String name) {
         this.pillar = pillar;
-        this.fifthRows = fifthRows != null ? fifthRows : new ArrayList<>();
+        this.fifthRows = fifthRows != null ? new ArrayList<>(fifthRows) : new ArrayList<>();
         this.password = password;
         this.studentId = studentId;
         this.email = email;
         this.name = name;
-        this.personalEvents = new ArrayList<>(); // Initialize here
+        this.personalEvents = new ArrayList<>();
     }
 
     public Student(BigInteger studentId, String email, String name, String pillar, String password) {
@@ -32,7 +32,7 @@ public class Student {
         this.pillar = pillar;
         this.password = password;
         this.fifthRows = new ArrayList<>();
-        this.personalEvents = new ArrayList<>(); // Initialize here
+        this.personalEvents = new ArrayList<>();
     }
 
     public String getEmail() { return email; }
@@ -45,7 +45,7 @@ public class Student {
     public String getFacultyName() { return pillar != null ? pillar : ""; }
 
     public List<Event> getPersonalEvents() {
-        return new ArrayList<>(personalEvents); // Defensive copy
+        return new ArrayList<>(personalEvents);
     }
 
     public void addPersonalEvent(Event event) {
