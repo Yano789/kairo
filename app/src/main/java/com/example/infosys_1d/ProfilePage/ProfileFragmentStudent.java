@@ -1,15 +1,18 @@
 package com.example.infosys_1d.ProfilePage;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,11 +45,17 @@ public class ProfileFragmentStudent extends Fragment {
     private EditText phoneEditText;
 
     private boolean isProfileImageSelected = false;
+    private SharedPreferences sharedPreferences;
+    private static final String PREF_NAME = "StudentProfilePrefs";
+    private String userEmail;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_student, container, false);
+
+        // Initialize SharedPreferences
+        sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
         // Initialize all views
         background = view.findViewById(R.id.background);
@@ -54,8 +63,7 @@ public class ProfileFragmentStudent extends Fragment {
         imagePicker = view.findViewById(R.id.ImagePicker);
         greetingTextView = view.findViewById(R.id.greetingTextView);
 
-        // Initialize TextViews by finding their direct IDs
-        // Add these IDs to your TextViews in XML if they don't exist
+        // Initialize TextViews
         nameTextView = view.findViewById(R.id.nameTextView);
         emailTextView = view.findViewById(R.id.emailTextView);
         idTextView = view.findViewById(R.id.idTextView);
@@ -69,7 +77,7 @@ public class ProfileFragmentStudent extends Fragment {
         phoneEditText = view.findViewById(R.id.phoneEditText);
 
         // Get the logged-in user's email from intent
-        String userEmail = requireActivity().getIntent().getStringExtra("user_email");
+        userEmail = requireActivity().getIntent().getStringExtra("user_email");
 
         if (userEmail != null) {
             Student currentStudent = getStudentByEmail(userEmail);
@@ -82,8 +90,15 @@ public class ProfileFragmentStudent extends Fragment {
             showToast("No user email found");
         }
 
+        // Load saved EditText and ImageView data
+        loadSavedData();
+
         // Set click listeners
         setClickListeners();
+
+        // Set TextWatchers to save EditText changes
+        setTextWatchers();
+
         return view;
     }
 
@@ -102,6 +117,115 @@ public class ProfileFragmentStudent extends Fragment {
             isProfileImageSelected = true;
             openImagePicker();
         });
+    }
+
+    private void setTextWatchers() {
+        genderEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                saveData("gender", s.toString());
+            }
+        });
+
+        birthdayEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                saveData("birthday", s.toString());
+            }
+        });
+
+        linkedinEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                saveData("linkedin", s.toString());
+            }
+        });
+
+        addressEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                saveData("address", s.toString());
+            }
+        });
+
+        phoneEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                saveData("phone", s.toString());
+            }
+        });
+    }
+
+    private void saveData(String key, String value) {
+        if (userEmail == null) return;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(userEmail + "_" + key, value);
+        editor.apply();
+    }
+
+    private void saveImageUri(String key, Uri uri) {
+        if (userEmail == null) return;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(userEmail + "_" + key, uri != null ? uri.toString() : "");
+        editor.apply();
+    }
+
+    private void loadSavedData() {
+        if (userEmail == null) return;
+
+        // Load EditText data
+        setTextSafe(genderEditText, sharedPreferences.getString(userEmail + "_gender", ""));
+        setTextSafe(birthdayEditText, sharedPreferences.getString(userEmail + "_birthday", ""));
+        setTextSafe(linkedinEditText, sharedPreferences.getString(userEmail + "_linkedin", ""));
+        setTextSafe(addressEditText, sharedPreferences.getString(userEmail + "_address", ""));
+        setTextSafe(phoneEditText, sharedPreferences.getString(userEmail + "_phone", ""));
+
+        // Load ImageView URIs
+        String profileImageUriString = sharedPreferences.getString(userEmail + "_profile_image_uri", "");
+        if (!profileImageUriString.isEmpty()) {
+            try {
+                Uri profileImageUri = Uri.parse(profileImageUriString);
+                profileImage.setImageURI(profileImageUri);
+            } catch (Exception e) {
+                showToast("Failed to load profile image");
+            }
+        }
+
+        String backgroundImageUriString = sharedPreferences.getString(userEmail + "_background_image_uri", "");
+        if (!backgroundImageUriString.isEmpty()) {
+            try {
+                Uri backgroundImageUri = Uri.parse(backgroundImageUriString);
+                background.setImageURI(backgroundImageUri);
+            } catch (Exception e) {
+                showToast("Failed to load background image");
+            }
+        }
+    }
+
+    private void setTextSafe(EditText editText, String text) {
+        if (editText != null && text != null && !text.isEmpty()) {
+            editText.setText(text);
+        }
     }
 
     private Student getStudentByEmail(String email) {
@@ -130,12 +254,22 @@ public class ProfileFragmentStudent extends Fragment {
         setTextSafe(pillarTextView, student.getFacultyName() != null ?
                 student.getFacultyName() : "Course not specified");
 
-        // Set hints for additional info
-        setHintSafe(genderEditText, "Add Gender");
-        setHintSafe(birthdayEditText, "Add Birthday");
-        setHintSafe(linkedinEditText, "Add LinkedIn Profile");
-        setHintSafe(addressEditText, "Add Mailing Address");
-        setHintSafe(phoneEditText, "Add Phone Number");
+        // Set hints for additional info (only if no saved data)
+        if (sharedPreferences.getString(userEmail + "_gender", "").isEmpty()) {
+            setHintSafe(genderEditText, "Add Gender");
+        }
+        if (sharedPreferences.getString(userEmail + "_birthday", "").isEmpty()) {
+            setHintSafe(birthdayEditText, "Add Birthday");
+        }
+        if (sharedPreferences.getString(userEmail + "_linkedin", "").isEmpty()) {
+            setHintSafe(linkedinEditText, "Add LinkedIn Profile");
+        }
+        if (sharedPreferences.getString(userEmail + "_address", "").isEmpty()) {
+            setHintSafe(addressEditText, "Add Mailing Address");
+        }
+        if (sharedPreferences.getString(userEmail + "_phone", "").isEmpty()) {
+            setHintSafe(phoneEditText, "Add Phone Number");
+        }
     }
 
     private void setTextSafe(TextView textView, String text) {
@@ -171,8 +305,10 @@ public class ProfileFragmentStudent extends Fragment {
             Uri imageUri = data.getData();
             if (isProfileImageSelected) {
                 profileImage.setImageURI(imageUri);
+                saveImageUri("profile_image_uri", imageUri);
             } else {
                 background.setImageURI(imageUri);
+                saveImageUri("background_image_uri", imageUri);
             }
         }
     }
