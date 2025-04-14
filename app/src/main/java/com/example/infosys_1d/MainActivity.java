@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize AppContext and EventRepository
         AppContext.setAppContext(this);
-        EventRepository.initialize(this);
         Log.d(TAG, "Initialized AppContext and EventRepository");
 
         // Get email from Intent

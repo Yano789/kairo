@@ -38,7 +38,7 @@ public class UserRepository {
                     "Jafira Nassar");
             Student s2 = new Student(
                     new BigInteger("1007915"),
-                    "Sharon@mymail.sutd.edu.sg",
+                    "sharon@mymail.sutd.edu.sg",
                     "Sharon Ashok",
                     "Computer Science and Design",
                     "kairo123");
@@ -60,10 +60,21 @@ public class UserRepository {
 
     public static ArrayList<Admin> getSampleAdmins() {
         ArrayList<Admin> admins = new ArrayList<>();
-        Admin fAdmin = new FacultyAdmin("admin1@school.edu", "Dennis Wasabi", new BigInteger("9001"), "adminpass");
-        Admin frAdmin = new FifthRowAdmin("admin2@fifthrow.edu", "Shreya", new BigInteger("9002"), "fifthrowpass");
-        admins.add(fAdmin);
-        admins.add(frAdmin);
+        Admin volleyballAdmin = new FifthRowAdmin(
+                "volleyball@club.sutd.edu.sg",
+                "Volleyball Club",
+                new BigInteger("9003"),
+                "volley123"
+        );
+        Admin mindsportsAdmin = new FifthRowAdmin(
+                "mindsports@club.sutd.edu.sg",
+                "MindSports Club",
+                new BigInteger("9004"),
+                "minds123"
+        );
+        admins.add(volleyballAdmin);
+        admins.add(mindsportsAdmin);
+        Log.d(TAG, "Sample admins initialized: " + admins.size());
         return admins;
     }
 
