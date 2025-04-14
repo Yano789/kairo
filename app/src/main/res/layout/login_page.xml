@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,14 +13,15 @@
         android:gravity="center"
         android:orientation="vertical">
 
+        <!-- Title Text -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Welcome to Kairo,"
             android:gravity="center"
             android:textColor="@color/_00000"
-            android:textSize="32dp"
-            android:textStyle="bold"/>
+            android:textSize="32sp"
+        android:textStyle="bold"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -29,9 +29,10 @@
             android:text="Manage your time with ease."
             android:gravity="center"
             android:textColor="@color/_00000"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
+        <!-- Logo -->
         <ImageView
             android:layout_width="160dp"
             android:layout_height="160dp"
@@ -39,47 +40,56 @@
             android:src="@drawable/kairobot"
             android:background="@drawable/icon_border"
             android:padding="8dp"
-            android:contentDescription="User Icon"/>
+            android:contentDescription="App Logo"/>
 
+        <!-- Username/Email Field -->
         <EditText
+            android:id="@+id/username_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:hint="Username"
+            android:hint="ID or Email"
             android:textColor="@color/white"
             android:textColorHint="#0F54BF"
             android:textSize="20sp"
             android:background="@drawable/rounded_corner"
             android:padding="18dp"
-            android:inputType="text"
-            android:id="@+id/username_input"/>
+            android:inputType="text"/>
 
-        <EditText
+        <!-- Password Field (Material Design) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Password"
-            android:textColor="@color/white"
-            android:textColorHint="#0F54BF"
-            android:textSize="20sp"
-            android:background="@drawable/rounded_corner"
-            android:padding="18dp"
-            android:inputType="textPassword"
-            android:id="@+id/password_input"/>
+            app:endIconMode="password_toggle"
+            app:endIconTint="#0F54BF"
+            style="@style/CustomTextInputLayout"
+            android:background="@drawable/rounded_corner">
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Login"
-            android:backgroundTint="@color/white"
-            android:textColor="#2196F3"
-            android:padding="18dp"
-            android:textSize="20sp"
-            android:id="@+id/login_btn"/>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:textColor="@color/white"
+                android:textColorHint="#0F54BF"
+                android:textSize="20sp"
+                android:inputType="textPassword"
+                android:padding="18dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
+    <!-- Login Button -->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Login"
+        android:backgroundTint="@color/white"
+        android:textColor="#2196F3"
+        android:padding="18dp"
+        android:textSize="20sp"
+        android:id="@+id/login_btn"/>
 
-
-
-</RelativeLayout>
+</LinearLayout>
+    </RelativeLayout>

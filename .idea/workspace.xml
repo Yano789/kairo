@@ -5,24 +5,6 @@
       <config />
     </shared>
     <layouts>
-<<<<<<< HEAD
-=======
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/bot_message_background.xml">
-        <config>
-          <theme>@style/Theme.Infosys1d</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/date_separator_background.xml">
-        <config>
-          <theme>@style/Theme.Infosys1d</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/user_message_background.xml">
-        <config>
-          <theme>@style/Theme.Infosys1d</theme>
-        </config>
-      </layout>
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_event_detail.xml">
         <config>
           <theme>@style/Theme.Infosys1d</theme>
@@ -33,36 +15,11 @@
           <theme>@style/Theme.Infosys1d</theme>
         </config>
       </layout>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/chat_message_item.xml">
-        <config>
-          <theme>@style/Theme.Infosys1d</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/date_separator.xml">
-        <config>
-          <theme>@style/Theme.Infosys1d</theme>
-        </config>
-      </layout>
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_tag_filter.xml">
         <config>
           <theme>@style/Theme.Infosys1d</theme>
         </config>
       </layout>
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_calendar.xml">
         <config>
           <theme>@style/Theme.Infosys1d</theme>
@@ -70,7 +27,7 @@
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_chat.xml">
         <config>
-          <theme>@style/Theme.Infosys1d</theme>
+          <theme>@style/Base.Theme.Infosys1d</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_home.xml">
@@ -78,39 +35,9 @@
           <theme>@style/Theme.Infosys1d</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_notifications.xml">
-        <config>
-          <theme>@style/Theme.Infosys1d</theme>
-        </config>
-      </layout>
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_profile.xml">
-=======
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_org.xml">
-        <config>
-          <theme>@style/Theme.Infosys1d</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_staff.xml">
-        <config>
-          <theme>@style/Theme.Infosys1d</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_student.xml">
-<<<<<<< HEAD
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
         <config>
-          <theme>@style/Theme.Infosys1d</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_student_2.xml">
-        <config>
-          <theme>@style/Theme.Infosys1d</theme>
+          <theme>@style/Base.Theme.Infosys1d</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_schedule.xml">
@@ -118,29 +45,14 @@
           <theme>@style/Theme.Infosys1d</theme>
         </config>
       </layout>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_event.xml">
-=======
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/menu/bottom_nav_menu.xml">
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_event.xml">
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
-=======
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/login_page.xml">
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/login_page.xml">
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/menu/bottom_nav_menu.xml">
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
         <config>
           <theme>@style/Theme.Infosys1d</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/login_page.xml">
+        <config>
+          <theme>@style/Base.Theme.Infosys1d</theme>
         </config>
       </layout>
     </layouts>
@@ -149,194 +61,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="93ccab24-e316-4d2e-84d0-67bc58c1ab3f" name="Changes" comment="Navi-Bar Testing">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/checksums/checksums.lock" afterDir="false" />
-=======
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Event.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/EventAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/EventDetailActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/TagFilterAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/default_event_image.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/kairo_icon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/kairo_round.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/rounded_date_background.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_event_detail.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/dialog_tag_filter.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_event.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/arrays.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/checksums/md5-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/checksums/sha1-checksums.bin" afterDir="false" />
-=======
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/ProfileFragmentStaff.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/ProfileFragmentStudent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/circle_mask.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/default_profile.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/profile_center_box.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/profile_overlay_box.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/profile_pic.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/rounded_top.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/spacer_12dp.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_staff.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_student.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/dependencies-accessors/010eb9b8df29fc99ce3bed887117efcf48d2ad6a/metadata.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/dependencies-accessors/010eb9b8df29fc99ce3bed887117efcf48d2ad6a/metadata.bin" afterDir="false" />
-<<<<<<< HEAD
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/ChatActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/ChatAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/ChatFragment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/ChatRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/ChatResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/Choice.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/Message.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/OpenRouterApi.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/bot_message_background.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/circle_background.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/date_separator_background.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/user_message_background.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/chat_message_item.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/date_separator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_chat.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/checksums/md5-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/checksums/sha1-checksums.bin" afterDir="false" />
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
-=======
-=======
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-      <change afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/LoginActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/icon_account_circle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/icon_border.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/kairobot.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/login_background.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/rounded_corner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/login_page.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/dependencies-accessors/010eb9b8df29fc99ce3bed887117efcf48d2ad6a/metadata.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/dependencies-accessors/010eb9b8df29fc99ce3bed887117efcf48d2ad6a/metadata.bin" afterDir="false" />
-<<<<<<< HEAD
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-      <change afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/bottom_line.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/profile_change_button.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/profile_overlay_box2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/profile_picture.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/transparent_background.xml" afterDir="false" />
->>>>>>> 40addd40355e9616fbc2107cb4c7b0b25ce3533a
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/executionHistory/executionHistory.lock" afterDir="false" />
->>>>>>> main
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10.2/fileHashes/fileHashes.lock" afterDir="false" />
+    <list default="true" id="93ccab24-e316-4d2e-84d0-67bc58c1ab3f" name="Changes" comment="Edited User and subclasses for password inputs">
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
-=======
-=======
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-<<<<<<< HEAD
-      <change beforePath="$PROJECT_DIR$/.gradle/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/config.properties" afterDir="false" />
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
-=======
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/config.properties" afterDir="false" />
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
->>>>>>> 40addd40355e9616fbc2107cb4c7b0b25ce3533a
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-<<<<<<< HEAD
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/HomeFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/HomeFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
->>>>>>> main
-=======
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/ProfileFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/ProfileFragmentOrg.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_org.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
-<<<<<<< HEAD
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/NotificationsFragment.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_notifications.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/ChatAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/ChatAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/ChatFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Chatbot/ChatFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Discovery/HomeFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/Discovery/HomeFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
-=======
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/config.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/config.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/ProfileFragmentOrg.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/ProfileFragmentOrg.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/ProfileFragmentStaff.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/ProfileFragmentStaff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/ProfileFragmentStudent.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/infosys_1d/ProfileFragmentStudent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/circle_mask.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/circle_mask.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/profile_overlay_box.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/profile_overlay_box.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/spacer_12dp.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/spacer_80dp.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_org.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_org.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_staff.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_staff.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_student.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_profile_student.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
->>>>>>> 40addd40355e9616fbc2107cb4c7b0b25ce3533a
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -346,35 +79,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\Administrator\.android\avd\Medium_Phone.avd)]" />
-=======
   <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=RZCX505L3RB)]" />
->>>>>>> main
-=======
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=R5CRC1D8VYH)]" />
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\Administrator\.android\avd\Medium_Phone.avd)]" />
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
-=======
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\65938\.android\avd\Pixel_5_API_30.avd)]" />
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\65938\.android\avd\Pixel_5_API_30.avd)]" />
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=R5CRC1D8VYH)]" />
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\65938\.android\avd\Pixel_5_API_30.avd)]" />
->>>>>>> 40addd40355e9616fbc2107cb4c7b0b25ce3533a
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -421,48 +126,26 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         <option value="valueResourceFile" />
         <option value="layoutResourceFile" />
-        <option value="Class" />
-=======
-=======
-        <option value="valueResourceFile" />
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
-        <option value="Class" />
         <option value="resourceFile" />
-        <option value="layoutResourceFile" />
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-        <option value="resourceFile" />
-=======
-        <option value="layoutResourceFile" />
-        <option value="resourceFile" />
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
+        <option value="Interface" />
         <option value="Class" />
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
-        <option value="layoutResourceFile" />
-        <option value="resourceFile" />
-<<<<<<< HEAD
-        <option value="Class" />
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Users" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
     &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;Yano789&quot;
+    &quot;assignee&quot;: &quot;Jafnassar&quot;
   }
 }</component>
   <component name="GithubPullRequestsUISettings">{
@@ -482,81 +165,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
-=======
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Android App.app.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-=======
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
-=======
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    &quot;git-widget-placeholder&quot;: &quot;calendarview&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Shreya/Documents&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
-  }
-}</component>
-=======
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Android App.app.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "com.google.services.firebase.aqiPopupShown": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "profile__page",
+    "git-widget-placeholder": "disc__cal",
     "kotlin-language-version-configured": "true",
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "last_directory_selection": "/Users/yanoperdices/AndroidStudioProjects/kairo/app/src/main/res/mipmap-anydpi-v26",
-    "last_opened_file_path": "/Users/yanoperdices/AndroidStudioProjects/kairo",
-=======
-    "last_opened_file_path": "C:/Users/65938/kairo2/kairo/app/src/main/res/drawable",
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-    "last_opened_file_path": "C:/Users/65938/kairo2/kairo/app/src/main/res/drawable",
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-    "last_opened_file_path": "C:/Users/65938/kairo/app/src/main/res/drawable",
->>>>>>> 40addd40355e9616fbc2107cb4c7b0b25ce3533a
+    "last_directory_selection": "C:/Users/Jafir/Desktop/Uni/Term 4/Infosys 1D/kairo/app/src/main/java",
+    "last_opened_file_path": "C:/Users/Jafir/Desktop/Uni/Term 4/50001-Lesson3-StarterCode",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
   <component name="RecentsManager">
-<<<<<<< HEAD
-<<<<<<< HEAD
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
       <recent name="$PROJECT_DIR$/app/src/main/res/mipmap/kairo_icon" />
@@ -564,63 +191,6 @@
       <recent name="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi" />
     </key>
   </component>
->>>>>>> main
-=======
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\65938\kairo\app\src\main\res\drawable" />
-      <recent name="C:\Users\65938\kairo2\kairo\app\src\main\res\drawable" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\65938\kairo2\kairo\app\src\main\res\drawable" />
-    </key>
-  </component>
-<<<<<<< HEAD
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_directory_selection&quot;: &quot;/Users/yanoperdices/AndroidStudioProjects/kairo/app/src/main/res/mipmap-anydpi-v26&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/yanoperdices/AndroidStudioProjects/kairo&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
-  }
-}</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Administrator\AndroidStudioProjects\kairo\app\src\main\res\layout" />
-      <recent name="C:\Users\Administrator\AndroidStudioProjects\kairo\app\src\main\res\drawable" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/mipmap/kairo_icon" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/kairo_icon" />
-    </key>
-  </component>
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
-=======
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/65938/kairo/kairo&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
-  }
-=======
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/65938/kairo/kairo&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
-  }
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-}</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\65938\kairo\kairo\app\src\main\res\drawable" />
-    </key>
-  </component>
-<<<<<<< HEAD
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
   <component name="RunManager">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
       <module name="infosys-1d.app" />
@@ -703,6 +273,39 @@
       <option name="presentableId" value="Default" />
       <updated>1742388108686</updated>
     </task>
+    <task id="LOCAL-00001" summary="Identification added">
+      <option name="closed" value="true" />
+      <created>1742551568123</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1742551568124</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Added Admin classes, edited student class">
+      <option name="closed" value="true" />
+      <created>1744167774396</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1744167774396</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added Admin classes, edited student class">
+      <option name="closed" value="true" />
+      <created>1744167983140</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1744167983140</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Edited User and subclasses for password inputs">
+      <option name="closed" value="true" />
+      <created>1744348673071</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1744348673071</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -735,67 +338,22 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Navi-Bar Testing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Navi-Bar Testing" />
+    <MESSAGE value="Identification added" />
+    <MESSAGE value="Added Admin classes, edited student class" />
+    <MESSAGE value="Edited User and subclasses for password inputs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Edited User and subclasses for password inputs" />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
       <map>
         <entry key="com.example.infosys_1d">
           <value>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <CheckInfo lastCheckTimestamp="1742475215805" />
-=======
-            <CheckInfo lastCheckTimestamp="1743857243665" />
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-            <CheckInfo lastCheckTimestamp="1743666323650" />
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
-=======
-            <CheckInfo lastCheckTimestamp="1742700383348" />
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
-            <CheckInfo lastCheckTimestamp="1742700383348" />
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
-            <CheckInfo lastCheckTimestamp="1743857243665" />
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-            <CheckInfo lastCheckTimestamp="1744213264038" />
->>>>>>> 40addd40355e9616fbc2107cb4c7b0b25ce3533a
+            <CheckInfo lastCheckTimestamp="1744601489032" />
           </value>
         </entry>
         <entry key="com.example.infosys_1d.test">
           <value>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <CheckInfo lastCheckTimestamp="1742475215805" />
-=======
-            <CheckInfo lastCheckTimestamp="1743857243666" />
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-            <CheckInfo lastCheckTimestamp="1743666323650" />
->>>>>>> 92f8695a589978280ae940d764d1a71d607fc0cb
-=======
-            <CheckInfo lastCheckTimestamp="1742700383347" />
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
-            <CheckInfo lastCheckTimestamp="1742700383347" />
->>>>>>> 1e4d4b51191d846ce0ed81a4806fd65c461feda5
-=======
-            <CheckInfo lastCheckTimestamp="1743857243666" />
->>>>>>> 931c4979fc4649e216cf72973fb84b265774fc5a
-=======
-            <CheckInfo lastCheckTimestamp="1744213264036" />
->>>>>>> 40addd40355e9616fbc2107cb4c7b0b25ce3533a
+            <CheckInfo lastCheckTimestamp="1744601489059" />
           </value>
         </entry>
       </map>

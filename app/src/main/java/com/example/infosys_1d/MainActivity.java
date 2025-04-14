@@ -1,33 +1,59 @@
 package com.example.infosys_1d;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.infosys_1d.Calendar.CalendarFragment;
 import com.example.infosys_1d.Chatbot.ChatFragment;
 import com.example.infosys_1d.Discovery.HomeFragment;
+import com.example.infosys_1d.Event.EventRepository;
 import com.example.infosys_1d.ProfilePage.ProfileFragmentOrg;
-import com.example.infosys_1d.ProfilePage.ProfileFragmentStaff;
 import com.example.infosys_1d.ProfilePage.ProfileFragmentStudent;
 import com.example.infosys_1d.Schedule.ScheduleFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize AppContext and EventRepository
+        AppContext.setAppContext(this);
+        EventRepository.initialize(this);
+        Log.d(TAG, "Initialized AppContext and EventRepository");
+
+        // Get email from Intent
+        String userEmail = getIntent().getStringExtra("user_email");
+        if (userEmail != null && !userEmail.isEmpty()) {
+            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("user_email", userEmail);
+            editor.apply();
+            Log.d(TAG, "Received and saved user_email: " + userEmail);
+        } else {
+            Log.w(TAG, "No user_email received in Intent");
+        }
+
+        // Log event counts for debugging
+        Log.d(TAG, "General events count: " + EventRepository.getGeneralEvents().size());
+        if (userEmail != null) {
+            Log.d(TAG, "Personal events count for " + userEmail + ": " + EventRepository.getCalendarEvents(userEmail).size());
+        }
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         Fragment homeFragment = new HomeFragment();
         Fragment calendarFragment = new CalendarFragment();
-        Fragment chatFragment = new ChatFragment(); // Replaced notificationsFragment
+        Fragment chatFragment = new ChatFragment();
         Fragment scheduleFragment = new ScheduleFragment();
         Fragment profileFragmentStudent = new ProfileFragmentStudent();
-        Fragment profileFragmentStaff = new ProfileFragmentStaff();
         Fragment profileFragmentOrg = new ProfileFragmentOrg();
 
         setCurrentFragment(homeFragment);
@@ -40,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.events_calendar) {
                 setCurrentFragment(calendarFragment);
             } else if (id == R.id.notifications) {
-                setCurrentFragment(chatFragment); // Now loads ChatFragment
+                setCurrentFragment(chatFragment);
             } else if (id == R.id.schedule) {
                 setCurrentFragment(scheduleFragment);
             } else if (id == R.id.profile) {
