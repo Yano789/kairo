@@ -73,7 +73,9 @@ public class ChatFragment extends Fragment {
         sendButton = view.findViewById(R.id.sendButton);
 
         chatAdapter = new ChatAdapter(chatMessages);
-        chatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setStackFromEnd(true); // Start from bottom
+        chatRecyclerView.setLayoutManager(layoutManager);
         chatRecyclerView.setAdapter(chatAdapter);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -86,8 +88,11 @@ public class ChatFragment extends Fragment {
             String userMessage = messageInput.getText().toString().trim();
             if (!userMessage.isEmpty()) {
                 originalUserInput = userMessage; // Store for date validation
-                chatMessages.add("You: " + userMessage);
+                String userMsg = "You: " + userMessage;
+                chatMessages.add(userMsg);
+                Log.d(TAG, "Added user message: " + userMsg);
                 chatAdapter.notifyDataSetChanged();
+                chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
                 messageInput.setText("");
                 sendMessageToOpenRouter(userMessage);
             }
@@ -116,21 +121,30 @@ public class ChatFragment extends Fragment {
                     String botReply = response.body().getChoices().get(0).getMessage().getContent();
                     Log.d(TAG, "Bot reply: " + botReply);
                     String visibleReply = botReply.split("<!--")[0].trim();
-                    chatMessages.add("Kai: " + visibleReply);
+                    String kaiMsg = "Kai: " + visibleReply;
+                    chatMessages.add(kaiMsg);
+                    Log.d(TAG, "Added bot message: " + kaiMsg);
                     chatAdapter.notifyDataSetChanged();
+                    chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
                     processBotReply(botReply);
                 } else {
                     Log.d(TAG, "Unsuccessful response: " + response.message());
-                    chatMessages.add("Kai: Error - " + response.message());
+                    String errorMsg = "Kai: Error - " + response.message();
+                    chatMessages.add(errorMsg);
+                    Log.d(TAG, "Added error message: " + errorMsg);
                     chatAdapter.notifyDataSetChanged();
+                    chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
                 }
             }
 
             @Override
             public void onFailure(Call<ChatResponse> call, Throwable t) {
                 Log.e(TAG, "Request failed: " + t.getMessage());
-                chatMessages.add("Kai: Error connecting to server - " + t.getMessage());
+                String errorMsg = "Kai: Error connecting to server - " + t.getMessage();
+                chatMessages.add(errorMsg);
+                Log.d(TAG, "Added failure message: " + errorMsg);
                 chatAdapter.notifyDataSetChanged();
+                chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
             }
         });
     }
@@ -164,13 +178,19 @@ public class ChatFragment extends Fragment {
                 }
             } else {
                 Log.w(TAG, "No JSON comment found in reply");
-                chatMessages.add("Kai: Sorry, I couldn't process the event. Please try again.");
+                String errorMsg = "Kai: Sorry, I couldn't process the event. Please try again.";
+                chatMessages.add(errorMsg);
+                Log.d(TAG, "Added error message: " + errorMsg);
                 chatAdapter.notifyDataSetChanged();
+                chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error parsing event: " + e.getMessage());
-            chatMessages.add("Kai: Sorry, I couldn't add the event. Please try again.");
+            String errorMsg = "Kai: Sorry, I couldn't add the event. Please try again.";
+            chatMessages.add(errorMsg);
+            Log.d(TAG, "Added error message: " + errorMsg);
             chatAdapter.notifyDataSetChanged();
+            chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
         }
     }
 
@@ -204,8 +224,11 @@ public class ChatFragment extends Fragment {
 
             if (eventCal.before(todayCal)) {
                 Log.w(TAG, "Parsed date is before today: " + dateStr);
-                chatMessages.add("Kai: Sorry, I can't add events before today. Please choose today or a future date.");
+                String errorMsg = "Kai: Sorry, I can't add events before today. Please choose today or a future date.";
+                chatMessages.add(errorMsg);
+                Log.d(TAG, "Added error message: " + errorMsg);
                 chatAdapter.notifyDataSetChanged();
+                chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
                 return;
             }
 
@@ -335,15 +358,29 @@ public class ChatFragment extends Fragment {
             if (userEmail != null && !userEmail.isEmpty()) {
                 EventRepository.addPersonalEventToCalendar(userEmail, event);
                 Log.d(TAG, "Event added: title=" + title + ", date=" + dateStr + ", start=" + startTimeStr + ", end=" + endTimeStr + ", location=" + location);
-            } else {
-                chatMessages.add("Kai: Sorry, I couldn't add the event. No user logged in.");
+                // Add confirmation message with details
+                String confirmationMessage = String.format(
+                        "Kai: Event added: %s on %s from %s to %s at %s.",
+                        title, dateStr, startTimeStr, endTimeStr, location
+                );
+                chatMessages.add(confirmationMessage);
+                Log.d(TAG, "Added confirmation: " + confirmationMessage);
                 chatAdapter.notifyDataSetChanged();
-                Log.w(TAG, "Event not added: No user email");
+                chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
+            } else {
+                String errorMsg = "Kai: Sorry, I couldn't add the event. No user logged in.";
+                chatMessages.add(errorMsg);
+                Log.d(TAG, "Added error message: " + errorMsg);
+                chatAdapter.notifyDataSetChanged();
+                chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error creating event: " + e.getMessage());
-            chatMessages.add("Kai: Sorry, I couldn't add the event due to an error: " + e.getMessage());
+            String errorMsg = "Kai: Sorry, I couldn't add the event due to an error: " + e.getMessage();
+            chatMessages.add(errorMsg);
+            Log.d(TAG, "Added error message: " + errorMsg);
             chatAdapter.notifyDataSetChanged();
+            chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
         }
     }
 }
