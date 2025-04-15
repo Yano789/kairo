@@ -1,9 +1,8 @@
 package com.example.infosys_1d.Calendar;
 
 import android.content.Context;
-import android.util.Log;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +12,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.infosys_1d.Event.Event;
 import com.example.infosys_1d.Event.EventAdapter;
 import com.example.infosys_1d.Event.EventRepository;
-import com.example.infosys_1d.Event.EventViewModel;
+import com.example.infosys_1d.Login.UserRepository;
 import com.example.infosys_1d.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -39,7 +38,6 @@ public class CalendarFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private EventAdapter calendarAdapter;
-    private EventViewModel eventViewModel;
     private final List<Event> calendarEvents = new ArrayList<>();
     private MaterialCalendarView calendarView;
     private TextView emptyView;
@@ -53,14 +51,10 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
         currentUserEmail = getCurrentUserEmail();
         Log.d(TAG, "onCreate: currentUserEmail = " + currentUserEmail);
         if (currentUserEmail.isEmpty()) {
             Log.w(TAG, "No user email found, cannot load events");
-            Toast.makeText(requireContext(), "Please log in to view your calendar", Toast.LENGTH_SHORT).show();
-        } else {
-            eventViewModel.refreshEvents(currentUserEmail);
         }
     }
 
@@ -76,7 +70,7 @@ public class CalendarFragment extends Fragment {
         setupRecyclerView();
         Calendar calendar = Calendar.getInstance();
         selectedYear = calendar.get(Calendar.YEAR);
-        selectedMonth = calendar.get(Calendar.MONTH);
+        selectedMonth = calendar.get(Calendar.MONTH) + 1; // 1-based
         visibleYear = selectedYear;
         visibleMonth = selectedMonth;
         loadInitialEvents();
@@ -85,11 +79,11 @@ public class CalendarFragment extends Fragment {
 
     private void loadInitialEvents() {
         if (!currentUserEmail.isEmpty()) {
-            eventViewModel.refreshEvents(currentUserEmail);
-            if (eventViewModel.getCalendarEvents().getValue() != null) {
-                filterEventsForMonth(visibleYear, visibleMonth);
-                setupCalendarDecorator();
-            }
+            List<Event> userEvents = UserRepository.getUserEvents(currentUserEmail);
+            calendarEvents.clear();
+            calendarEvents.addAll(userEvents);
+            filterEventsForMonth(visibleYear, visibleMonth);
+            setupCalendarDecorator();
         }
     }
 
@@ -102,12 +96,10 @@ public class CalendarFragment extends Fragment {
         selectedYear = visibleYear;
         selectedMonth = visibleMonth;
         setupCalendarListener();
-        setupObservers();
         if (!currentUserEmail.isEmpty()) {
-            eventViewModel.refreshEvents(currentUserEmail);
+            filterEventsForDate(today);
         }
         calendarView.setSelectedDate(today);
-        filterEventsForDate(today);
     }
 
     private void setupRecyclerView() {
@@ -115,48 +107,24 @@ public class CalendarFragment extends Fragment {
                 new EventAdapter.OnEventActionListener() {
                     @Override
                     public void onAddToCalendar(Event event) {
-                        // Not applicable
+                        Log.d(TAG, "Add to calendar not applicable for: " + event.getName());
                     }
 
                     @Override
                     public void onRemoveFromCalendar(Event event) {
+                        Log.d(TAG, "Removing event: " + event.getName() + ", ID: " + event.getId());
                         EventRepository.removeFromCalendar(currentUserEmail, event);
-                        refreshAndUpdateUI();
+                        loadInitialEvents();
                     }
                 });
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(calendarAdapter);
     }
 
-    private void setupObservers() {
-        eventViewModel.getCalendarEvents().observe(getViewLifecycleOwner(), events -> {
-            calendarEvents.clear();
-            Log.d(TAG, "Received events for " + currentUserEmail + ": " + (events != null ? events.size() : 0));
-            if (events != null) {
-                for (Event event : events) {
-                    Log.d(TAG, "Event: " + event.getName() + ", title: " + event.getTitle() + ", tags: " + event.getTags());
-                    calendarEvents.add(event);
-                }
-            }
-            Log.d(TAG, "Total events after processing: " + calendarEvents.size());
-            if (calendarView.getSelectedDate() != null) {
-                filterEventsForDate(calendarView.getSelectedDate());
-            } else {
-                filterEventsForMonth(visibleYear, visibleMonth);
-            }
-            setupCalendarDecorator();
-            updateEmptyView(calendarEvents);
-        });
-    }
-
     private void updateEmptyView(List<Event> events) {
         boolean isEmpty = events == null || events.isEmpty();
-        if (emptyView != null) {
-            emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-        }
-        if (recyclerView != null) {
-            recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        }
+        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 
     private void setupCalendarDecorator() {
@@ -167,21 +135,18 @@ public class CalendarFragment extends Fragment {
             cal.setTimeInMillis(event.getStartTime());
             CalendarDay eventDay = CalendarDay.from(cal.get(Calendar.YEAR),
                     cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
-            int color = modifyColorForPersonal(event.getColor());
-            eventColorMap.computeIfAbsent(eventDay, day -> new ArrayList<>())
-                    .add(color);
+            try {
+                int color = ContextCompat.getColor(requireContext(), event.getColor());
+                eventColorMap.computeIfAbsent(eventDay, day -> new ArrayList<>())
+                        .add(color);
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to resolve color for event: " + event.getName() + ", color: " + event.getColor());
+            }
         }
         for (Map.Entry<CalendarDay, List<Integer>> entry : eventColorMap.entrySet()) {
             calendarView.addDecorator(new MultiDotDecorator(entry.getKey(), entry.getValue()));
         }
         Log.d(TAG, "Decorators added for " + eventColorMap.size() + " days");
-    }
-
-    private int modifyColorForPersonal(int originalColor) {
-        return Color.argb(200,
-                Color.red(originalColor),
-                Color.green(originalColor),
-                Color.blue(originalColor));
     }
 
     private void setupCalendarListener() {
@@ -197,6 +162,9 @@ public class CalendarFragment extends Fragment {
     }
 
     private void filterEventsForDate(int year, int month, int day) {
+        List<Event> userEvents = UserRepository.getUserEvents(currentUserEmail);
+        calendarEvents.clear();
+        calendarEvents.addAll(userEvents);
         List<Event> filteredEvents = calendarEvents.stream()
                 .filter(e -> {
                     Calendar cal = Calendar.getInstance();
@@ -210,12 +178,20 @@ public class CalendarFragment extends Fragment {
 
         Log.d(TAG, "Filtered events for " + year + "-" + month + "-" + day + ": " + filteredEvents.size());
         for (Event e : filteredEvents) {
-            Log.d(TAG, " - Filtered event: " + e.getName() + ", title: " + e.getTitle());
+            try {
+                int color = ContextCompat.getColor(requireContext(), e.getColor());
+                Log.d(TAG, " - Filtered event: " + e.getName() + ", Color: 0x" + Integer.toHexString(color));
+            } catch (Exception ex) {
+                Log.e(TAG, "Color error for event: " + e.getName() + ", color: " + e.getColor());
+            }
         }
         updateEventDisplay(filteredEvents);
     }
 
     private void filterEventsForMonth(int year, int month) {
+        List<Event> userEvents = UserRepository.getUserEvents(currentUserEmail);
+        calendarEvents.clear();
+        calendarEvents.addAll(userEvents);
         List<Event> filteredEvents = calendarEvents.stream()
                 .filter(e -> {
                     Calendar cal = Calendar.getInstance();
@@ -228,15 +204,14 @@ public class CalendarFragment extends Fragment {
 
         Log.d(TAG, "Filtered events for " + year + "-" + month + ": " + filteredEvents.size());
         for (Event e : filteredEvents) {
-            Log.d(TAG, " - Filtered event: " + e.getName() + ", title: " + e.getTitle());
+            try {
+                int color = ContextCompat.getColor(requireContext(), e.getColor());
+                Log.d(TAG, " - Filtered event: " + e.getName() + ", Color: 0x" + Integer.toHexString(color));
+            } catch (Exception ex) {
+                Log.e(TAG, "Color error for event: " + e.getName() + ", color: " + e.getColor());
+            }
         }
         updateEventDisplay(filteredEvents);
-    }
-
-    private void refreshAndUpdateUI() {
-        if (!currentUserEmail.isEmpty()) {
-            eventViewModel.refreshEvents(currentUserEmail);
-        }
     }
 
     private void resetToMonthView() {
@@ -249,25 +224,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void updateEventDisplay(List<Event> events) {
-        if (calendarAdapter == null) {
-            calendarAdapter = new EventAdapter(requireContext(), new ArrayList<>(),
-                    R.layout.calendar_item_event, new EventAdapter.OnEventActionListener() {
-                @Override
-                public void onAddToCalendar(Event event) {
-                    // Not applicable
-                }
-
-                @Override
-                public void onRemoveFromCalendar(Event event) {
-                    EventRepository.removeFromCalendar(currentUserEmail, event);
-                    refreshAndUpdateUI();
-                }
-            });
-            recyclerView.setAdapter(calendarAdapter);
-        }
-
         calendarAdapter.setEvents(events);
-        calendarAdapter.notifyDataSetChanged();
         updateEmptyView(events);
     }
 

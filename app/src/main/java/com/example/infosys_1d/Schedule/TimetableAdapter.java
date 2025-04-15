@@ -8,23 +8,24 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.infosys_1d.Event.Event;
 import com.example.infosys_1d.R;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class TimetableAdapter extends RecyclerView.Adapter<TimetableViewHolder> {
-    private List<MyEvent> eventList;
+    private List<Event> eventList;
     private LocalDate currentWeekStart;
 
-    public TimetableAdapter(Context context, List<MyEvent> eventList, LocalDate currentWeekStart) {
+    public TimetableAdapter(Context context, List<Event> eventList, LocalDate currentWeekStart) {
         this.eventList = eventList;
         this.currentWeekStart = currentWeekStart;
     }
 
-    public void setEventList(List<MyEvent> newList) {
+    public void setEventList(List<Event> newList) {
         this.eventList = newList;
-        notifyDataSetChanged(); // Refresh UI after update
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -37,7 +38,7 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull TimetableViewHolder holder, int position) {
-
+        // No event binding needed here; EventCanvasView handles rendering
     }
 
     public void setCurrentWeekStart(LocalDate currentWeekStart) {
@@ -45,18 +46,8 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableViewHolder> 
         notifyDataSetChanged();
     }
 
-
-
-    private String formatTime(int minutes) {
-        int hour = minutes / 60;
-        int min = minutes % 60;
-        return String.format("%02d:%02d", hour, min);
-    }
-
     @Override
     public int getItemCount() {
         return 288; // 24 hours * 12 slots per hour (5-min intervals)
     }
 }
-
-

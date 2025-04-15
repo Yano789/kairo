@@ -58,6 +58,7 @@ public class EventRepository {
                 R.drawable.default_event_image
         );
         event1.setId("event_001");
+        Log.d(TAG, "Created event_001, Color: " + event1.getColor());
 
         Event event2 = new Event(
                 "Community Charity Run",
@@ -67,12 +68,13 @@ public class EventRepository {
                 endTime2,
                 "2025-04-15",
                 tags2,
-                R.color.light_green, // Changed to pastel
+                R.color.light_green,
                 "Charity Run",
                 "Community Event",
                 R.drawable.default_event_image
         );
         event2.setId("event_002");
+        Log.d(TAG, "Created event_002, Color: " + event2.getColor());
 
         Event event3 = new Event(
                 "AI Workshop",
@@ -88,6 +90,7 @@ public class EventRepository {
                 R.drawable.default_event_image
         );
         event3.setId("event_003");
+        Log.d(TAG, "Created event_003, Color: " + event3.getColor());
 
         generalEvents.add(event1);
         generalEvents.add(event2);
@@ -101,7 +104,6 @@ public class EventRepository {
 
     public static void moveToCalendar(String userEmail, Event event) {
         try {
-            // Ensure pastel color
             Event updatedEvent = new Event(
                     event.getName(),
                     event.getDescription(),
@@ -110,7 +112,7 @@ public class EventRepository {
                     event.getEndTime(),
                     event.getDate(),
                     event.getTags(),
-                    getPastelColor(event.getColor()),
+                    event.getColor(),
                     event.getTitle(),
                     event.getSubtitle(),
                     event.getImageResId()
@@ -121,10 +123,6 @@ public class EventRepository {
         } catch (Exception e) {
             Log.e(TAG, "Failed to move event '" + event.getName() + "' to calendar for " + userEmail + ": " + e.getMessage());
         }
-    }
-
-    private static int getPastelColor(int originalColor) {
-        return originalColor; // Keep pastel colors
     }
 
     public static void removeFromCalendar(String userEmail, Event event) {
@@ -149,7 +147,6 @@ public class EventRepository {
             if (event.getId() == null || event.getId().isEmpty()) {
                 event.setId("personal_" + UUID.randomUUID().toString());
             }
-            // Ensure pastel color
             Event updatedEvent = new Event(
                     event.getName(),
                     event.getDescription(),
@@ -158,7 +155,7 @@ public class EventRepository {
                     event.getEndTime(),
                     event.getDate(),
                     event.getTags(),
-                    getPastelColor(event.getColor()),
+                    event.getColor() != 0 ? event.getColor() : R.color.light_blue, // Default color
                     event.getTitle(),
                     event.getSubtitle(),
                     event.getImageResId()
@@ -188,7 +185,6 @@ public class EventRepository {
             sdf.parse(dateInput);
             return dateInput;
         } catch (ParseException e) {
-            // Handle relative dates
             Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Singapore"));
             try {
                 cal.setTime(sdf.parse(currentDate));

@@ -13,17 +13,23 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.infosys_1d.Event.Event;
 import com.example.infosys_1d.R;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class EventCanvasView extends View {
-    private List<MyEvent> eventList = new ArrayList<>();
+    private List<Event> eventList = new ArrayList<>();
     private LocalDate currentWeekStart;
     private int rowHeightPx = 0;
 
@@ -31,7 +37,7 @@ public class EventCanvasView extends View {
     private final TextPaint textPaint;
 
     public interface OnEventClickListener {
-        void onEventClick(MyEvent event);
+        void onEventClick(Event event);
     }
 
     private OnEventClickListener eventClickListener;
@@ -44,7 +50,6 @@ public class EventCanvasView extends View {
         super(context, attrs);
 
         boxPaint = new Paint();
-        boxPaint.setColor(0xFFFFF3A0); // light yellow
         boxPaint.setStyle(Paint.Style.FILL);
 
         textPaint = new TextPaint();
@@ -55,7 +60,7 @@ public class EventCanvasView extends View {
         setWillNotDraw(false);
     }
 
-    public void setData(List<MyEvent> events, LocalDate weekStart, int rowHeight) {
+    public void setData(List<Event> events, LocalDate weekStart, int rowHeight) {
         this.eventList = events;
         this.currentWeekStart = weekStart;
         this.rowHeightPx = rowHeight;
@@ -75,23 +80,43 @@ public class EventCanvasView extends View {
         if (recycler == null) return;
 
         int scrollOffsetY = recycler.computeVerticalScrollOffset();
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        timeFormat.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
 
-        for (MyEvent event : eventList) {
-            int dayIndex = (int) ChronoUnit.DAYS.between(currentWeekStart, event.getDate());
-            if (dayIndex < 0 || dayIndex >= 7 || event.getStartTime() >= event.getEndTime()) continue;
+        for (Event event : eventList) {
+            LocalDate eventDate = LocalDate.parse(event.getDate());
+            int dayIndex = (int) ChronoUnit.DAYS.between(currentWeekStart, eventDate);
+            if (dayIndex < 0 || dayIndex >= 7) continue;
+
+            // Convert milliseconds to minutes since midnight
+            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Singapore"));
+            cal.setTimeInMillis(event.getStartTime());
+            int startMin = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+            cal.setTimeInMillis(event.getEndTime());
+            int endMin = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+
+            if (startMin >= endMin) continue;
 
             float left = colWidth * (dayIndex + 1);
             float right = left + colWidth;
-            float top = event.getStartTime() * pxPerMin - scrollOffsetY;
-            float bottom = event.getEndTime() * pxPerMin - scrollOffsetY;
+            float top = startMin * pxPerMin - scrollOffsetY;
+            float bottom = endMin * pxPerMin - scrollOffsetY;
 
             // Draw only if visible
             if (bottom < 0 || top > getHeight()) continue;
 
+            // Set event color
+            try {
+                boxPaint.setColor(ContextCompat.getColor(getContext(), event.getColor()));
+            } catch (Exception e) {
+                boxPaint.setColor(ContextCompat.getColor(getContext(), R.color.light_blue));
+            }
+
             canvas.drawRect(left, top, right, bottom, boxPaint);
 
             String displayText = event.getTitle() + "\n" +
-                    formatTime(event.getStartTime()) + " - " + formatTime(event.getEndTime());
+                    timeFormat.format(event.getStartTime()) + " - " +
+                    timeFormat.format(event.getEndTime());
 
             StaticLayout layout = StaticLayout.Builder
                     .obtain(displayText, 0, displayText.length(), textPaint, (int) (colWidth - 16))
@@ -111,14 +136,6 @@ public class EventCanvasView extends View {
         }
     }
 
-
-
-    private String formatTime(int minutes) {
-        int hour = minutes / 60;
-        int min = minutes % 60;
-        return String.format("%02d:%02d", hour, min);
-    }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() != MotionEvent.ACTION_DOWN) return false;
@@ -133,17 +150,26 @@ public class EventCanvasView extends View {
         RecyclerView recycler = root.findViewById(R.id.timetableRecyclerView);
         if (recycler == null) return false;
 
-        int scrollOffsetY = recycler.computeVerticalScrollOffset(); // ✅ key line
+        int scrollOffsetY = recycler.computeVerticalScrollOffset();
         float adjustedY = y + scrollOffsetY;
 
-        for (MyEvent e : eventList) {
-            int dayIndex = (int) ChronoUnit.DAYS.between(currentWeekStart, e.getDate());
-            if (dayIndex < 0 || dayIndex >= 7 || e.getStartTime() >= e.getEndTime()) continue;
+        for (Event e : eventList) {
+            LocalDate eventDate = LocalDate.parse(e.getDate());
+            int dayIndex = (int) ChronoUnit.DAYS.between(currentWeekStart, eventDate);
+            if (dayIndex < 0 || dayIndex >= 7) continue;
+
+            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Singapore"));
+            cal.setTimeInMillis(e.getStartTime());
+            int startMin = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+            cal.setTimeInMillis(e.getEndTime());
+            int endMin = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+
+            if (startMin >= endMin) continue;
 
             float left = colWidth * (dayIndex + 1);
             float right = left + colWidth;
-            float top = pxPerMin * e.getStartTime();
-            float bottom = pxPerMin * e.getEndTime();
+            float top = pxPerMin * startMin;
+            float bottom = pxPerMin * endMin;
 
             if (adjustedY >= top && adjustedY <= bottom && x >= left && x <= right) {
                 if (eventClickListener != null) {
@@ -156,50 +182,9 @@ public class EventCanvasView extends View {
         return false;
     }
 
-
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        if (event.getAction() != MotionEvent.ACTION_DOWN) return false;
-//
-//        float x = event.getX();
-//        float y = event.getY();
-//
-//        float colWidth = getWidth() / 8f;
-//        float pxPerMin = rowHeightPx / 5f;
-//
-//        // Same scroll offset logic from onDraw
-//        View root = getRootView();
-//        RecyclerView recycler = root.findViewById(R.id.timetableRecyclerView);
-//        if (recycler == null || recycler.getLayoutManager() == null) return false;
-//
-//        float adjustedY = y + recycler.computeVerticalScrollOffset();
-//
-//
-//        for (MyEvent e : eventList) {
-//            if (e.getStartTime() >= e.getEndTime()) continue;
-//
-//            int dayIndex = (int) ChronoUnit.DAYS.between(currentWeekStart, e.getDate());
-//            if (dayIndex < 0 || dayIndex >= 7) continue;
-//
-//            float left = colWidth * (dayIndex + 1);
-//            float right = left + colWidth;
-//            float top = pxPerMin * e.getStartTime();
-//            float bottom = pxPerMin * e.getEndTime();
-//
-//            if (bottom < 0 || top > getHeight()) continue;
-//
-//            RectF rect = new RectF(left, top, right, bottom);
-//            if (rect.contains(x, adjustedY)) {
-//                if (eventClickListener != null) {
-//                    eventClickListener.onEventClick(e);
-//                }
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
-
+    private String formatTime(int minutes) {
+        int hour = minutes / 60;
+        int min = minutes % 60;
+        return String.format("%02d:%02d", hour, min);
+    }
 }
-
-

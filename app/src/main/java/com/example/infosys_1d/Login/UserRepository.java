@@ -83,9 +83,16 @@ public class UserRepository {
         for (Student student : getSampleStudents()) {
             if (student.getEmail().equalsIgnoreCase(userEmail)) {
                 try {
+                    // Ensure "personal" tag
+                    List<String> tags = event.getTags();
+                    if (!tags.contains("personal")) {
+                        tags.add("personal");
+                        Log.d(TAG, "Added 'personal' tag to event: " + event.getName() + ", Date: " + event.getDate());
+                    }
                     student.addPersonalEvent(event);
                     saveEventsToPreferences(userEmail, student.getPersonalEvents());
-                    Log.d(TAG, "Successfully added event '" + event.getName() + "' on " + event.getDate() + " to " + userEmail);
+                    Log.d(TAG, "Successfully added event '" + event.getName() + "' on " + event.getDate() +
+                            " to " + userEmail + ", Tags: " + event.getTags());
                     found = true;
                     break;
                 } catch (Exception e) {
@@ -104,7 +111,7 @@ public class UserRepository {
                 List<Event> events = student.getPersonalEvents();
                 Log.d(TAG, "Events for " + userEmail + ": " + events.size() + " events found");
                 for (Event e : events) {
-                    Log.d(TAG, " - " + e.getName() + ", date: " + e.getDate());
+                    Log.d(TAG, " - " + e.getName() + ", date: " + e.getDate() + ", tags: " + e.getTags());
                 }
                 return events;
             }

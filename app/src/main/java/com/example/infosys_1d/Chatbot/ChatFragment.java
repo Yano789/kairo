@@ -336,19 +336,16 @@ public class ChatFragment extends Fragment {
             if (titleLower.contains("party")) tags.add("party");
             if (titleLower.contains("seminar")) tags.add("seminar");
 
-            // Get event color
-            int eventColor = ContextCompat.getColor(requireContext(), R.color.light_blue);
-
-            // Create Event object
+            // Create Event object with resource ID for color
             Event event = new Event(
                     title,
-                    title + " scheduled by Kai",
+                    "Scheduled by Kai",
                     location != null && !location.isEmpty() ? location : "Not specified",
                     startTimeMillis,
                     endTimeMillis,
                     dateStr,
                     tags,
-                    eventColor,
+                    R.color.light_purple, // Use resource ID
                     title,
                     "Scheduled Event",
                     R.drawable.default_event_image
@@ -383,4 +380,5 @@ public class ChatFragment extends Fragment {
             chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
         }
     }
+
 }

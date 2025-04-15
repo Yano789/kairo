@@ -2,16 +2,17 @@ package com.example.infosys_1d.Event;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.infosys_1d.R;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "EventAdapter";
     private static final int TYPE_CALENDAR = 1;
     private static final int TYPE_DISCOVERY = 2;
 
@@ -79,21 +81,27 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private void bindCalendarViewHolder(CalendarViewHolder holder, Event event) {
-        // Set date components
         String[] dateParts = event.getDate().split("-");
-        holder.tvEventDay.setText(dateParts[2]); // Day number
-        holder.eventDayOfWeek.setText(getDayName(event.getDate())); // Day name
+        holder.tvEventDay.setText(dateParts[2]);
+        holder.eventDayOfWeek.setText(getDayName(event.getDate()));
 
-        // Set event details
         holder.tvTitle.setText(event.getTitle());
         holder.tvDescription.setText(event.getDescription());
         String formattedTime = formatTimeRange(event.getStartTime(), event.getEndTime());
         holder.tvTime.setText(formattedTime);
-        holder.cardView.setCardBackgroundColor(event.getColor());
 
-        // For calendar events, show remove icon and set click listener
-        holder.btnAction.setImageResource(R.drawable.ic_delete); // Set trash icon
-        holder.btnAction.setContentDescription("Remove event"); // Accessibility
+        int color;
+        try {
+            color = ContextCompat.getColor(context, event.getColor());
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to resolve color for event: " + event.getName() + ", color: " + event.getColor());
+            color = ContextCompat.getColor(context, R.color.light_blue); // Fallback
+        }
+        Log.d(TAG, "Binding event: " + event.getName() + ", ColorRes: " + event.getColor() + ", ResolvedColor: 0x" + Integer.toHexString(color));
+        holder.cardView.setCardBackgroundColor(color);
+
+        holder.btnAction.setImageResource(R.drawable.ic_delete);
+        holder.btnAction.setContentDescription("Remove event");
         holder.btnAction.setOnClickListener(v -> {
             if (actionListener != null) {
                 actionListener.onRemoveFromCalendar(event);
@@ -103,19 +111,16 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private String formatTimeRange(long startMillis, long endMillis) {
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
-
         String startTime = timeFormat.format(new Date(startMillis));
         String endTime = timeFormat.format(new Date(endMillis));
-
         return startTime + " to " + endTime;
     }
 
     private void bindDiscoveryViewHolder(DiscoveryViewHolder holder, Event event) {
-        // Set date in discovery format (e.g., "22\nFEB")
         String[] dateParts = event.getDate().split("-");
         try {
             int year = Integer.parseInt(dateParts[0]);
-            int month = Integer.parseInt(dateParts[1]) - 1; // Months are 0-based
+            int month = Integer.parseInt(dateParts[1]) - 1;
             int day = Integer.parseInt(dateParts[2]);
 
             Calendar calendar = Calendar.getInstance();
@@ -129,20 +134,17 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.eventDate.setText(dateParts[2] + "\n" + dateParts[1]);
         }
 
-        // Set event details
         holder.eventTitle.setText(event.getTitle());
         holder.eventSubtitle.setText(event.getSubtitle());
 
-        // Set image
         if (event.getImageResId() != -1) {
             holder.eventImage.setImageResource(event.getImageResId());
         } else {
             holder.eventImage.setImageResource(R.drawable.default_event_image);
         }
 
-        // For discovery events, show add to calendar icon
-        holder.btnAction.setImageResource(R.drawable.ic_add); // You'll need this icon
-        holder.btnAction.setContentDescription("Add to calendar"); // Accessibility
+        holder.btnAction.setImageResource(R.drawable.ic_add);
+        holder.btnAction.setContentDescription("Add to calendar");
         holder.btnAction.setOnClickListener(v -> {
             if (actionListener != null) {
                 actionListener.onAddToCalendar(event);
@@ -172,6 +174,11 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
+    public void setEvents(List<Event> newEvents) {
+        this.eventList = newEvents;
+        notifyDataSetChanged();
+    }
+
     static class CalendarViewHolder extends RecyclerView.ViewHolder {
         TextView tvEventDay, eventDayOfWeek, tvTitle, tvDescription, tvTime;
         CardView cardView;
@@ -187,10 +194,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             cardView = itemView.findViewById(R.id.cardViewEvent);
             btnAction = itemView.findViewById(R.id.btnAction);
         }
-    }
-    public void setEvents(List<Event> newEvents) {
-        this.eventList = newEvents;
-        notifyDataSetChanged();
     }
 
     static class DiscoveryViewHolder extends RecyclerView.ViewHolder {
@@ -208,6 +211,5 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             cardView = itemView.findViewById(R.id.eventCard);
             btnAction = itemView.findViewById(R.id.btnAction);
         }
-
     }
 }
