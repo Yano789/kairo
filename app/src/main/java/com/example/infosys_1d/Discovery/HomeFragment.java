@@ -126,14 +126,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onAddToCalendar(Event event) {
                 Log.d(TAG, "Adding event to calendar: " + event.getName() + " with ID " + event.getId() + " for " + getCurrentUserEmail());
-                EventRepository.moveToCalendar(getCurrentUserEmail(), event);
+                EventRepository.moveToCalendar(getCurrentUserEmail(), event, requireContext());
                 eventViewModel.refreshDiscoverableEvents();
             }
 
             @Override
             public void onRemoveFromCalendar(Event event) {
                 Log.d(TAG, "Removing event from calendar: " + event.getName() + " with ID " + event.getId() + " for " + getCurrentUserEmail());
-                EventRepository.removeFromCalendar(getCurrentUserEmail(), event);
+                EventRepository.removeFromCalendar(getCurrentUserEmail(), event, requireContext());
                 eventViewModel.refreshDiscoverableEvents();
             }
         });

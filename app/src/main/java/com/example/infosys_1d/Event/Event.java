@@ -166,4 +166,6 @@ public class Event implements Parcelable {
     public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
+
+    public void setTags(List<String> tags){this.tags = tags; }
 }

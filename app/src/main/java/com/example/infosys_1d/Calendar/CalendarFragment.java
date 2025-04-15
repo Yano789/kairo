@@ -113,7 +113,7 @@ public class CalendarFragment extends Fragment {
                     @Override
                     public void onRemoveFromCalendar(Event event) {
                         Log.d(TAG, "Removing event: " + event.getName() + ", ID: " + event.getId());
-                        EventRepository.removeFromCalendar(currentUserEmail, event);
+                        EventRepository.removeFromCalendar(currentUserEmail, event, requireContext());
                         loadInitialEvents();
                     }
                 });

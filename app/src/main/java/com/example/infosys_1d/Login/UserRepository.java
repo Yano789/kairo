@@ -14,9 +14,9 @@ import org.json.JSONObject;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Calendar;
 
 public class UserRepository {
     private static final String TAG = "UserRepository";
@@ -33,12 +33,10 @@ public class UserRepository {
             fifthRows.add(new FifthRowID(new BigInteger("50"), "MindSports"));
             fifthRows2.add(new FifthRowID(new BigInteger("51"), "CAT"));
 
-            // Mariano's class schedule
             List<Event> marianoEvents = new ArrayList<>();
             Calendar cal = Calendar.getInstance();
             cal.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
 
-            // Monday: Algorithms (9:00-11:00), Design Studio (14:00-16:00)
             cal.set(2025, Calendar.APRIL, 14, 9, 0);
             long algoStart = cal.getTimeInMillis();
             cal.set(2025, Calendar.APRIL, 14, 11, 0);
@@ -79,7 +77,6 @@ public class UserRepository {
             design.setId("personal_002");
             marianoEvents.add(design);
 
-            // Tuesday: Software Engineering (10:00-12:00)
             cal.set(2025, Calendar.APRIL, 15, 10, 0);
             long softEngStart = cal.getTimeInMillis();
             cal.set(2025, Calendar.APRIL, 15, 12, 0);
@@ -100,7 +97,6 @@ public class UserRepository {
             softEng.setId("personal_003");
             marianoEvents.add(softEng);
 
-            // Wednesday: Data Structures (9:00-11:00), AI Lab (13:00-15:00)
             cal.set(2025, Calendar.APRIL, 16, 9, 0);
             long dataStart = cal.getTimeInMillis();
             cal.set(2025, Calendar.APRIL, 16, 11, 0);
@@ -141,7 +137,6 @@ public class UserRepository {
             aiLab.setId("personal_005");
             marianoEvents.add(aiLab);
 
-            // Thursday: Software Engineering (10:00-12:00)
             cal.set(2025, Calendar.APRIL, 17, 10, 0);
             long softEng2Start = cal.getTimeInMillis();
             cal.set(2025, Calendar.APRIL, 17, 12, 0);
@@ -162,7 +157,6 @@ public class UserRepository {
             softEng2.setId("personal_006");
             marianoEvents.add(softEng2);
 
-            // Friday: Design Studio (14:00-16:00)
             cal.set(2025, Calendar.APRIL, 18, 14, 0);
             long design2Start = cal.getTimeInMillis();
             cal.set(2025, Calendar.APRIL, 18, 16, 0);
@@ -234,19 +228,20 @@ public class UserRepository {
         return admins;
     }
 
-    public static void addPersonalEventToUser(String userEmail, Event event) {
+    public static void addPersonalEventToUser(String userEmail, Event event, Context context) {
         boolean found = false;
         for (Student student : getSampleStudents()) {
             if (student.getEmail().equalsIgnoreCase(userEmail)) {
                 try {
                     // Ensure "personal" tag
-                    List<String> tags = event.getTags();
+                    List<String> tags = new ArrayList<>(event.getTags());
                     if (!tags.contains("personal")) {
                         tags.add("personal");
+                        event.setTags(tags);
                         Log.d(TAG, "Added 'personal' tag to event: " + event.getName() + ", Date: " + event.getDate());
                     }
                     student.addPersonalEvent(event);
-                    saveEventsToPreferences(userEmail, student.getPersonalEvents());
+                    saveEventsToPreferences(userEmail, student.getPersonalEvents(), context);
                     Log.d(TAG, "Successfully added event '" + event.getName() + "' on " + event.getDate() +
                             " to " + userEmail + ", Tags: " + event.getTags());
                     found = true;
@@ -276,12 +271,12 @@ public class UserRepository {
         return new ArrayList<>();
     }
 
-    public static void removeUserEvent(String userEmail, Event event) {
+    public static void removeUserEvent(String userEmail, Event event, Context context) {
         for (Student student : getSampleStudents()) {
             if (student.getEmail().equalsIgnoreCase(userEmail)) {
                 try {
                     student.removePersonalEvent(event);
-                    saveEventsToPreferences(userEmail, student.getPersonalEvents());
+                    saveEventsToPreferences(userEmail, student.getPersonalEvents(), context);
                     Log.d(TAG, "Successfully removed event '" + event.getName() + "' from " + userEmail);
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to remove event '" + event.getName() + "' from " + userEmail + ": " + e.getMessage());
@@ -291,12 +286,12 @@ public class UserRepository {
         }
     }
 
-    public static void updateUserEvents(String userEmail, List<Event> updatedEvents) {
+    public static void updateUserEvents(String userEmail, List<Event> updatedEvents, Context context) {
         for (Student student : getSampleStudents()) {
             if (student.getEmail().equalsIgnoreCase(userEmail)) {
                 try {
                     student.setPersonalEvents(updatedEvents);
-                    saveEventsToPreferences(userEmail, updatedEvents);
+                    saveEventsToPreferences(userEmail, updatedEvents, context);
                     Log.d(TAG, "Successfully updated events for " + userEmail + ": " + updatedEvents.size() + " events");
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to update events for " + userEmail + ": " + e.getMessage());
@@ -304,6 +299,15 @@ public class UserRepository {
                 break;
             }
         }
+    }
+
+    public static void initializeEvents(Context context) {
+        if (context == null) {
+            Log.e(TAG, "Cannot initialize events: Context is null");
+            return;
+        }
+        loadEventsFromPreferences(context);
+        Log.d(TAG, "Initialized events from SharedPreferences");
     }
 
     public static void loadEventsFromPreferences(Context context) {
@@ -320,36 +324,42 @@ public class UserRepository {
                     JSONArray jsonArray = new JSONArray(jsonStr);
                     List<Event> events = new ArrayList<>();
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject json = jsonArray.getJSONObject(i);
-                        Event event = new Event(
-                                json.getString("name"),
-                                json.getString("description"),
-                                json.getString("location"),
-                                json.getLong("startTime"),
-                                json.getLong("endTime"),
-                                json.getString("date"),
-                                jsonArrayToList(json.getJSONArray("tags")),
-                                json.getInt("color"),
-                                json.getString("title"),
-                                json.getString("subtitle"),
-                                json.getInt("imageResId")
-                        );
-                        event.setId(json.getString("id"));
-                        events.add(event);
+                        try {
+                            JSONObject json = jsonArray.getJSONObject(i);
+                            Event event = new Event(
+                                    json.getString("name"),
+                                    json.getString("description"),
+                                    json.getString("location"),
+                                    json.getLong("startTime"),
+                                    json.getLong("endTime"),
+                                    json.getString("date"),
+                                    jsonArrayToList(json.getJSONArray("tags")),
+                                    json.getInt("color"),
+                                    json.getString("title"),
+                                    json.getString("subtitle"),
+                                    json.getInt("imageResId")
+                            );
+                            event.setId(json.getString("id"));
+                            events.add(event);
+                            Log.d(TAG, "Loaded event: " + event.getName() + ", ID: " + event.getId() + " for " + userEmail);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing event at index " + i + " for " + userEmail + ": " + e.getMessage());
+                        }
                     }
                     student.setPersonalEvents(events);
                     Log.d(TAG, "Loaded " + events.size() + " events for user: " + userEmail);
                 } catch (Exception e) {
                     Log.e(TAG, "Error loading events for " + userEmail + ": " + e.getMessage());
                 }
+            } else {
+                Log.d(TAG, "No saved events found for user: " + userEmail);
             }
         }
     }
 
-    private static void saveEventsToPreferences(String userEmail, List<Event> events) {
-        Context context = AppContext.getAppContext();
+    private static void saveEventsToPreferences(String userEmail, List<Event> events, Context context) {
         if (context == null) {
-            Log.e(TAG, "Cannot save events: Context is null");
+            Log.e(TAG, "Cannot save events for " + userEmail + ": Context is null");
             return;
         }
         SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -358,7 +368,7 @@ public class UserRepository {
             JSONArray jsonArray = new JSONArray();
             for (Event event : events) {
                 JSONObject json = new JSONObject();
-                json.put("id", event.getId());
+                json.put("id", event.getId() != null ? event.getId() : "");
                 json.put("name", event.getName());
                 json.put("description", event.getDescription());
                 json.put("location", event.getLocation());
@@ -377,6 +387,7 @@ public class UserRepository {
             Log.d(TAG, "Saved " + events.size() + " events for user: " + userEmail);
         } catch (Exception e) {
             Log.e(TAG, "Error saving events for " + userEmail + ": " + e.getMessage());
+            editor.remove(userEmail).apply(); // Clear invalid data
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.infosys_1d.Event;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.infosys_1d.R;
@@ -12,22 +13,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 
 public class EventRepository {
     private static final String TAG = "EventRepository";
     private static List<Event> generalEvents = new ArrayList<>();
+    private static Set<String> userAddedEventIds = new HashSet<>();
+    private static final String PREF_NAME = "EventPrefs";
 
     public static void loadDummyEvents(Context context) {
-        generalEvents.clear(); // Ensure fresh list
+        generalEvents.clear();
+        userAddedEventIds.clear();
+        loadUserAddedEventIds(context);
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Singapore"));
 
         // General Events
-        // 1. Tech Summit
         cal.set(2025, Calendar.APRIL, 15, 10, 0);
         long startTime1 = cal.getTimeInMillis();
         cal.set(2025, Calendar.APRIL, 15, 16, 0);
@@ -47,7 +53,6 @@ public class EventRepository {
         );
         techSummit.setId("event_001");
 
-        // 2. Music Night
         cal.set(2025, Calendar.APRIL, 16, 18, 0);
         long startTime2 = cal.getTimeInMillis();
         cal.set(2025, Calendar.APRIL, 16, 21, 0);
@@ -67,7 +72,6 @@ public class EventRepository {
         );
         musicNight.setId("event_002");
 
-        // 3. Food Festival
         cal.set(2025, Calendar.APRIL, 18, 12, 0);
         long startTime3 = cal.getTimeInMillis();
         cal.set(2025, Calendar.APRIL, 18, 18, 0);
@@ -87,7 +91,6 @@ public class EventRepository {
         );
         foodFestival.setId("event_003");
 
-        // 4. Art Exhibition
         cal.set(2025, Calendar.APRIL, 19, 11, 0);
         long startTime4 = cal.getTimeInMillis();
         cal.set(2025, Calendar.APRIL, 19, 15, 0);
@@ -108,7 +111,6 @@ public class EventRepository {
         artExhibition.setId("event_004");
 
         // Fifthrow Events
-        // 5. SUTD Clubfair
         cal.set(2025, Calendar.APRIL, 14, 9, 0);
         long startTime5 = cal.getTimeInMillis();
         cal.set(2025, Calendar.APRIL, 14, 14, 0);
@@ -128,7 +130,6 @@ public class EventRepository {
         );
         clubfair.setId("event_005");
 
-        // 6. Charity Run
         cal.set(2025, Calendar.APRIL, 17, 7, 0);
         long startTime6 = cal.getTimeInMillis();
         cal.set(2025, Calendar.APRIL, 17, 10, 0);
@@ -148,7 +149,6 @@ public class EventRepository {
         );
         charityRun.setId("event_006");
 
-        // 7. Fifthrow Meetup
         cal.set(2025, Calendar.APRIL, 20, 13, 0);
         long startTime7 = cal.getTimeInMillis();
         cal.set(2025, Calendar.APRIL, 20, 15, 0);
@@ -168,7 +168,6 @@ public class EventRepository {
         );
         fifthrowMeetup.setId("event_007");
 
-        // 8. Volunteer Drive
         cal.set(2025, Calendar.APRIL, 21, 14, 0);
         long startTime8 = cal.getTimeInMillis();
         cal.set(2025, Calendar.APRIL, 21, 17, 0);
@@ -204,10 +203,17 @@ public class EventRepository {
     }
 
     public static List<Event> getGeneralEvents() {
-        return new ArrayList<>(generalEvents);
+        List<Event> filteredEvents = new ArrayList<>();
+        for (Event event : generalEvents) {
+            if (!userAddedEventIds.contains(event.getId())) {
+                filteredEvents.add(event);
+            }
+        }
+        Log.d(TAG, "Returning " + filteredEvents.size() + " general events (filtered)");
+        return filteredEvents;
     }
 
-    public static void moveToCalendar(String userEmail, Event event) {
+    public static void moveToCalendar(String userEmail, Event event, Context context) {
         try {
             Event updatedEvent = new Event(
                     event.getName(),
@@ -216,23 +222,27 @@ public class EventRepository {
                     event.getStartTime(),
                     event.getEndTime(),
                     event.getDate(),
-                    new ArrayList<>(event.getTags()), // Copy tags
+                    new ArrayList<>(event.getTags()),
                     event.getColor(),
                     event.getTitle(),
                     event.getSubtitle(),
                     event.getImageResId()
             );
             updatedEvent.setId(event.getId());
-            UserRepository.addPersonalEventToUser(userEmail, updatedEvent);
-            Log.d(TAG, "Moved event '" + event.getName() + "' with ID " + event.getId() + " to calendar for " + userEmail + ", Color: " + updatedEvent.getColor());
+            UserRepository.addPersonalEventToUser(userEmail, updatedEvent, context);
+            userAddedEventIds.add(event.getId());
+            saveUserAddedEventIds(context);
+            Log.d(TAG, "Moved event '" + event.getName() + "' with ID " + event.getId() + " to calendar for " + userEmail);
         } catch (Exception e) {
             Log.e(TAG, "Failed to move event '" + event.getName() + "' to calendar for " + userEmail + ": " + e.getMessage());
         }
     }
 
-    public static void removeFromCalendar(String userEmail, Event event) {
+    public static void removeFromCalendar(String userEmail, Event event, Context context) {
         try {
-            UserRepository.removeUserEvent(userEmail, event);
+            UserRepository.removeUserEvent(userEmail, event, context);
+            userAddedEventIds.remove(event.getId());
+            saveUserAddedEventIds(context);
             Log.d(TAG, "Removed event '" + event.getName() + "' with ID " + event.getId() + " from calendar for " + userEmail);
         } catch (Exception e) {
             Log.e(TAG, "Failed to remove event '" + event.getName() + "' from calendar for " + userEmail + ": " + e.getMessage());
@@ -247,7 +257,7 @@ public class EventRepository {
         Log.d(TAG, "Added general event '" + event.getName() + "' with ID " + event.getId());
     }
 
-    public static void addPersonalEventToCalendar(String userEmail, Event event) {
+    public static void addPersonalEventToCalendar(String userEmail, Event event, Context context) {
         try {
             if (event.getId() == null || event.getId().isEmpty()) {
                 event.setId("personal_" + UUID.randomUUID().toString());
@@ -259,15 +269,15 @@ public class EventRepository {
                     event.getStartTime(),
                     event.getEndTime(),
                     event.getDate(),
-                    new ArrayList<>(event.getTags()), // Copy tags
+                    new ArrayList<>(event.getTags()),
                     event.getColor() != 0 ? event.getColor() : R.color.light_blue,
                     event.getTitle(),
                     event.getSubtitle(),
                     event.getImageResId()
             );
             updatedEvent.setId(event.getId());
-            UserRepository.addPersonalEventToUser(userEmail, updatedEvent);
-            Log.d(TAG, "Added personal event '" + event.getName() + "' with ID " + event.getId() + " for " + userEmail + ", Color: " + updatedEvent.getColor());
+            UserRepository.addPersonalEventToUser(userEmail, updatedEvent, context);
+            Log.d(TAG, "Added personal event '" + event.getName() + "' with ID " + event.getId() + " for " + userEmail);
         } catch (Exception e) {
             Log.e(TAG, "Failed to add personal event '" + event.getName() + "' for " + userEmail + ": " + e.getMessage());
         }
@@ -277,6 +287,28 @@ public class EventRepository {
         List<Event> userEvents = UserRepository.getUserEvents(userEmail);
         Log.d(TAG, "Retrieved " + userEvents.size() + " calendar events for " + userEmail);
         return userEvents;
+    }
+
+    private static void saveUserAddedEventIds(Context context) {
+        if (context == null) {
+            Log.e(TAG, "Cannot save userAddedEventIds: Context is null");
+            return;
+        }
+        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putStringSet("user_added_event_ids", userAddedEventIds);
+        editor.apply();
+        Log.d(TAG, "Saved " + userAddedEventIds.size() + " user-added event IDs");
+    }
+
+    private static void loadUserAddedEventIds(Context context) {
+        if (context == null) {
+            Log.e(TAG, "Cannot load userAddedEventIds: Context is null");
+            return;
+        }
+        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        userAddedEventIds = new HashSet<>(prefs.getStringSet("user_added_event_ids", new HashSet<>()));
+        Log.d(TAG, "Loaded " + userAddedEventIds.size() + " user-added event IDs");
     }
 
     public static String getDateString(String dateInput, String currentDate) {

@@ -2,23 +2,28 @@ package com.example.infosys_1d.ProfilePage;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.infosys_1d.R;
 
+import java.io.InputStream;
+
 public class ProfileFragmentOrg extends Fragment {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
     private ImageView background;
     private ImageView profileImage;
 
@@ -29,6 +34,26 @@ public class ProfileFragmentOrg extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    // Activity result launcher for photo picker
+    private final androidx.activity.result.ActivityResultLauncher<Intent> imagePickerLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri imageUri = result.getData().getData();
+                    if (imageUri != null) {
+                        try {
+                            Bitmap bitmap = loadBitmapFromUri(imageUri, isProfileImageSelected);
+                            if (isProfileImageSelected) {
+                                profileImage.setImageBitmap(bitmap);
+                            } else {
+                                background.setImageBitmap(bitmap);
+                            }
+                        } catch (Exception e) {
+                            showToast("Failed to load image: " + e.getMessage());
+                        }
+                    }
+                }
+            });
 
     public ProfileFragmentOrg() {}
 
@@ -58,47 +83,74 @@ public class ProfileFragmentOrg extends Fragment {
         background = view.findViewById(R.id.background);
         profileImage = view.findViewById(R.id.profileImage);
 
-        // when background image is clicked
-        background.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isProfileImageSelected = false;
-                openImagePicker();
-            }
+        // Set click listeners
+        background.setOnClickListener(v -> {
+            isProfileImageSelected = false;
+            openImagePicker();
         });
 
-        // when profile image is clicked
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isProfileImageSelected = true;
-                openImagePicker();
-            }
+        profileImage.setOnClickListener(v -> {
+            isProfileImageSelected = true;
+            openImagePicker();
         });
 
         return view;
     }
 
     private void openImagePicker() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        imagePickerLauncher.launch(intent);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private Bitmap loadBitmapFromUri(Uri uri, boolean isProfile) throws Exception {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        InputStream inputStream = requireContext().getContentResolver().openInputStream(uri);
+        BitmapFactory.decodeStream(inputStream, null, options);
+        if (inputStream != null) {
+            inputStream.close();
+        }
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
+        // Set target dimensions
+        int targetWidth = isProfile ? 130 : 1080; // Profile: 130dp, Background: max 1080px width
+        int targetHeight = isProfile ? 130 : 1920; // Profile: 130dp, Background: max 1920px height
 
-            if (isProfileImageSelected) {
-                profileImage.setImageURI(imageUri);
-            } else {
-                background.setImageURI(imageUri);
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight);
+        options.inJustDecodeBounds = false;
+
+        // Decode scaled bitmap
+        inputStream = requireContext().getContentResolver().openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+        if (inputStream != null) {
+            inputStream.close();
+        }
+
+        if (bitmap == null) {
+            throw new Exception("Failed to decode bitmap");
+        }
+
+        return bitmap;
+    }
+
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
             }
+        }
+        return inSampleSize;
+    }
+
+    private void showToast(String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
     }
 }
-

@@ -353,7 +353,7 @@ public class ChatFragment extends Fragment {
 
             // Add event to calendar
             if (userEmail != null && !userEmail.isEmpty()) {
-                EventRepository.addPersonalEventToCalendar(userEmail, event);
+                EventRepository.addPersonalEventToCalendar(userEmail, event, getContext());
                 Log.d(TAG, "Event added: title=" + title + ", date=" + dateStr + ", start=" + startTimeStr + ", end=" + endTimeStr + ", location=" + location);
                 // Add confirmation message with details
                 String confirmationMessage = String.format(

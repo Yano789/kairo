@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.infosys_1d.Calendar.CalendarAdapter;
 import com.example.infosys_1d.Event.Event;
+import com.example.infosys_1d.Event.EventRepository;
 import com.example.infosys_1d.Login.UserRepository;
 import com.example.infosys_1d.R;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -62,7 +63,6 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
 
-        // Get user email
         userEmail = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE).getString("user_email", "");
         if (userEmail.isEmpty()) {
             Log.w(TAG, "No user email found");
@@ -223,7 +223,10 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
         Button saveButton = dialogView.findViewById(R.id.saveButton);
         FloatingActionButton deleteButton = dialogView.findViewById(R.id.deleteButton);
 
-        boolean isPersonalEvent = eventToEdit != null && eventToEdit.getTags().contains("personal");
+        boolean isPersonalEvent = eventToEdit != null &&
+                eventToEdit.getTags().contains("personal") &&
+                !eventToEdit.getTags().contains("general") &&
+                !eventToEdit.getTags().contains("fifthrow");
 
         final LocalDate[] selectedDate = {(eventToEdit != null) ? LocalDate.parse(eventToEdit.getDate()) : LocalDate.now()};
         eventDate.setText(formatDate(selectedDate[0]));
@@ -359,7 +362,7 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
                             "Scheduled Event",
                             R.drawable.default_event_image
                     );
-                    UserRepository.addPersonalEventToUser(userEmail, newEvent);
+                    UserRepository.addPersonalEventToUser(userEmail, newEvent, requireContext());
                     eventList.add(newEvent);
                     Log.d(TAG, "Added event: " + name + ", date: " + dateStr);
                 } else {
@@ -368,8 +371,8 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
                     eventToEdit.setDate(dateStr);
                     eventToEdit.setStartTime(startTimeMillis);
                     eventToEdit.setEndTime(endTimeMillis);
-                    UserRepository.removeUserEvent(userEmail, eventToEdit);
-                    UserRepository.addPersonalEventToUser(userEmail, eventToEdit);
+                    UserRepository.removeUserEvent(userEmail, eventToEdit, requireContext());
+                    UserRepository.addPersonalEventToUser(userEmail, eventToEdit, requireContext());
                     Log.d(TAG, "Updated event: " + name + ", date: " + dateStr);
                 }
 
@@ -393,7 +396,7 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
                     .setMessage("Are you sure you want to delete this event?" + (!isPersonalEvent ? " It will return to the Discover page." : ""))
                     .setPositiveButton("Delete", (d, which) -> {
                         if (eventToEdit != null) {
-                            UserRepository.removeUserEvent(userEmail, eventToEdit);
+                            EventRepository.removeFromCalendar(userEmail, eventToEdit, requireContext());
                             eventList.remove(eventToEdit);
                             timetableAdapter.setEventList(eventList);
                             if (rowHeightPx > 0) {
