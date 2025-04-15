@@ -24,7 +24,6 @@ import com.example.infosys_1d.Login.Student;
 import com.example.infosys_1d.Login.UserRepository;
 import com.example.infosys_1d.R;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 
 public class ProfileFragmentStudent extends Fragment {
@@ -52,7 +51,7 @@ public class ProfileFragmentStudent extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile_student, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Initialize SharedPreferences
         sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
