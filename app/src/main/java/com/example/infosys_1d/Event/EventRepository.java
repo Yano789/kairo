@@ -22,80 +22,185 @@ public class EventRepository {
     private static List<Event> generalEvents = new ArrayList<>();
 
     public static void loadDummyEvents(Context context) {
-        if (!generalEvents.isEmpty()) return;
-
-        List<String> tags1 = Arrays.asList("conference", "tech");
-        List<String> tags2 = Arrays.asList("fifthrow", "charity");
-        List<String> tags3 = Arrays.asList("workshop", "tech");
+        generalEvents.clear(); // Ensure fresh list
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Singapore"));
-        cal.set(2025, Calendar.APRIL, 20, 9, 0);
-        long startTime1 = cal.getTimeInMillis();
-        cal.set(2025, Calendar.APRIL, 20, 17, 0);
-        long endTime1 = cal.getTimeInMillis();
 
-        cal.set(2025, Calendar.APRIL, 15, 7, 0);
-        long startTime2 = cal.getTimeInMillis();
+        // General Events
+        // 1. Tech Summit
         cal.set(2025, Calendar.APRIL, 15, 10, 0);
-        long endTime2 = cal.getTimeInMillis();
-
-        cal.set(2025, Calendar.APRIL, 25, 13, 0);
-        long startTime3 = cal.getTimeInMillis();
-        cal.set(2025, Calendar.APRIL, 25, 15, 0);
-        long endTime3 = cal.getTimeInMillis();
-
-        Event event1 = new Event(
-                "Tech Conference 2025",
-                "Annual tech conference",
-                "Convention Center",
+        long startTime1 = cal.getTimeInMillis();
+        cal.set(2025, Calendar.APRIL, 15, 16, 0);
+        long endTime1 = cal.getTimeInMillis();
+        Event techSummit = new Event(
+                "Tech Summit 2025",
+                "Latest innovations in AI and robotics",
+                "SUTD Auditorium",
                 startTime1,
                 endTime1,
-                "2025-04-20",
-                tags1,
+                "2025-04-15",
+                Arrays.asList("general", "tech"),
                 R.color.light_blue,
-                "Tech Conference",
-                "Innovation Summit",
-                R.drawable.default_event_image
+                "Tech Summit",
+                "Innovation Showcase",
+                R.drawable.tech_event
         );
-        event1.setId("event_001");
-        Log.d(TAG, "Created event_001, Color: " + event1.getColor());
+        techSummit.setId("event_001");
 
-        Event event2 = new Event(
-                "Community Charity Run",
-                "Fifthrow charity event",
-                "East Coast Park",
+        // 2. Music Night
+        cal.set(2025, Calendar.APRIL, 16, 18, 0);
+        long startTime2 = cal.getTimeInMillis();
+        cal.set(2025, Calendar.APRIL, 16, 21, 0);
+        long endTime2 = cal.getTimeInMillis();
+        Event musicNight = new Event(
+                "Music Night",
+                "Live performances by student bands",
+                "Campus Plaza",
                 startTime2,
                 endTime2,
-                "2025-04-15",
-                tags2,
-                R.color.light_green,
-                "Charity Run",
-                "Community Event",
-                R.drawable.default_event_image
+                "2025-04-16",
+                Arrays.asList("general", "music"),
+                R.color.light_purple,
+                "Music Night",
+                "Live Concert",
+                R.drawable.music_event
         );
-        event2.setId("event_002");
-        Log.d(TAG, "Created event_002, Color: " + event2.getColor());
+        musicNight.setId("event_002");
 
-        Event event3 = new Event(
-                "AI Workshop",
-                "Hands-on AI session",
-                "SUTD Campus",
+        // 3. Food Festival
+        cal.set(2025, Calendar.APRIL, 18, 12, 0);
+        long startTime3 = cal.getTimeInMillis();
+        cal.set(2025, Calendar.APRIL, 18, 18, 0);
+        long endTime3 = cal.getTimeInMillis();
+        Event foodFestival = new Event(
+                "Food Festival",
+                "Taste cuisines from around the world",
+                "East Coast Park",
                 startTime3,
                 endTime3,
-                "2025-04-25",
-                tags3,
-                R.color.light_blue,
-                "AI Workshop",
-                "Tech Learning",
-                R.drawable.default_event_image
+                "2025-04-18",
+                Arrays.asList("general", "food"),
+                R.color.light_orange,
+                "Food Festival",
+                "Culinary Delight",
+                R.drawable.food_event
         );
-        event3.setId("event_003");
-        Log.d(TAG, "Created event_003, Color: " + event3.getColor());
+        foodFestival.setId("event_003");
 
-        generalEvents.add(event1);
-        generalEvents.add(event2);
-        generalEvents.add(event3);
+        // 4. Art Exhibition
+        cal.set(2025, Calendar.APRIL, 19, 11, 0);
+        long startTime4 = cal.getTimeInMillis();
+        cal.set(2025, Calendar.APRIL, 19, 15, 0);
+        long endTime4 = cal.getTimeInMillis();
+        Event artExhibition = new Event(
+                "Art Exhibition",
+                "Showcase of student artwork",
+                "SUTD Gallery",
+                startTime4,
+                endTime4,
+                "2025-04-19",
+                Arrays.asList("general", "art"),
+                R.color.light_red,
+                "Art Exhibition",
+                "Creative Display",
+                R.drawable.art_event
+        );
+        artExhibition.setId("event_004");
+
+        // Fifthrow Events
+        // 5. SUTD Clubfair
+        cal.set(2025, Calendar.APRIL, 14, 9, 0);
+        long startTime5 = cal.getTimeInMillis();
+        cal.set(2025, Calendar.APRIL, 14, 14, 0);
+        long endTime5 = cal.getTimeInMillis();
+        Event clubfair = new Event(
+                "SUTD Clubfair",
+                "Explore student clubs and societies",
+                "Campus Courtyard",
+                startTime5,
+                endTime5,
+                "2025-04-14",
+                Arrays.asList("fifthrow", "club"),
+                R.color.light_green,
+                "Clubfair",
+                "Student Activities",
+                R.drawable.sutd_clubfair
+        );
+        clubfair.setId("event_005");
+
+        // 6. Charity Run
+        cal.set(2025, Calendar.APRIL, 17, 7, 0);
+        long startTime6 = cal.getTimeInMillis();
+        cal.set(2025, Calendar.APRIL, 17, 10, 0);
+        long endTime6 = cal.getTimeInMillis();
+        Event charityRun = new Event(
+                "Charity Run",
+                "Run for a cause with Fifthrow",
+                "Marina Bay",
+                startTime6,
+                endTime6,
+                "2025-04-17",
+                Arrays.asList("fifthrow", "charity"),
+                R.color.light_yellow,
+                "Charity Run",
+                "Community Support",
+                R.drawable.charity_event
+        );
+        charityRun.setId("event_006");
+
+        // 7. Fifthrow Meetup
+        cal.set(2025, Calendar.APRIL, 20, 13, 0);
+        long startTime7 = cal.getTimeInMillis();
+        cal.set(2025, Calendar.APRIL, 20, 15, 0);
+        long endTime7 = cal.getTimeInMillis();
+        Event fifthrowMeetup = new Event(
+                "Fifthrow Meetup",
+                "Networking with Fifthrow communities",
+                "SUTD Lounge",
+                startTime7,
+                endTime7,
+                "2025-04-20",
+                Arrays.asList("fifthrow", "networking"),
+                R.color.light_blue,
+                "Fifthrow Meetup",
+                "Community Event",
+                R.drawable.sutd_clubfair
+        );
+        fifthrowMeetup.setId("event_007");
+
+        // 8. Volunteer Drive
+        cal.set(2025, Calendar.APRIL, 21, 14, 0);
+        long startTime8 = cal.getTimeInMillis();
+        cal.set(2025, Calendar.APRIL, 21, 17, 0);
+        long endTime8 = cal.getTimeInMillis();
+        Event volunteerDrive = new Event(
+                "Volunteer Drive",
+                "Join Fifthrow to volunteer",
+                "Community Center",
+                startTime8,
+                endTime8,
+                "2025-04-21",
+                Arrays.asList("fifthrow", "volunteer"),
+                R.color.light_green,
+                "Volunteer Drive",
+                "Give Back",
+                R.drawable.charity_event
+        );
+        volunteerDrive.setId("event_008");
+
+        generalEvents.add(techSummit);
+        generalEvents.add(musicNight);
+        generalEvents.add(foodFestival);
+        generalEvents.add(artExhibition);
+        generalEvents.add(clubfair);
+        generalEvents.add(charityRun);
+        generalEvents.add(fifthrowMeetup);
+        generalEvents.add(volunteerDrive);
+
         Log.d(TAG, "Loaded " + generalEvents.size() + " dummy events");
+        for (Event e : generalEvents) {
+            Log.d(TAG, " - " + e.getName() + ", Date: " + e.getDate() + ", Tags: " + e.getTags() + ", Image: " + e.getImageResId());
+        }
     }
 
     public static List<Event> getGeneralEvents() {
@@ -111,7 +216,7 @@ public class EventRepository {
                     event.getStartTime(),
                     event.getEndTime(),
                     event.getDate(),
-                    event.getTags(),
+                    new ArrayList<>(event.getTags()), // Copy tags
                     event.getColor(),
                     event.getTitle(),
                     event.getSubtitle(),
@@ -154,8 +259,8 @@ public class EventRepository {
                     event.getStartTime(),
                     event.getEndTime(),
                     event.getDate(),
-                    event.getTags(),
-                    event.getColor() != 0 ? event.getColor() : R.color.light_blue, // Default color
+                    new ArrayList<>(event.getTags()), // Copy tags
+                    event.getColor() != 0 ? event.getColor() : R.color.light_blue,
                     event.getTitle(),
                     event.getSubtitle(),
                     event.getImageResId()

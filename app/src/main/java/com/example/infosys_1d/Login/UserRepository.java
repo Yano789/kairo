@@ -6,13 +6,17 @@ import android.util.Log;
 
 import com.example.infosys_1d.AppContext;
 import com.example.infosys_1d.Event.Event;
+import com.example.infosys_1d.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class UserRepository {
     private static final String TAG = "UserRepository";
@@ -28,6 +32,156 @@ public class UserRepository {
             ArrayList<FifthRowID> fifthRows2 = new ArrayList<>();
             fifthRows.add(new FifthRowID(new BigInteger("50"), "MindSports"));
             fifthRows2.add(new FifthRowID(new BigInteger("51"), "CAT"));
+
+            // Mariano's class schedule
+            List<Event> marianoEvents = new ArrayList<>();
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
+
+            // Monday: Algorithms (9:00-11:00), Design Studio (14:00-16:00)
+            cal.set(2025, Calendar.APRIL, 14, 9, 0);
+            long algoStart = cal.getTimeInMillis();
+            cal.set(2025, Calendar.APRIL, 14, 11, 0);
+            long algoEnd = cal.getTimeInMillis();
+            Event algo = new Event(
+                    "Algorithms",
+                    "Study of algorithms and complexity",
+                    "Lecture Hall 1",
+                    algoStart,
+                    algoEnd,
+                    "2025-04-14",
+                    Arrays.asList("personal", "class"),
+                    R.color.light_blue,
+                    "Algorithms",
+                    "CSD Course",
+                    R.drawable.default_event_image
+            );
+            algo.setId("personal_001");
+            marianoEvents.add(algo);
+
+            cal.set(2025, Calendar.APRIL, 14, 14, 0);
+            long designStart = cal.getTimeInMillis();
+            cal.set(2025, Calendar.APRIL, 14, 16, 0);
+            long designEnd = cal.getTimeInMillis();
+            Event design = new Event(
+                    "Design Studio",
+                    "Project-based design work",
+                    "Design Lab",
+                    designStart,
+                    designEnd,
+                    "2025-04-14",
+                    Arrays.asList("personal", "class"),
+                    R.color.light_green,
+                    "Design Studio",
+                    "CSD Course",
+                    R.drawable.default_event_image
+            );
+            design.setId("personal_002");
+            marianoEvents.add(design);
+
+            // Tuesday: Software Engineering (10:00-12:00)
+            cal.set(2025, Calendar.APRIL, 15, 10, 0);
+            long softEngStart = cal.getTimeInMillis();
+            cal.set(2025, Calendar.APRIL, 15, 12, 0);
+            long softEngEnd = cal.getTimeInMillis();
+            Event softEng = new Event(
+                    "Software Engineering",
+                    "Software development methodologies",
+                    "Lecture Hall 2",
+                    softEngStart,
+                    softEngEnd,
+                    "2025-04-15",
+                    Arrays.asList("personal", "class"),
+                    R.color.light_purple,
+                    "Software Engineering",
+                    "CSD Course",
+                    R.drawable.default_event_image
+            );
+            softEng.setId("personal_003");
+            marianoEvents.add(softEng);
+
+            // Wednesday: Data Structures (9:00-11:00), AI Lab (13:00-15:00)
+            cal.set(2025, Calendar.APRIL, 16, 9, 0);
+            long dataStart = cal.getTimeInMillis();
+            cal.set(2025, Calendar.APRIL, 16, 11, 0);
+            long dataEnd = cal.getTimeInMillis();
+            Event dataStruct = new Event(
+                    "Data Structures",
+                    "Advanced data structures",
+                    "Lecture Hall 1",
+                    dataStart,
+                    dataEnd,
+                    "2025-04-16",
+                    Arrays.asList("personal", "class"),
+                    R.color.light_blue,
+                    "Data Structures",
+                    "CSD Course",
+                    R.drawable.default_event_image
+            );
+            dataStruct.setId("personal_004");
+            marianoEvents.add(dataStruct);
+
+            cal.set(2025, Calendar.APRIL, 16, 13, 0);
+            long aiStart = cal.getTimeInMillis();
+            cal.set(2025, Calendar.APRIL, 16, 15, 0);
+            long aiEnd = cal.getTimeInMillis();
+            Event aiLab = new Event(
+                    "AI Lab",
+                    "Practical AI applications",
+                    "AI Lab",
+                    aiStart,
+                    aiEnd,
+                    "2025-04-16",
+                    Arrays.asList("personal", "class"),
+                    R.color.light_red,
+                    "AI Lab",
+                    "CSD Course",
+                    R.drawable.default_event_image
+            );
+            aiLab.setId("personal_005");
+            marianoEvents.add(aiLab);
+
+            // Thursday: Software Engineering (10:00-12:00)
+            cal.set(2025, Calendar.APRIL, 17, 10, 0);
+            long softEng2Start = cal.getTimeInMillis();
+            cal.set(2025, Calendar.APRIL, 17, 12, 0);
+            long softEng2End = cal.getTimeInMillis();
+            Event softEng2 = new Event(
+                    "Software Engineering",
+                    "Software development methodologies",
+                    "Lecture Hall 2",
+                    softEng2Start,
+                    softEng2End,
+                    "2025-04-17",
+                    Arrays.asList("personal", "class"),
+                    R.color.light_purple,
+                    "Software Engineering",
+                    "CSD Course",
+                    R.drawable.default_event_image
+            );
+            softEng2.setId("personal_006");
+            marianoEvents.add(softEng2);
+
+            // Friday: Design Studio (14:00-16:00)
+            cal.set(2025, Calendar.APRIL, 18, 14, 0);
+            long design2Start = cal.getTimeInMillis();
+            cal.set(2025, Calendar.APRIL, 18, 16, 0);
+            long design2End = cal.getTimeInMillis();
+            Event design2 = new Event(
+                    "Design Studio",
+                    "Project-based design work",
+                    "Design Lab",
+                    design2Start,
+                    design2End,
+                    "2025-04-18",
+                    Arrays.asList("personal", "class"),
+                    R.color.light_green,
+                    "Design Studio",
+                    "CSD Course",
+                    R.drawable.default_event_image
+            );
+            design2.setId("personal_007");
+            marianoEvents.add(design2);
 
             Student s1 = new Student(
                     "Computer Science and Design",
@@ -49,11 +203,13 @@ public class UserRepository {
                     new BigInteger("1008005"),
                     "mariano_perdices@mymail.sutd.edu.sg",
                     "Mariano Perdices");
+            s3.setPersonalEvents(marianoEvents);
 
             sampleStudents.add(s1);
             sampleStudents.add(s2);
             sampleStudents.add(s3);
             Log.d(TAG, "Sample students initialized: " + sampleStudents.size());
+            Log.d(TAG, "Mariano's events: " + marianoEvents.size());
         }
         return sampleStudents;
     }

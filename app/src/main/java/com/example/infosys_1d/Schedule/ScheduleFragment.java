@@ -77,7 +77,7 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
 
         calendarRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 8));
         timetableRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        timetableRecyclerView.setNestedScrollingEnabled(false); // Prevent parent scroll conflicts
+        timetableRecyclerView.setNestedScrollingEnabled(false);
 
         eventCanvas.setOnEventClickListener(this::openShowEventDialog);
 
@@ -99,13 +99,13 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
         loadTimetable();
         if (rowHeightPx > 0) {
             eventCanvas.setData(eventList, currentWeekStart, rowHeightPx);
+            eventCanvas.invalidate();
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        // Force reinitialization
         timetableRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         timetableRecyclerView.setNestedScrollingEnabled(false);
         loadTimetable();
@@ -113,6 +113,8 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
             timetableRecyclerView.getLayoutManager().onRestoreInstanceState(scrollState);
             Log.d(TAG, "Restored scroll state");
         }
+        timetableRecyclerView.invalidate();
+        timetableRecyclerView.requestLayout();
         timetableRecyclerView.post(() -> {
             boolean canScroll = timetableRecyclerView.canScrollVertically(1) || timetableRecyclerView.canScrollVertically(-1);
             Log.d(TAG, "Post-resume: Can scroll = " + canScroll + ", Child count = " + timetableRecyclerView.getChildCount());
@@ -139,17 +141,12 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
     }
 
     private void loadTimetable() {
-        // Fetch events from UserRepository
         eventList.clear();
         if (!userEmail.isEmpty()) {
             List<Event> allEvents = UserRepository.getUserEvents(userEmail);
             LocalDate weekEnd = currentWeekStart.plusDays(6);
             for (Event event : allEvents) {
                 try {
-                    if (!event.getTags().contains("personal")) {
-                        Log.d(TAG, "Skipped non-personal event: " + event.getTitle() + ", Tags: " + event.getTags());
-                        continue;
-                    }
                     LocalDate eventDate = LocalDate.parse(event.getDate());
                     if (!eventDate.isBefore(currentWeekStart) && !eventDate.isAfter(weekEnd)) {
                         eventList.add(event);
@@ -159,14 +156,12 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
                     Log.e(TAG, "Error parsing event date: " + event.getTitle() + ", Date: " + event.getDate() + ", Error: " + e.getMessage());
                 }
             }
-            Log.d(TAG, "Loaded " + eventList.size() + " personal events for week starting " + currentWeekStart);
+            Log.d(TAG, "Loaded " + eventList.size() + " events for week starting " + currentWeekStart);
         }
 
-        // Reinitialize adapter
         timetableAdapter = new TimetableAdapter(getContext(), eventList, currentWeekStart);
         timetableRecyclerView.setAdapter(timetableAdapter);
 
-        // Clear decorations and listeners
         while (timetableRecyclerView.getItemDecorationCount() > 0) {
             timetableRecyclerView.removeItemDecorationAt(0);
         }
@@ -176,12 +171,10 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
         timetableRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                Log.d(TAG, "Timetable scrolled: dx=" + dx + ", dy=" + dy);
                 eventCanvas.invalidate();
             }
         });
 
-        // Delay canvas update until row height is set
         timetableRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -196,7 +189,6 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
             }
         });
 
-        // Force layout and log state
         timetableRecyclerView.requestLayout();
         timetableRecyclerView.post(() -> {
             boolean canScroll = timetableRecyclerView.canScrollVertically(1) || timetableRecyclerView.canScrollVertically(-1);
@@ -231,23 +223,29 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
         Button saveButton = dialogView.findViewById(R.id.saveButton);
         FloatingActionButton deleteButton = dialogView.findViewById(R.id.deleteButton);
 
+        boolean isPersonalEvent = eventToEdit != null && eventToEdit.getTags().contains("personal");
+
         final LocalDate[] selectedDate = {(eventToEdit != null) ? LocalDate.parse(eventToEdit.getDate()) : LocalDate.now()};
         eventDate.setText(formatDate(selectedDate[0]));
 
-        eventDate.setOnClickListener(v -> {
-            MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker()
-                    .setTitleText("Select Event Date")
-                    .setSelection(selectedDate[0].atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli())
-                    .build();
+        if (isPersonalEvent || eventToEdit == null) {
+            eventDate.setOnClickListener(v -> {
+                MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker()
+                        .setTitleText("Select Event Date")
+                        .setSelection(selectedDate[0].atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                        .build();
 
-            picker.addOnPositiveButtonClickListener(selection -> {
-                selectedDate[0] = Instant.ofEpochMilli(selection)
-                        .atZone(ZoneId.systemDefault()).toLocalDate();
-                eventDate.setText(formatDate(selectedDate[0]));
+                picker.addOnPositiveButtonClickListener(selection -> {
+                    selectedDate[0] = Instant.ofEpochMilli(selection)
+                            .atZone(ZoneId.systemDefault()).toLocalDate();
+                    eventDate.setText(formatDate(selectedDate[0]));
+                });
+
+                picker.show(getParentFragmentManager(), "EVENT_DATE_PICKER");
             });
-
-            picker.show(getParentFragmentManager(), "EVENT_DATE_PICKER");
-        });
+        } else {
+            eventDate.setEnabled(false);
+        }
 
         String[] hours = new String[24];
         for (int i = 0; i < 24; i++) hours[i] = String.format("%02d", i);
@@ -272,11 +270,20 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
             startMinute.setValue(Integer.parseInt(startParts[1]) / 5);
             endHour.setValue(Integer.parseInt(endParts[0]));
             endMinute.setValue(Integer.parseInt(endParts[1]) / 5);
+
+            if (!isPersonalEvent) {
+                eventName.setEnabled(false);
+                startHour.setEnabled(false);
+                startMinute.setEnabled(false);
+                endHour.setEnabled(false);
+                endMinute.setEnabled(false);
+                saveButton.setVisibility(View.GONE);
+            }
             deleteButton.setVisibility(View.VISIBLE);
         } else {
-            startHour.setValue(9); // Default 9:00
+            startHour.setValue(9);
             startMinute.setValue(0);
-            endHour.setValue(10); // Default 10:00
+            endHour.setValue(10);
             endMinute.setValue(0);
             deleteButton.setVisibility(View.GONE);
         }
@@ -288,10 +295,16 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
 
         dialog.show();
 
-        saveButton.setText(eventToEdit != null ? "Update" : "Save");
+        saveButton.setText(eventToEdit != null && isPersonalEvent ? "Update" : "Save");
         saveButton.setOnClickListener(v -> {
             if (userEmail.isEmpty()) {
                 Toast.makeText(getContext(), "Please log in to save events", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                return;
+            }
+
+            if (!isPersonalEvent && eventToEdit != null) {
+                Toast.makeText(getContext(), "Discover events cannot be edited", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 return;
             }
@@ -310,9 +323,7 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
                 return;
             }
 
-            // Convert to Event format
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            String dateStr = selectedDate[0].toString(); // yyyy-MM-dd
+            String dateStr = selectedDate[0].toString();
             String startTimeStr = String.format(Locale.getDefault(), "%02d:%02d", startTimeMin / 60, startTimeMin % 60);
             String endTimeStr = String.format(Locale.getDefault(), "%02d:%02d", endTimeMin / 60, endTimeMin % 60);
 
@@ -335,7 +346,6 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
                 if (name.toLowerCase().contains("meeting")) tags.add("meeting");
 
                 if (eventToEdit == null) {
-                    // Create new event
                     Event newEvent = new Event(
                             name,
                             name + " scheduled via timetable",
@@ -353,7 +363,6 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
                     eventList.add(newEvent);
                     Log.d(TAG, "Added event: " + name + ", date: " + dateStr);
                 } else {
-                    // Update existing event
                     eventToEdit.setTitle(name);
                     eventToEdit.setDescription(name + " scheduled via timetable");
                     eventToEdit.setDate(dateStr);
@@ -381,7 +390,7 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
         deleteButton.setOnClickListener(v -> {
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Delete Event")
-                    .setMessage("Are you sure you want to delete this event?")
+                    .setMessage("Are you sure you want to delete this event?" + (!isPersonalEvent ? " It will return to the Discover page." : ""))
                     .setPositiveButton("Delete", (d, which) -> {
                         if (eventToEdit != null) {
                             UserRepository.removeUserEvent(userEmail, eventToEdit);
@@ -391,7 +400,7 @@ public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItem
                                 eventCanvas.setData(eventList, currentWeekStart, rowHeightPx);
                                 eventCanvas.invalidate();
                             }
-                            Log.d(TAG, "Deleted event: " + eventToEdit.getTitle());
+                            Log.d(TAG, "Deleted event: " + eventToEdit.getTitle() + ", Tags: " + eventToEdit.getTags());
                         }
                         dialog.dismiss();
                         Toast.makeText(getContext(), "Event deleted", Toast.LENGTH_SHORT).show();
