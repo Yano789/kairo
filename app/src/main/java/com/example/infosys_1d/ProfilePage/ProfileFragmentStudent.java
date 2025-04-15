@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -24,12 +28,14 @@ import com.example.infosys_1d.Login.Student;
 import com.example.infosys_1d.Login.UserRepository;
 import com.example.infosys_1d.R;
 
-import java.math.BigInteger;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class ProfileFragmentStudent extends Fragment {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
     private ImageView background;
     private ImageView profileImage;
     private ImageView imagePicker;
@@ -49,10 +55,32 @@ public class ProfileFragmentStudent extends Fragment {
     private static final String PREF_NAME = "StudentProfilePrefs";
     private String userEmail;
 
+    // Activity result launcher for photo picker
+    private final androidx.activity.result.ActivityResultLauncher<Intent> imagePickerLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri imageUri = result.getData().getData();
+                    if (imageUri != null) {
+                        try {
+                            Bitmap bitmap = loadBitmapFromUri(imageUri, isProfileImageSelected);
+                            if (isProfileImageSelected) {
+                                profileImage.setImageBitmap(bitmap);
+                                saveBitmap("profile_image", bitmap);
+                            } else {
+                                background.setImageBitmap(bitmap);
+                                saveBitmap("background_image", bitmap);
+                            }
+                        } catch (Exception e) {
+                            showToast("Failed to load image: " + e.getMessage());
+                        }
+                    }
+                }
+            });
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile_student, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Initialize SharedPreferences
         sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -183,11 +211,29 @@ public class ProfileFragmentStudent extends Fragment {
         editor.apply();
     }
 
-    private void saveImageUri(String key, Uri uri) {
-        if (userEmail == null) return;
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(userEmail + "_" + key, uri != null ? uri.toString() : "");
-        editor.apply();
+    private void saveBitmap(String key, Bitmap bitmap) {
+        if (userEmail == null || bitmap == null) return;
+        try {
+            File file = new File(requireContext().getFilesDir(), userEmail + "_" + key + ".jpg");
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos); // Use JPEG, 85% quality
+            fos.close();
+        } catch (Exception e) {
+            showToast("Failed to save image: " + e.getMessage());
+        }
+    }
+
+    private Bitmap loadBitmap(String key) {
+        if (userEmail == null) return null;
+        try {
+            File file = new File(requireContext().getFilesDir(), userEmail + "_" + key + ".jpg");
+            if (file.exists()) {
+                return BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            showToast("Failed to load saved image");
+        }
+        return null;
     }
 
     private void loadSavedData() {
@@ -200,26 +246,62 @@ public class ProfileFragmentStudent extends Fragment {
         setTextSafe(addressEditText, sharedPreferences.getString(userEmail + "_address", ""));
         setTextSafe(phoneEditText, sharedPreferences.getString(userEmail + "_phone", ""));
 
-        // Load ImageView URIs
-        String profileImageUriString = sharedPreferences.getString(userEmail + "_profile_image_uri", "");
-        if (!profileImageUriString.isEmpty()) {
-            try {
-                Uri profileImageUri = Uri.parse(profileImageUriString);
-                profileImage.setImageURI(profileImageUri);
-            } catch (Exception e) {
-                showToast("Failed to load profile image");
-            }
+        // Load ImageView data
+        Bitmap profileBitmap = loadBitmap("profile_image");
+        if (profileBitmap != null) {
+            profileImage.setImageBitmap(profileBitmap);
         }
 
-        String backgroundImageUriString = sharedPreferences.getString(userEmail + "_background_image_uri", "");
-        if (!backgroundImageUriString.isEmpty()) {
-            try {
-                Uri backgroundImageUri = Uri.parse(backgroundImageUriString);
-                background.setImageURI(backgroundImageUri);
-            } catch (Exception e) {
-                showToast("Failed to load background image");
+        Bitmap backgroundBitmap = loadBitmap("background_image");
+        if (backgroundBitmap != null) {
+            background.setImageBitmap(backgroundBitmap);
+        }
+    }
+
+    private Bitmap loadBitmapFromUri(Uri uri, boolean isProfile) throws Exception {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        InputStream inputStream = requireContext().getContentResolver().openInputStream(uri);
+        BitmapFactory.decodeStream(inputStream, null, options);
+        if (inputStream != null) {
+            inputStream.close();
+        }
+
+        // Set target dimensions
+        int targetWidth = isProfile ? 130 : 1080; // Profile: 130dp, Background: max 1080px width
+        int targetHeight = isProfile ? 130 : 1920; // Profile: 130dp, Background: max 1920px height
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight);
+        options.inJustDecodeBounds = false;
+
+        // Decode scaled bitmap
+        inputStream = requireContext().getContentResolver().openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+        if (inputStream != null) {
+            inputStream.close();
+        }
+
+        if (bitmap == null) {
+            throw new Exception("Failed to decode bitmap");
+        }
+
+        return bitmap;
+    }
+
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
             }
         }
+        return inSampleSize;
     }
 
     private void setTextSafe(EditText editText, String text) {
@@ -291,25 +373,7 @@ public class ProfileFragmentStudent extends Fragment {
     }
 
     private void openImagePicker() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
-            if (isProfileImageSelected) {
-                profileImage.setImageURI(imageUri);
-                saveImageUri("profile_image_uri", imageUri);
-            } else {
-                background.setImageURI(imageUri);
-                saveImageUri("background_image_uri", imageUri);
-            }
-        }
+        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        imagePickerLauncher.launch(intent);
     }
 }

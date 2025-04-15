@@ -11,6 +11,7 @@ import com.example.infosys_1d.Calendar.CalendarFragment;
 import com.example.infosys_1d.Chatbot.ChatFragment;
 import com.example.infosys_1d.Discovery.HomeFragment;
 import com.example.infosys_1d.Event.EventRepository;
+import com.example.infosys_1d.Login.UserRepository;
 import com.example.infosys_1d.ProfilePage.ProfileFragmentOrg;
 import com.example.infosys_1d.ProfilePage.ProfileFragmentStudent;
 import com.example.infosys_1d.Schedule.ScheduleFragment;
@@ -26,8 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize AppContext and EventRepository
         AppContext.setAppContext(this);
-        EventRepository.initialize(this);
         Log.d(TAG, "Initialized AppContext and EventRepository");
+
+        // Initialize events
+        EventRepository.loadDummyEvents(this);
+        UserRepository.initializeEvents(this);
 
         // Get email from Intent
         String userEmail = getIntent().getStringExtra("user_email");
