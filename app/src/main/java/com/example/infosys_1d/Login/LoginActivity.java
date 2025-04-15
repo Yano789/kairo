@@ -62,23 +62,23 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private Object getAuthenticatedUser(String usernameInput, String password) {
-        // Check students first
-        Student student = getAuthenticatedStudent(usernameInput, password);
-        if (student != null) {
-            return student;
-        }
-        // Then check admins
+        // Check admins by ID or email
         Admin admin = getAuthenticatedAdmin(usernameInput, password);
-        return admin;
+        if (admin != null) {
+            return admin;
+        }
+        // Check students by ID or email
+        Student student = getAuthenticatedStudent(usernameInput, password);
+        return student;
     }
 
     private Student getAuthenticatedStudent(String usernameInput, String password) {
-        // Check if input is an ID (numeric)
+        // Try as numeric ID first
         try {
             BigInteger inputId = new BigInteger(usernameInput);
             return checkStudentById(inputId, password);
         } catch (NumberFormatException e) {
-            // Treat as email/username
+            // Then try as email/name
             return checkStudentByEmail(usernameInput, password);
         }
     }
@@ -108,15 +108,16 @@ public class LoginActivity extends AppCompatActivity {
         return null;
     }
 
-    private Admin getAuthenticatedAdmin(String email, String password) {
+    private Admin getAuthenticatedAdmin(String input, String password) {
         ArrayList<Admin> admins = UserRepository.getSampleAdmins();
         for (Admin admin : admins) {
-            if (admin.getEmail().equalsIgnoreCase(email) && admin.getPassword().equals(password)) {
-                Log.d(TAG, "Authenticated admin: " + email);
+            if ((admin.getAdminId().equalsIgnoreCase(input) || admin.getEmail().equalsIgnoreCase(input))
+                    && admin.getPassword().equals(password)) {
+                Log.d(TAG, "Authenticated admin by " + (admin.getAdminId().equalsIgnoreCase(input) ? "ID: " + input : "email: " + input));
                 return admin;
             }
         }
-        Log.w(TAG, "No admin found for email: " + email);
+        Log.w(TAG, "No admin found for input: " + input);
         return null;
     }
 }

@@ -2,14 +2,12 @@ package com.example.infosys_1d.Login;
 
 import android.os.Parcel;
 
-import java.math.BigInteger;
-
 public class FifthRowAdmin extends Admin {
 
-    public FifthRowAdmin(String email, String name, BigInteger id, String password) {
+    public FifthRowAdmin(String email, String name, String adminId, String password) {
         this.email = email;
         this.name = name;
-        this.id = id;
+        this.adminId = adminId;
         this.password = password;
     }
 
@@ -32,5 +30,9 @@ public class FifthRowAdmin extends Admin {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
+    }
+
+    public String getPillar() {
+        return "Fifthrow Student Organization";
     }
 }

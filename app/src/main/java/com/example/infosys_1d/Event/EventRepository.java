@@ -55,7 +55,7 @@ public class EventRepository {
                 R.color.light_blue,
                 "Tech Conference",
                 "Innovation Summit",
-                R.drawable.tech_event
+                R.drawable.default_event_image
         );
         event1.setId("event_001");
 
@@ -67,10 +67,10 @@ public class EventRepository {
                 endTime2,
                 "2025-04-15",
                 tags2,
-                R.color.light_purple,
+                R.color.light_green, // Changed to pastel
                 "Charity Run",
                 "Community Event",
-                R.drawable.charity_event
+                R.drawable.default_event_image
         );
         event2.setId("event_002");
 
@@ -82,7 +82,7 @@ public class EventRepository {
                 endTime3,
                 "2025-04-25",
                 tags3,
-                R.color.light_green,
+                R.color.light_blue,
                 "AI Workshop",
                 "Tech Learning",
                 R.drawable.default_event_image
@@ -101,11 +101,30 @@ public class EventRepository {
 
     public static void moveToCalendar(String userEmail, Event event) {
         try {
-            UserRepository.addPersonalEventToUser(userEmail, event);
-            Log.d(TAG, "Moved event '" + event.getName() + "' with ID " + event.getId() + " to calendar for " + userEmail);
+            // Ensure pastel color
+            Event updatedEvent = new Event(
+                    event.getName(),
+                    event.getDescription(),
+                    event.getLocation(),
+                    event.getStartTime(),
+                    event.getEndTime(),
+                    event.getDate(),
+                    event.getTags(),
+                    getPastelColor(event.getColor()),
+                    event.getTitle(),
+                    event.getSubtitle(),
+                    event.getImageResId()
+            );
+            updatedEvent.setId(event.getId());
+            UserRepository.addPersonalEventToUser(userEmail, updatedEvent);
+            Log.d(TAG, "Moved event '" + event.getName() + "' with ID " + event.getId() + " to calendar for " + userEmail + ", Color: " + updatedEvent.getColor());
         } catch (Exception e) {
             Log.e(TAG, "Failed to move event '" + event.getName() + "' to calendar for " + userEmail + ": " + e.getMessage());
         }
+    }
+
+    private static int getPastelColor(int originalColor) {
+        return originalColor; // Keep pastel colors
     }
 
     public static void removeFromCalendar(String userEmail, Event event) {
@@ -130,8 +149,23 @@ public class EventRepository {
             if (event.getId() == null || event.getId().isEmpty()) {
                 event.setId("personal_" + UUID.randomUUID().toString());
             }
-            UserRepository.addPersonalEventToUser(userEmail, event);
-            Log.d(TAG, "Added personal event '" + event.getName() + "' with ID " + event.getId() + " for " + userEmail);
+            // Ensure pastel color
+            Event updatedEvent = new Event(
+                    event.getName(),
+                    event.getDescription(),
+                    event.getLocation(),
+                    event.getStartTime(),
+                    event.getEndTime(),
+                    event.getDate(),
+                    event.getTags(),
+                    getPastelColor(event.getColor()),
+                    event.getTitle(),
+                    event.getSubtitle(),
+                    event.getImageResId()
+            );
+            updatedEvent.setId(event.getId());
+            UserRepository.addPersonalEventToUser(userEmail, updatedEvent);
+            Log.d(TAG, "Added personal event '" + event.getName() + "' with ID " + event.getId() + " for " + userEmail + ", Color: " + updatedEvent.getColor());
         } catch (Exception e) {
             Log.e(TAG, "Failed to add personal event '" + event.getName() + "' for " + userEmail + ": " + e.getMessage());
         }

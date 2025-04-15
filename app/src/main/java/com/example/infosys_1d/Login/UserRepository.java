@@ -63,13 +63,13 @@ public class UserRepository {
         Admin volleyballAdmin = new FifthRowAdmin(
                 "volleyball@club.sutd.edu.sg",
                 "Volleyball Club",
-                new BigInteger("9003"),
+                "F9003",
                 "volley123"
         );
         Admin mindsportsAdmin = new FifthRowAdmin(
                 "mindsports@club.sutd.edu.sg",
                 "MindSports Club",
-                new BigInteger("9004"),
+                "F9004",
                 "minds123"
         );
         admins.add(volleyballAdmin);
