@@ -112,7 +112,7 @@ public class ChatFragment extends Fragment {
         ChatRequest request = new ChatRequest("deepseek/deepseek-chat", messages);
 
         Log.d(TAG, "Sending request: " + message);
-        Call<ChatResponse> call = openRouterApi.sendMessage("Bearer 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", request);
+        Call<ChatResponse> call = openRouterApi.sendMessage("Bearer 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", request);
         call.enqueue(new Callback<ChatResponse>() {
             @Override
             public void onResponse(Call<ChatResponse> call, Response<ChatResponse> response) {
