@@ -414,4 +414,19 @@ public class EventRepository {
             return 0;
         }
     }
+    public static List<Event> findConflictingEvents(String userEmail, Event newEvent, Context context) {
+        List<Event> conflictingEvents = new ArrayList<>();
+        List<Event> userEvents = UserRepository.getUserEvents(userEmail);
+
+        for (Event existingEvent : userEvents) {
+            // Check for overlap: newEvent.start <= existingEvent.end && newEvent.end >= existingEvent.start
+            if (newEvent.getStartTime() <= existingEvent.getEndTime() &&
+                    newEvent.getEndTime() >= existingEvent.getStartTime()) {
+                conflictingEvents.add(existingEvent);
+            }
+        }
+
+        Log.d(TAG, "Found " + conflictingEvents.size() + " conflicting events for user " + userEmail);
+        return conflictingEvents;
+    }
 }
