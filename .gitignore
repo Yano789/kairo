@@ -27,4 +27,5 @@ local.properties
 .externalNativeBuild
 .cxx
 local.properties
+gradle.properties
 >>>>>>> d45d82a8797a8094564515e5e14a5a0d4e0326b7

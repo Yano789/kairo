@@ -6,6 +6,10 @@ android {
     namespace = "com.example.infosys_1d"
     compileSdk = 35
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.example.infosys_1d"
         minSdk = 26
@@ -14,6 +18,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "OPENROUTER_API_KEY", "\"${System.getenv("OPENROUTER_API_KEY") ?: project.properties["openrouter.api.key"]?.toString() ?: ""}\"")
     }
 
     buildTypes {

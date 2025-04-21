@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.infosys_1d.BuildConfig;
 import com.example.infosys_1d.Event.Event;
 import com.example.infosys_1d.Event.EventRepository;
 import com.example.infosys_1d.R;
@@ -46,9 +46,23 @@ public class ChatFragment extends Fragment {
     private OpenRouterApi openRouterApi;
     private String userEmail;
     private String originalUserInput;
+    private String apiKey;
 
     public ChatFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Load API key from BuildConfig
+        apiKey = BuildConfig.OPENROUTER_API_KEY;
+        if (apiKey == null || apiKey.isEmpty()) {
+            Log.e(TAG, "OPENROUTER_API_KEY not found in BuildConfig");
+            chatMessages.add("Kai: Error - API key missing. Please contact the app developer.");
+        } else {
+            Log.d(TAG, "API key loaded successfully");
+        }
     }
 
     @Override
@@ -102,6 +116,15 @@ public class ChatFragment extends Fragment {
     }
 
     private void sendMessageToOpenRouter(String message) {
+        if (apiKey == null || apiKey.isEmpty()) {
+            String errorMsg = "Kai: Error - API key not configured. Please contact the app developer.";
+            chatMessages.add(errorMsg);
+            Log.e(TAG, errorMsg);
+            chatAdapter.notifyDataSetChanged();
+            chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
+            return;
+        }
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
         String today = sdf.format(Calendar.getInstance(TimeZone.getTimeZone("Asia/Singapore")).getTime());
@@ -112,7 +135,7 @@ public class ChatFragment extends Fragment {
         ChatRequest request = new ChatRequest("deepseek/deepseek-chat", messages);
 
         Log.d(TAG, "Sending request: " + message);
-        Call<ChatResponse> call = openRouterApi.sendMessage("Bearer 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", request);
+        Call<ChatResponse> call = openRouterApi.sendMessage("Bearer " + apiKey, request);
         call.enqueue(new Callback<ChatResponse>() {
             @Override
             public void onResponse(Call<ChatResponse> call, Response<ChatResponse> response) {
@@ -345,7 +368,7 @@ public class ChatFragment extends Fragment {
                     endTimeMillis,
                     dateStr,
                     tags,
-                    R.color.light_purple, // Use resource ID
+                    R.color.light_purple,
                     title,
                     "Scheduled Event",
                     R.drawable.default_event_image
@@ -355,7 +378,6 @@ public class ChatFragment extends Fragment {
             if (userEmail != null && !userEmail.isEmpty()) {
                 EventRepository.addPersonalEventToCalendar(userEmail, event, getContext());
                 Log.d(TAG, "Event added: title=" + title + ", date=" + dateStr + ", start=" + startTimeStr + ", end=" + endTimeStr + ", location=" + location);
-                // Add confirmation message with details
                 String confirmationMessage = String.format(
                         "Kai: Event added: %s on %s from %s to %s at %s.",
                         title, dateStr, startTimeStr, endTimeStr, location
@@ -380,5 +402,4 @@ public class ChatFragment extends Fragment {
             chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
         }
     }
-
 }
