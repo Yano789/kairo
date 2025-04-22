@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -125,9 +127,20 @@ public class HomeFragment extends Fragment {
                 R.layout.discovery_item_event, new EventAdapter.OnEventActionListener() {
             @Override
             public void onAddToCalendar(Event event) {
-                Log.d(TAG, "Adding event to calendar: " + event.getName() + " with ID " + event.getId() + " for " + getCurrentUserEmail());
-                EventRepository.moveToCalendar(getCurrentUserEmail(), event, requireContext());
-                eventViewModel.refreshDiscoverableEvents();
+                Log.d(TAG, "Attempting to add event to calendar: " + event.getName() + " with ID " + event.getId() + " for " + getCurrentUserEmail());
+
+                // Check for conflicting events
+                List<Event> conflictingEvents = EventRepository.findConflictingEvents(getCurrentUserEmail(), event, requireContext());
+
+                if (!conflictingEvents.isEmpty()) {
+                    // Show confirmation dialog for conflicts
+                    showConflictDialog(event, conflictingEvents);
+                } else {
+                    // No conflicts, proceed to add
+                    EventRepository.moveToCalendar(getCurrentUserEmail(), event, requireContext());
+                    eventViewModel.refreshDiscoverableEvents();
+                    Toast.makeText(requireContext(), "Event added to calendar", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -140,6 +153,53 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(eventAdapter);
+    }
+
+    private void showConflictDialog(Event newEvent, List<Event> conflictingEvents) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity(), androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert);
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_event_conflict, null);
+        builder.setView(dialogView);
+
+        // Set message
+        TextView messageText = dialogView.findViewById(R.id.dialog_message);
+        StringBuilder message = new StringBuilder("The event \"" + newEvent.getName() + "\" conflicts with the following events:\n\n");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy h:mm a", Locale.getDefault());
+
+        for (Event conflict : conflictingEvents) {
+            message.append("- ")
+                    .append(conflict.getName())
+                    .append(" (")
+                    .append(dateFormat.format(new Date(conflict.getStartTime())))
+                    .append(" to ")
+                    .append(dateFormat.format(new Date(conflict.getEndTime())))
+                    .append(")\n");
+        }
+        message.append("\nDo you still want to add this event to your calendar?");
+        messageText.setText(message.toString());
+
+        // Set button listeners
+        Button addAnywayButton = dialogView.findViewById(R.id.button_add_anyway);
+        Button cancelButton = dialogView.findViewById(R.id.button_cancel);
+
+        addAnywayButton.setOnClickListener(v -> {
+            Log.d(TAG, "User chose 'Add Anyway' for event: " + newEvent.getName());
+            EventRepository.moveToCalendar(getCurrentUserEmail(), newEvent, requireContext());
+            eventViewModel.refreshDiscoverableEvents();
+            Toast.makeText(requireContext(), "Event added to calendar", Toast.LENGTH_SHORT).show();
+            ((AlertDialog) v.getTag()).dismiss();
+        });
+
+        cancelButton.setOnClickListener(v -> {
+            Log.d(TAG, "User chose 'Cancel' for event: " + newEvent.getName());
+            Toast.makeText(requireContext(), "Event not added", Toast.LENGTH_SHORT).show();
+            ((AlertDialog) v.getTag()).dismiss();
+        });
+
+        // Create and show dialog
+        AlertDialog dialog = builder.create();
+        addAnywayButton.setTag(dialog); // Pass dialog to buttons for dismissal
+        cancelButton.setTag(dialog);
+        dialog.show();
     }
 
     private void setupObservers() {

@@ -63,4 +63,5 @@ dependencies {
     implementation(libs.material.v190)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.androidx.appcompat.v161)
     }
